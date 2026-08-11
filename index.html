@@ -204,6 +204,15 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 .authHint{margin-top:10px;font:8px var(--mono);color:#4d555a;letter-spacing:.08em;line-height:1.6}
 .authHint b{color:#717a80;font-weight:500}
 </style>
+
+<style id="final-tools-css">
+.adminTools{display:flex;gap:8px;flex-wrap:wrap}.fileBtn{position:relative;overflow:hidden;display:inline-flex;align-items:center;cursor:pointer}.fileBtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+</style>
+
+<style id="final-auth-visibility">
+#accessCode{display:block!important;visibility:visible!important;opacity:1!important}
+#authorize{display:inline-flex!important;visibility:visible!important;opacity:1!important}
+</style>
 </head>
 <body>
 <div id="noise"></div><div class="system-watermark">SPMG-04</div><div id="scan"></div><div id="vignette"></div><div id="glitch"></div>
@@ -744,26 +753,45 @@ function updateBuilderPreview(){
  }).join("\n");
  $("#builderPreview").innerHTML=lines;
 }
+
 function createOperation(){
- const title=$("#bTitle").value.trim(), body=$("#bBody").value.trim();
- if(!title||!body){toast("ОШИБКА","Заполните название и текст операции.");return}
- const op={
-   id:"OP-57-"+String(Math.floor(100+Math.random()*899)),
-   status:"ACTIVE",class:$("#bClass").value,priority:$("#bPriority").value,
-   title,date:"11.08.2057",deadline:$("#bDeadline").value.trim()||"OPEN",
-   desc:$("#bDesc").value.trim()||"Оперативное распоряжение SPMG-04.",
-   body,custom:true
- };
- operations.unshift(op);saveCustomOperations();closeBuilder();
- log("OPS","ОПЕРАЦИЯ ОПУБЛИКОВАНА // "+op.id);
- toast("ОПЕРАЦИЯ СОЗДАНА",`${op.id} // ${op.title}`);
- state.page="operations";
- document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.page==="operations"));
- render();glitch();
+  if(state.user.role!=="admin"){toast("ДОСТУП ЗАПРЕЩЁН","Создание операций доступно только Administrator.");return}
+  const title=(document.getElementById("bTitle")?.value||"").trim();
+  const body=(document.getElementById("bBody")?.value||"").trim();
+  if(!title||!body){toast("ОШИБКА","Заполните название и текст операции.");return}
+  const op={
+    id:"OP-57-"+String(Date.now()).slice(-6),
+    status:"ACTIVE",
+    class:document.getElementById("bClass")?.value||"SPMG-IV",
+    priority:document.getElementById("bPriority")?.value||"СРЕДНИЙ",
+    title,date:"11.08.2057",
+    deadline:(document.getElementById("bDeadline")?.value||"OPEN").trim(),
+    desc:(document.getElementById("bDesc")?.value||"").trim()||"Оперативное распоряжение SPMG-04.",
+    body,custom:true,createdBy:state.user.name
+  };
+  operations.unshift(op);
+  try{
+    localStorage.setItem("spmg04_operations",JSON.stringify(operations.filter(x=>x.custom)));
+    const check=JSON.parse(localStorage.getItem("spmg04_operations")||"[]");
+    if(!check.some(x=>x.id===op.id))throw new Error("Сохранение операции не подтверждено");
+  }catch(e){
+    operations=operations.filter(x=>x.id!==op.id);
+    console.error(e);
+    toast("ОШИБКА СОХРАНЕНИЯ","Операция не была записана.");
+    return;
+  }
+  log("OPS",`ОПЕРАЦИЯ СОЗДАНА // ${op.id} // ${op.title}`);
+  closeBuilder();
+  state.page="operations";
+  document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.page==="operations"));
+  render();
+  glitch();successSound();
+  toast("ОПЕРАЦИЯ СОЗДАНА",`${op.id} // запись подтверждена в локальном хранилище.`);
 }
 
 
 function applyRoleUI(){
+ const lb=document.getElementById("logoutBtn"); if(lb)lb.onclick=logout;
  const admin=state.user.role==="admin";
  document.querySelectorAll('#nav [data-page="builder"],#nav [data-page="admin"]').forEach(el=>{
    el.classList.toggle("hidden",!admin);
@@ -774,6 +802,53 @@ function applyRoleUI(){
  if(user)user.textContent=state.user.name;
 }
 
+
+function exportPortalData(){
+  if(state.user.role!=="admin")return;
+  const data={
+    version:"SPMG-04/2057",
+    exportedAt:new Date().toISOString(),
+    operations:operations.filter(x=>x.custom),
+    audit:state.audit||[]
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="SPMG-04_portal_backup.json";a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  log("ADMIN","ЭКСПОРТ ДАННЫХ // JSON BACKUP");
+}
+function importPortalData(file){
+  if(state.user.role!=="admin"||!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      if(!data||!Array.isArray(data.operations))throw new Error("Неверный формат");
+      data.operations.forEach(x=>{if(x?.id&&!operations.some(o=>o.id===x.id))operations.unshift({...x,custom:true})});
+      localStorage.setItem("spmg04_operations",JSON.stringify(operations.filter(x=>x.custom)));
+      if(Array.isArray(data.audit)){state.audit=data.audit.slice(0,200);localStorage.setItem("spmg04_audit",JSON.stringify(state.audit))}
+      log("ADMIN","ИМПОРТ ДАННЫХ // JSON BACKUP");
+      render();toast("ИМПОРТ ЗАВЕРШЁН","Данные загружены и проверены.");
+    }catch(e){console.error(e);toast("ОШИБКА ИМПОРТА","Файл не соответствует формату SPMG-04.");}
+  };
+  reader.readAsText(file);
+}
+
+
+function logout(){
+  log("AUTH","ВЫХОД // "+(state.user.name||"ОПЕРАТОР"));
+  state.user={name:"Оператор",role:"operator",level:"SPMG-IV",code:""};
+  state.booted=false;
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("boot").classList.remove("hidden");
+  const input=document.getElementById("accessCode"),btn=document.getElementById("authorize");
+  if(input){input.value="";input.disabled=false}
+  if(btn)btn.disabled=false;
+  const title=document.getElementById("bootTitle"),sub=document.getElementById("bootSubtitle"),status=document.getElementById("bootFooterStatus");
+  if(title)title.textContent="ДОСТУП ОГРАНИЧЕН";
+  if(sub)sub.textContent="Введите код допуска для продолжения";
+  if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
+}
+
 function render(){
  applyRoleUI();
  if(state.page==="overview")renderOverview();
@@ -782,8 +857,11 @@ if(state.page==="admin" && state.user.role==="admin"){
  const rows=state.audit.map((x,i)=>`<div class="auditRow"><span>${esc(x.time)}</span><b>${esc(x.user)}</b><span>${esc(x.role)}</span><em>${esc(x.type)}</em><strong>${esc(x.msg)}</strong></div>`).join("");
  content.innerHTML=head("SPMG-04 // ADMINISTRATIVE CONTROL","АДМИНИСТРИРОВАНИЕ",`<button class="btn" id="clearAudit">ОЧИСТИТЬ ЛОКАЛЬНЫЙ ЖУРНАЛ</button>`)
  +panel("ЖУРНАЛ АУДИТА",rows||`<div class="empty">ЖУРНАЛ ПУСТ</div>`,"LOCAL // 200 MAX")
+ +panel("УПРАВЛЕНИЕ ДАННЫМИ",`<div class="adminTools"><button class="btn" id="exportData">ЭКСПОРТ JSON</button><label class="btn fileBtn">ИМПОРТ JSON<input type="file" id="importData" accept=".json,application/json"></label></div>`,"BACKUP / RESTORE")
  +panel("СЕССИЯ",`<div class="adminSession"><span>УЧЁТНАЯ ЗАПИСЬ</span><b>${esc(state.user.name)}</b><span>УРОВЕНЬ</span><b>FULL ACCESS</b><span>ХРАНИЛИЩЕ</span><b>LOCAL STORAGE</b></div>`,"ADMINISTRATOR");
  $("#clearAudit").onclick=()=>{state.audit=[];localStorage.removeItem("spmg04_audit");log("ADMIN","ЖУРНАЛ ОЧИЩЕН");render()};
+ $("#exportData").onclick=exportPortalData;
+ $("#importData").onchange=e=>importPortalData(e.target.files[0]);
 }
 
  if(state.page==="operations"){
@@ -996,6 +1074,7 @@ document.addEventListener("click",e=>{
 
 
 
+
 function authorize(){
   const input=document.getElementById("accessCode");
   const btn=document.getElementById("authorize");
@@ -1005,81 +1084,54 @@ function authorize(){
   const titleEl=document.getElementById("bootTitle");
   const sub=document.getElementById("bootSubtitle");
 
-  if(!input || !btn || !boot || !app){
-    console.error("SPMG AUTH: authorization elements missing");
+  if(!input||!btn||!boot||!app){
+    console.error("SPMG AUTH: missing DOM elements");
     return false;
   }
 
-  const code=input.value.trim();
-  if(!code){
-    if(typeof toast==="function") toast("АВТОРИЗАЦИЯ","Введите код допуска.");
-    input.focus();
-    return false;
-  }
-
-  // RP/demo credentials. These are NOT real server-side security.
-  const normalized=code.toUpperCase();
-  let account=null;
-
-  if(normalized==="SPMG-ADMIN-2057"){
-    account={name:"Administrator",role:"admin",level:"FULL ACCESS"};
-  }else if(normalized==="SPMG-04-2057"){
-    account={name:"Оператор SPMG-04",role:"operator",level:"SPMG-IV"};
-  }else if(normalized==="SPMG-OP-2057"){
-    account={name:"Полевой оператор",role:"operator",level:"SPMG-IV"};
-  }
+  const code=(input.value||"").trim().toUpperCase();
+  const accounts={
+    "SPMG-04-2057":{name:"Оператор SPMG-04",role:"operator",level:"SPMG-IV"},
+    "SPMG-OP-2057":{name:"Полевой оператор",role:"operator",level:"SPMG-IV"},
+    "SPMG-ADMIN-2057":{name:"Administrator",role:"admin",level:"FULL ACCESS"}
+  };
+  const account=accounts[code];
 
   if(!account){
-    input.disabled=false;
-    btn.disabled=false;
-    if(status)status.textContent="ДОСТУП ОТКЛОНЁН";
-    if(titleEl)titleEl.textContent="ОШИБКА ВЕРИФИКАЦИИ";
+    if(status)status.textContent="ДОСТУП ОТКЛОНЁН // НЕИЗВЕСТНЫЙ КОД";
+    if(titleEl)titleEl.textContent="ВЕРИФИКАЦИЯ НЕ ПРОЙДЕНА";
     if(sub)sub.textContent="УЧЁТНАЯ ЗАПИСЬ НЕ РАСПОЗНАНА";
-    clickSound("alert");
-    if(typeof toast==="function") toast("ДОСТУП ОТКЛОНЁН","Код допуска не распознан.");
+    input.disabled=false;btn.disabled=false;input.focus();input.select();
+    try{clickSound("alert")}catch(e){}
+    if(typeof toast==="function")toast("ДОСТУП ОТКЛОНЁН","Проверьте код допуска.");
     setTimeout(()=>{
       if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
-      if(titleEl)titleEl.textContent="ВЕРИФИКАЦИЯ ОПЕРАТОРА";
+      if(titleEl)titleEl.textContent="ДОСТУП ОГРАНИЧЕН";
       if(sub)sub.textContent="Введите код допуска для продолжения";
-      input.focus(); input.select();
-    },900);
+    },1000);
     return false;
   }
 
-  initAudio();
-  clickSound("click");
-  input.disabled=true; btn.disabled=true;
+  try{initAudio();clickSound("click")}catch(e){}
+  input.disabled=true;btn.disabled=true;
   if(status)status.textContent="ПРОВЕРКА УЧЁТНЫХ ДАННЫХ...";
   if(titleEl)titleEl.textContent="ВЕРИФИКАЦИЯ ОПЕРАТОРА";
-  if(sub)sub.textContent="Проверка уровня допуска и идентификатора...";
-
-  state.user={name:account.name,role:account.role,code:code,level:account.level};
+  if(sub)sub.textContent="Сверка уровня допуска и идентификатора...";
+  state.user={name:account.name,role:account.role,level:account.level,code};
 
   setTimeout(()=>{
     if(status)status.textContent="УЧЁТНАЯ ЗАПИСЬ ПОДТВЕРЖДЕНА";
     if(titleEl)titleEl.textContent=account.role==="admin"?"ДОПУСК ADMINISTRATOR":"ДОПУСК ПОДТВЕРЖДЁН";
-    if(sub)sub.textContent=account.role==="admin"
-      ?"Полный уровень управления // SPMG-IV"
-      :"Стандартный оперативный уровень // SPMG-IV";
-
-    boot.classList.add("hidden");
-    app.classList.remove("hidden");
-    state.booted=true;
-
-    const sid=document.getElementById("sessionId");
-    if(sid && typeof uid==="function")sid.textContent=uid();
-
-    log("AUTH",`ВХОД // ${account.name} // ${account.role==="admin"?"ПОЛНЫЙ ДОСТУП":"ОПЕРАТИВНЫЙ ДОСТУП"}`);
-    applyRoleUI();
-    render();
-    successSound();
-    if(typeof toast==="function")toast(
-      account.role==="admin"?"ADMINISTRATOR":"СЕАНС УСТАНОВЛЕН",
-      account.role==="admin"?"Полный доступ к внутренней сети разрешён.":"Оперативный доступ к внутренней сети разрешён."
-    );
+    if(sub)sub.textContent=account.role==="admin"?"Полный уровень управления // SPMG-IV":"Стандартный оперативный уровень // SPMG-IV";
+    boot.classList.add("hidden");app.classList.remove("hidden");state.booted=true;
+    const sid=document.getElementById("sessionId");if(sid&&typeof uid==="function")sid.textContent=uid();
+    if(typeof log==="function")log("AUTH",`ВХОД // ${account.name} // ${account.role==="admin"?"ПОЛНЫЙ ДОСТУП":"ОПЕРАТИВНЫЙ ДОСТУП"}`);
+    if(typeof applyRoleUI==="function")applyRoleUI();
+    if(typeof render==="function")render();
+    try{successSound()}catch(e){}
+    if(typeof toast==="function")toast(account.role==="admin"?"ADMINISTRATOR":"СЕАНС УСТАНОВЛЕН",account.role==="admin"?"Полный доступ к внутренней сети разрешён.":"Оперативный доступ к внутренней сети разрешён.");
     if(typeof glitch==="function")glitch();
-  },800);
-
+  },650);
   return true;
 }
 function clock(){
@@ -1148,25 +1200,7 @@ window.addEventListener("error", function(e){
 });
 </script>
 
-<script id="spmg-auth-bindings">
-(function(){
-  function bindAuth(){
-    const input=document.getElementById("accessCode");
-    const btn=document.getElementById("authorize");
-    if(!input || !btn) return;
-    btn.type="button";
-    btn.onclick=function(e){e.preventDefault();authorize();};
-    input.onkeydown=function(e){
-      if(e.key==="Enter" || e.keyCode===13){
-        e.preventDefault();
-        authorize();
-      }
-    };
-  }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindAuth);
-  else bindAuth();
-})();
-</script>
+
 
 <script>
 window.addEventListener("error",function(e){
@@ -1175,6 +1209,84 @@ window.addEventListener("error",function(e){
 window.addEventListener("unhandledrejection",function(e){
   console.error("[SPMG-04] PROMISE ERROR:",e.reason);
 });
+</script>
+
+(function(){
+  let bootStarted=false;
+  function startPortalBoot(){
+    if(bootStarted) return;
+    bootStarted=true;
+    try{
+      const boot=document.getElementById("boot");
+      const app=document.getElementById("app");
+      const status=document.getElementById("bootFooterStatus");
+      const title=document.getElementById("bootTitle");
+      const sub=document.getElementById("bootSubtitle");
+      const progress=document.getElementById("bootProgress");
+      if(!boot||!app){
+        console.error("SPMG BOOT: root elements missing");
+        return;
+      }
+
+      // Reset a possibly stale "initialization" state.
+      if(status)status.textContent="ПОДГОТОВКА ЗАЩИЩЁННОГО КАНАЛА...";
+      if(title)title.textContent="ИНИЦИАЛИЗАЦИЯ";
+      if(sub)sub.textContent="Запуск защищённого терминала...";
+      if(progress)progress.style.width="0%";
+
+      const stages=[
+        [180,12,"ПРОВЕРКА КОНТУРА..."],
+        [420,29,"СИНХРОНИЗАЦИЯ ВРЕМЕНИ..."],
+        [700,48,"ПРОВЕРКА ЦЕЛОСТНОСТИ..."],
+        [980,66,"ЗАГРУЗКА КРИПТОГРАФИЧЕСКОГО ПРОФИЛЯ..."],
+        [1260,82,"ПОДГОТОВКА КАНАЛА SPMG-04..."],
+        [1500,96,"СИСТЕМА ГОТОВА."]
+      ];
+      stages.forEach(([ms,p,msg])=>setTimeout(()=>{
+        if(progress)progress.style.width=p+"%";
+        if(status)status.textContent=msg;
+      },ms));
+
+      // The loading screen is only a pre-auth terminal.
+      // It MUST stop after a bounded time and expose the auth field.
+      setTimeout(()=>{
+        if(progress)progress.style.width="100%";
+        if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
+        if(title)title.textContent="ДОСТУП ОГРАНИЧЕН";
+        if(sub)sub.textContent="Введите код допуска для продолжения";
+        const input=document.getElementById("accessCode");
+        const btn=document.getElementById("authorize");
+        if(input){input.disabled=false;input.hidden=false;input.focus();}
+        if(btn){btn.disabled=false;btn.hidden=false;}
+        boot.classList.remove("initializing");
+      },1700);
+    }catch(e){
+      console.error("SPMG BOOT ERROR",e);
+      const status=document.getElementById("bootFooterStatus");
+      if(status)status.textContent="СИСТЕМА ГОТОВА // АВТОРИЗАЦИЯ ДОСТУПНА";
+    }
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",startPortalBoot);
+  else startPortalBoot();
+})();
+
+<script id="spmg-auth-bindings">
+(function(){
+  function bindAuth(){
+    const input=document.getElementById("accessCode");
+    const btn=document.getElementById("authorize");
+    if(!input||!btn)return;
+    btn.type="button";
+    btn.disabled=false;
+    input.disabled=false;
+    btn.onclick=function(e){e.preventDefault();authorize();};
+    input.onkeydown=function(e){
+      if(e.key==="Enter"||e.keyCode===13){e.preventDefault();authorize();}
+    };
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindAuth);
+  else bindAuth();
+})();
 </script>
 </body>
 </html>
