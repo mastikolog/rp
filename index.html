@@ -3,31 +3,29 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AURUM // TERMINAL v5.0</title>
+    <title>AURUM // SECURITY TERMINAL v6.0</title>
     <style>
         /* ============================================================
            ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
            ============================================================ */
         :root {
-            --bg: #050505;
+            --bg: #040404;
             --panel: #0a0a0a;
-            --border: rgba(255, 255, 255, 0.04);
-            --text: #c8c8c8;
-            --text-dim: #555;
+            --border: rgba(255, 255, 255, 0.03);
+            --text: #c0c0c0;
+            --text-dim: #4a4a4a;
             --text-bright: #f0f0f0;
             --green: #00ff41;
             --red: #ff1a1a;
             --cyan: #7df9ff;
+            --amber: #ffb347;
             --glitch-color1: #ff1a1a;
             --glitch-color2: #7df9ff;
-            --shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+            --shadow: 0 0 80px rgba(0, 0, 0, 0.95);
             --font: 'Share Tech Mono', 'Courier New', monospace;
             --ease: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* ============================================================
-           СБРОС И БАЗА
-           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -49,16 +47,14 @@
         /* ============================================================
            ФОНОВЫЕ ЭФФЕКТЫ
            ============================================================ */
-
-        /* Шум */
         .noise {
             position: fixed;
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.035;
+            opacity: 0.04;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E");
-            animation: noiseAnim 0.5s steps(2) infinite;
+            animation: noiseAnim 0.4s steps(2) infinite;
         }
 
         @keyframes noiseAnim {
@@ -67,26 +63,24 @@
             100% { transform: translate(1%, -1%); }
         }
 
-        /* Сканирующая сетка */
         .grid {
             position: fixed;
             inset: 0;
             z-index: 1;
             pointer-events: none;
-            opacity: 0.05;
+            opacity: 0.04;
             background-image:
-                linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 20s linear infinite;
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 18s linear infinite;
         }
 
         @keyframes gridMove {
             0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
+            100% { transform: translate(40px, 40px); }
         }
 
-        /* Сканирующие линии (вертикальные) */
         .scanlines {
             position: fixed;
             inset: 0;
@@ -95,22 +89,21 @@
             background: repeating-linear-gradient(0deg,
                     transparent 0px,
                     transparent 3px,
-                    rgba(0, 0, 0, 0.15) 3px,
-                    rgba(0, 0, 0, 0.15) 4px);
-            opacity: 0.3;
+                    rgba(0, 0, 0, 0.12) 3px,
+                    rgba(0, 0, 0, 0.12) 4px);
+            opacity: 0.35;
         }
 
-        /* Горизонтальная сканирующая полоса (движется) */
         .scan-bar {
             position: fixed;
             left: 0;
             width: 100%;
-            height: 2px;
+            height: 1.5px;
             z-index: 3;
             pointer-events: none;
-            background: rgba(255, 255, 255, 0.015);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
-            animation: scanBarMove 6s linear infinite;
+            background: rgba(255, 255, 255, 0.01);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.02);
+            animation: scanBarMove 7s linear infinite;
         }
 
         @keyframes scanBarMove {
@@ -129,9 +122,9 @@
             border: 1px solid var(--border);
             background: var(--panel);
             box-shadow:
-                inset 0 0 100px rgba(255, 255, 255, 0.005),
+                inset 0 0 100px rgba(255, 255, 255, 0.003),
                 var(--shadow),
-                0 0 0 1px rgba(255, 255, 255, 0.015);
+                0 0 0 1px rgba(255, 255, 255, 0.01);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -144,19 +137,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 24px;
+            padding: 12px 24px;
             border-bottom: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 14px;
-            font-size: 11px;
+            gap: 12px;
+            font-size: 10px;
             letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--text-dim);
@@ -164,8 +157,8 @@
 
         .dot {
             display: inline-block;
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
             background: var(--green);
             animation: dotPulse 1.4s ease-in-out infinite;
@@ -174,7 +167,7 @@
 
         @keyframes dotPulse {
             0%,
-            100% { opacity: 0.2; transform: scale(0.9); }
+            100% { opacity: 0.15; transform: scale(0.8); }
             50% { opacity: 1; transform: scale(1); }
         }
 
@@ -186,8 +179,8 @@
 
         .header-right {
             display: flex;
-            gap: 18px;
-            font-size: 10px;
+            gap: 14px;
+            font-size: 9px;
             letter-spacing: 0.08em;
             color: var(--text-dim);
         }
@@ -201,15 +194,15 @@
            ============================================================ */
         .terminal-body {
             position: relative;
-            padding: 24px 28px 20px;
-            min-height: 380px;
-            max-height: 70vh;
+            padding: 20px 26px 18px;
+            min-height: 340px;
+            max-height: 68vh;
             overflow-y: auto;
             overflow-x: hidden;
-            font-size: 14px;
-            line-height: 1.75;
+            font-size: 13px;
+            line-height: 1.7;
             scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.05) transparent;
+            scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
             flex: 1;
         }
 
@@ -220,7 +213,7 @@
             background: transparent;
         }
         .terminal-body::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 2px;
         }
 
@@ -230,167 +223,217 @@
         .line {
             padding: 2px 0;
             opacity: 0;
-            animation: typeIn 0.06s forwards;
+            animation: typeIn 0.05s forwards;
             word-wrap: break-word;
         }
 
         @keyframes typeIn {
-            0% { opacity: 0; transform: translateY(3px); }
+            0% { opacity: 0; transform: translateY(2px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
         .line.dim { color: var(--text-dim); }
         .line.bright { color: var(--text-bright); }
-        .line.green { color: var(--green); text-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
-        .line.red { color: var(--red); text-shadow: 0 0 10px rgba(255, 26, 26, 0.3); }
-        .line.cyan { color: var(--cyan); text-shadow: 0 0 8px rgba(125, 249, 255, 0.15); }
+        .line.green { color: var(--green); text-shadow: 0 0 12px rgba(0, 255, 65, 0.15); }
+        .line.red { color: var(--red); text-shadow: 0 0 12px rgba(255, 26, 26, 0.2); }
+        .line.cyan { color: var(--cyan); text-shadow: 0 0 8px rgba(125, 249, 255, 0.1); }
+        .line.amber { color: var(--amber); text-shadow: 0 0 8px rgba(255, 179, 71, 0.1); }
         .line.separator {
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
             padding: 0;
-            margin: 10px 0;
+            margin: 8px 0;
             opacity: 1;
         }
 
         /* ============================================================
-           ЗАДАНИЕ
+           ГЛАВНАЯ СТРАНИЦА
            ============================================================ */
-        .task-header {
-            margin: 10px 0 6px;
+        .main-panel {
+            display: grid;
+            grid-template-columns: 200px 1fr 220px;
+            gap: 16px;
+            padding: 4px 0;
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
         }
-        .task-code {
-            font-size: 12px;
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Левая панель — меню */
+        .menu-panel {
+            border-right: 1px solid rgba(255, 255, 255, 0.03);
+            padding-right: 16px;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-left: 2px solid transparent;
+            transition: all var(--ease);
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            color: var(--text-bright);
+            border-left-color: var(--green);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .menu-item .badge {
+            float: right;
+            color: var(--red);
+            font-size: 8px;
+        }
+
+        /* Центральная панель — контент */
+        .content-panel {
+            padding: 0 8px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        /* Карточка задания */
+        .task-card {
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            transition: all var(--ease);
+            cursor: pointer;
+        }
+
+        .task-card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .task-card .code {
+            font-size: 9px;
             color: var(--text-dim);
             letter-spacing: 0.08em;
         }
-        .task-title {
-            font-size: 18px;
-            font-weight: 700;
+
+        .task-card .title {
+            font-size: 13px;
             color: var(--text-bright);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
             margin: 2px 0 4px;
+            letter-spacing: 0.03em;
         }
-        .task-meta {
-            font-size: 10px;
+
+        .task-card .meta {
+            font-size: 9px;
             color: var(--text-dim);
-            letter-spacing: 0.1em;
             display: flex;
-            gap: 18px;
+            gap: 14px;
             flex-wrap: wrap;
+        }
+
+        .task-card .meta .status-active {
+            color: var(--green);
+        }
+        .task-card .meta .status-done {
+            color: var(--text-dim);
+        }
+        .task-card .meta .priority-high {
+            color: var(--red);
+        }
+
+        /* Уведомление */
+        .notification {
+            border: 1px solid rgba(125, 249, 255, 0.06);
+            background: rgba(125, 249, 255, 0.02);
+            padding: 10px 14px;
             margin-bottom: 10px;
-        }
-        .task-meta .status {
-            color: var(--green);
-        }
-        .task-meta .clearance {
-            color: var(--red);
-        }
-        .task-body {
-            padding: 8px 0 4px;
-            color: var(--text);
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
-            margin-top: 4px;
-        }
-        .task-body p {
-            margin: 6px 0;
-        }
-        .task-body .redacted {
-            color: var(--red);
-            background: rgba(255, 26, 26, 0.05);
-            padding: 0 4px;
-            letter-spacing: 0.15em;
-        }
-        .task-body .code {
-            color: var(--cyan);
-            font-weight: 700;
-        }
-
-        /* ============================================================
-           КНОПКИ
-           ============================================================ */
-        .actions {
             display: flex;
-            gap: 10px;
-            margin-top: 18px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.03);
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .btn {
-            padding: 10px 22px;
+        .notification .text {
+            font-size: 11px;
+            color: var(--cyan);
+        }
+
+        .notification .btn-small {
+            font-size: 8px;
+            padding: 4px 12px;
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: var(--text-dim);
-            font-family: var(--font);
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
+            border: 1px solid rgba(125, 249, 255, 0.1);
+            color: var(--cyan);
             cursor: pointer;
+            font-family: var(--font);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             transition: all var(--ease);
-            position: relative;
-            overflow: hidden;
         }
 
-        .btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.02);
-            transform: translateX(-100%);
-            transition: transform 0.4s ease;
+        .notification .btn-small:hover {
+            border-color: var(--cyan);
+            background: rgba(125, 249, 255, 0.04);
         }
 
-        .btn:hover::after {
-            transform: translateX(0);
+        /* Правая панель — лог */
+        .log-panel {
+            border-left: 1px solid rgba(255, 255, 255, 0.03);
+            padding-left: 16px;
         }
 
-        .btn:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            color: var(--text-bright);
+        .log-entry {
+            font-size: 9px;
+            color: var(--text-dim);
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
 
-        .btn-primary {
-            border-color: rgba(0, 255, 65, 0.15);
+        .log-entry .time {
+            color: var(--text-dim);
+            margin-right: 8px;
+        }
+
+        .log-entry .action {
+            color: var(--text);
+        }
+
+        .log-entry .action-green {
             color: var(--green);
         }
-        .btn-primary:hover {
-            border-color: var(--green);
-            background: rgba(0, 255, 65, 0.04);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.04);
-        }
 
-        .btn-danger {
-            border-color: rgba(255, 26, 26, 0.12);
+        .log-entry .action-red {
             color: var(--red);
-        }
-        .btn-danger:hover {
-            border-color: var(--red);
-            background: rgba(255, 26, 26, 0.04);
-            box-shadow: 0 0 20px rgba(255, 26, 26, 0.04);
-        }
-
-        .btn:disabled {
-            opacity: 0.25;
-            cursor: not-allowed;
-            pointer-events: none;
         }
 
         /* ============================================================
-           ФУТЕР (ОТКЛЮЧЕНИЕ)
+           ФУТЕР
            ============================================================ */
         .footer {
-            padding: 12px 24px 14px;
+            padding: 10px 24px 12px;
             border-top: 1px solid var(--border);
             background: rgba(0, 0, 0, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 10px;
+            font-size: 9px;
             letter-spacing: 0.08em;
             color: var(--text-dim);
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 4px;
             flex-shrink: 0;
         }
 
@@ -409,7 +452,7 @@
         }
 
         /* ============================================================
-           ГЛИТЧ-ЭФФЕКТЫ (периодические)
+           ГЛИТЧ-ЭФФЕКТЫ
            ============================================================ */
         .glitch-overlay {
             position: fixed;
@@ -438,42 +481,88 @@
         /* ============================================================
            АДАПТИВ
            ============================================================ */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+            .main-panel {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .menu-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+                padding-right: 0;
+                padding-bottom: 8px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .menu-item {
+                padding: 4px 10px;
+                font-size: 8px;
+                border-left: none;
+                border-bottom: 2px solid transparent;
+            }
+            .menu-item:hover,
+            .menu-item.active {
+                border-left: none;
+                border-bottom-color: var(--green);
+            }
+            .log-panel {
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.03);
+                padding-left: 0;
+                padding-top: 8px;
+            }
             .terminal-wrapper {
                 width: 98vw;
                 max-height: 98vh;
-                border: none;
             }
             .header {
-                padding: 10px 14px;
-                font-size: 9px;
+                padding: 8px 14px;
+                font-size: 8px;
             }
             .header-left {
-                gap: 8px;
+                gap: 6px;
             }
             .header-right {
-                gap: 10px;
-                font-size: 8px;
+                gap: 8px;
+                font-size: 7px;
             }
             .terminal-body {
-                padding: 16px 14px 14px;
+                padding: 12px 12px 10px;
+                font-size: 11px;
+                max-height: 60vh;
+            }
+            .task-card .title {
                 font-size: 12px;
-                max-height: 62vh;
-            }
-            .task-title {
-                font-size: 15px;
-            }
-            .btn {
-                padding: 8px 14px;
-                font-size: 9px;
             }
             .footer {
-                padding: 10px 14px;
-                font-size: 8px;
+                padding: 8px 14px;
+                font-size: 7px;
             }
-            .task-meta {
-                font-size: 9px;
-                gap: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .terminal-body {
+                font-size: 10px;
+                padding: 10px 10px 8px;
+            }
+            .task-card {
+                padding: 8px 10px;
+            }
+            .task-card .title {
+                font-size: 11px;
+            }
+            .notification {
+                flex-direction: column;
+                gap: 6px;
+                align-items: flex-start;
+            }
+            .header-brand {
+                font-size: 10px;
+            }
+            .menu-item {
+                font-size: 7px;
+                padding: 3px 6px;
             }
         }
 
@@ -507,13 +596,13 @@
                 <span class="dot"></span>
                 <span class="header-brand">AURUM</span>
                 <span style="color:var(--text-dim);">|</span>
-                <span>TERMINAL v5.0</span>
-                <span style="color:var(--text-dim); font-size:9px;">SECURE</span>
+                <span>SECURITY TERMINAL v6.0</span>
+                <span style="color:var(--text-dim); font-size:8px;">SECURE</span>
             </div>
             <div class="header-right">
                 <span>NODE: <span id="nodeId">WS-07</span></span>
                 <span>|</span>
-                <span>OP: <span id="opId">QUARTZ</span></span>
+                <span>OP: <span id="opId">СОТРУДНИК</span></span>
                 <span>|</span>
                 <span>LVL: <span style="color:var(--red);">3</span></span>
             </div>
@@ -548,91 +637,113 @@
             // ============================================================
             const output = document.getElementById('output');
             const terminalBody = document.getElementById('terminalBody');
-            const terminalWrapper = document.getElementById('terminalWrapper');
             const glitchOverlay = document.getElementById('glitchOverlay');
             const sessionTimeEl = document.getElementById('sessionTime');
 
+            let isMainPageShown = false;
+
             // ============================================================
-            // 2. ДАННЫЕ ЗАДАНИЯ
+            // 2. ДАННЫЕ ЗАДАНИЙ
             // ============================================================
-            const TASK = {
+            const TASKS = [{
                 code: 'OP-42/ALPHA',
                 title: 'СБОР РАЗВЕДДАННЫХ // СЕКТОР 7',
-                classification: 'TOP SECRET // EYES ONLY',
+                priority: 'ВЫСОКИЙ',
                 status: 'АКТИВНО',
                 clearance: 'LVL-3',
                 body: [
                     'Цель: получить данные о передвижении отряда «ТЕНЬ» в секторе 7.',
-                    'Объект: группа из 4–6 человек, вооружение лёгкое, без бронетехники.',
-                    'Метод: скрытное наблюдение, фотофиксация, перехват коммуникаций.',
+                    'Объект: группа из 4–6 человек, вооружение лёгкое.',
+                    'Метод: скрытное наблюдение, фотофиксация.',
                     'Время выполнения: 72 часа.',
-                    'Приоритет: ВЫСОКИЙ.',
-                    'Кодовое слово для подтверждения: «ГОРИЗОНТ».'
+                    'Кодовое слово: «ГОРИЗОНТ».'
                 ]
-            };
+            }, {
+                code: 'OP-45/BETA',
+                title: 'КОНТАКТ С АГЕНТОМ «СПУТНИК»',
+                priority: 'СРЕДНИЙ',
+                status: 'АКТИВНО',
+                clearance: 'LVL-2',
+                body: [
+                    'Цель: установить контакт с агентом «СПУТНИК» в точке 7B.',
+                    'Объект: передача данных о перемещениях противника.',
+                    'Метод: радиосвязь, кодовые фразы.',
+                    'Время выполнения: 48 часов.',
+                    'Кодовое слово: «МАЯК».'
+                ]
+            }, {
+                code: 'OP-48/GAMMA',
+                title: 'ЭВАКУАЦИЯ ИЗ СЕКТОРА 12',
+                priority: 'КРИТИЧЕСКИЙ',
+                status: 'АКТИВНО',
+                clearance: 'LVL-4',
+                body: [
+                    'Цель: эвакуировать группу исследователей из сектора 12.',
+                    'Объект: гражданские лица, 7 человек.',
+                    'Метод: наземный транспорт, прикрытие.',
+                    'Время выполнения: 24 часа.',
+                    'Кодовое слово: «КОВЧЕГ».'
+                ]
+            }];
 
             // ============================================================
-            // 3. ЛОГИ (РАСШИРЕННЫЙ ЗАГРУЗОЧНЫЙ ЭКРАН)
+            // 3. ЗАГРУЗОЧНЫЕ ЛОГИ (СИСТЕМА БЕЗОПАСНОСТИ)
             // ============================================================
-            const LOGS = [
-                { text: '> ИНИЦИАЛИЗАЦИЯ ЯДРА СИСТЕМЫ AURUM...', cls: 'dim', delay: 180 },
-                { text: '> ЗАГРУЗКА МОДУЛЕЙ БЕЗОПАСНОСТИ...', cls: 'dim', delay: 220 },
-                { text: '> ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ СВЯЗИ...', cls: 'dim', delay: 190 },
-                { text: '> УСТАНОВЛЕНИЕ ЗАЩИЩЁННОГО СОЕДИНЕНИЯ...', cls: 'dim', delay: 240 },
-                { text: '> ВЕРИФИКАЦИЯ УЧЁТНЫХ ДАННЫХ ОПЕРАТИВНИКА...', cls: 'dim', delay: 260 },
-                { text: '> РАСШИФРОВКА ПРОФИЛЯ АГЕНТА...', cls: 'dim', delay: 210 },
-                { text: '> ПРОФИЛЬ: QUARTZ // ДОПУСК: УРОВЕНЬ 3', cls: 'green', delay: 200 },
-                { text: '> СИНХРОНИЗАЦИЯ С ЦЕНТРАЛЬНЫМ УЗЛОМ...', cls: 'dim', delay: 230 },
-                { text: '> ЗАГРУЗКА ПОСЛЕДНИХ ОПЕРАТИВНЫХ СВОДОК...', cls: 'dim', delay: 190 },
-                { text: '> ДОСТУП РАЗРЁШЕН. ПРИВЕТСТВУЕМ, ОПЕРАТИВНИК.', cls: 'green', delay: 300 },
-                { text: '> ЗАГРУЗКА АКТИВНОГО ЗАДАНИЯ...', cls: 'dim', delay: 180 },
-                { text: '> РАСШИФРОВКА ДАННЫХ...', cls: 'dim', delay: 260 },
-                { text: '> ПРОВЕРКА ЭЛЕКТРОННОЙ ПОДПИСИ...', cls: 'dim', delay: 210 },
-                { text: '> ПОДПИСЬ ВЕРИФИЦИРОВАНА.', cls: 'green', delay: 150 },
-                { text: '> ГОТОВО.', cls: 'green', delay: 120 },
-                { text: '', cls: 'separator', delay: 80 },
-                // Заголовок задания
-                { text: `[ ${TASK.classification} ]`, cls: 'red', delay: 200 },
-                { text: `# ${TASK.code}`, cls: 'dim', delay: 120 },
-                { text: `[ СТАТУС: ${TASK.status} ]`, cls: 'green', delay: 160 },
-                { text: `[ ДОПУСК: ${TASK.clearance} ]`, cls: 'red', delay: 140 },
+            const BOOT_LOGS = [
+                { text: '▸ ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ БЕЗОПАСНОСТИ AURUM...', cls: 'dim', delay: 140 },
+                { text: '▸ ЗАГРУЗКА КРИПТОГРАФИЧЕСКИХ МОДУЛЕЙ...', cls: 'dim', delay: 170 },
+                { text: '▸ ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ СВЯЗИ...', cls: 'dim', delay: 150 },
+                { text: '▸ УСТАНОВЛЕНИЕ ЗАЩИЩЁННОГО СОЕДИНЕНИЯ...', cls: 'dim', delay: 190 },
+                { text: '▸ ВЕРИФИКАЦИЯ УЧЁТНЫХ ДАННЫХ...', cls: 'dim', delay: 160 },
+                { text: '▸ РАСШИФРОВКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ...', cls: 'dim', delay: 200 },
+                { text: '▸ ПРОФИЛЬ: СОТРУДНИК // ДОПУСК: УРОВЕНЬ 3', cls: 'green', delay: 180 },
+                { text: '▸ ЗАПРОС КОДА ШИФРОВАНИЯ...', cls: 'amber', delay: 160 },
+                { text: '▸ ВВЕДИТЕ КОД: [СИСТЕМА ОЖИДАЕТ]', cls: 'bright', delay: 200 },
                 { text: '', cls: 'separator', delay: 100 },
-                // Тело задания
-                ...TASK.body.map((line, i) => ({
-                    text: `  ${line}`,
-                    cls: i === TASK.body.length - 1 ? 'bright' : '',
-                    delay: 130
-                })),
-                { text: '', cls: 'separator', delay: 100 },
-                { text: '> ЗАДАНИЕ ЗАГРУЖЕНО. ОЖИДАЙТЕ ДАЛЬНЕЙШИХ УКАЗАНИЙ.', cls: 'green', delay: 280 },
-                { text: '> ДЛЯ ПОДТВЕРЖДЕНИЯ ВВЕДИТЕ КОДОВОЕ СЛОВО.', cls: 'dim', delay: 200 },
-                { text: '> ИЛИ ИСПОЛЬЗУЙТЕ КНОПКИ УПРАВЛЕНИЯ.', cls: 'dim', delay: 160 },
+                // Ввод кода (имитация)
+                { text: '▸ КОД ПРИНЯТ: 7F-3A-92', cls: 'cyan', delay: 300 },
+                { text: '▸ РАСШИФРОВКА КЛЮЧА...', cls: 'dim', delay: 220 },
+                { text: '▸ КЛЮЧ ВЕРИФИЦИРОВАН.', cls: 'green', delay: 150 },
+                { text: '▸ ЗАПУСК СКАНИРОВАНИЯ ОКРУЖАЮЩЕЙ СРЕДЫ...', cls: 'dim', delay: 180 },
+                { text: '▸ УГРОЗ НЕ ОБНАРУЖЕНО.', cls: 'green', delay: 130 },
+                { text: '▸ СИНХРОНИЗАЦИЯ С ЦЕНТРАЛЬНЫМ УЗЛОМ...', cls: 'dim', delay: 200 },
+                { text: '▸ ОБНОВЛЕНИЕ СПИСКА АКТИВНЫХ ЗАДАНИЙ...', cls: 'dim', delay: 160 },
+                { text: '▸ ЗАГРУЗКА ДАННЫХ УСПЕШНА.', cls: 'green', delay: 140 },
+                { text: '▸ СИСТЕМА ГОТОВА К РАБОТЕ.', cls: 'green', delay: 180 },
+                { text: '', cls: 'separator', delay: 200 },
+                { text: '▸ ДОБРО ПОЖАЛОВАТЬ В СИСТЕМУ AURUM.', cls: 'bright', delay: 300 },
             ];
 
             // ============================================================
             // 4. ПЕЧАТЬ СТРОК
             // ============================================================
             let lineIndex = 0;
-            let isCompleted = false;
+            let isBootComplete = false;
 
             function typeLine() {
-                if (lineIndex >= LOGS.length) {
-                    if (!isCompleted) {
-                        isCompleted = true;
-                        showActions();
+                if (lineIndex >= BOOT_LOGS.length) {
+                    if (!isBootComplete) {
+                        isBootComplete = true;
+                        setTimeout(showMainPage, 600);
                     }
                     return;
                 }
 
-                const entry = LOGS[lineIndex];
+                const entry = BOOT_LOGS[lineIndex];
                 const div = document.createElement('div');
                 div.className = `line ${entry.cls || ''}`.trim();
-                div.textContent = entry.text || '\u00A0';
+
+                if (entry.text.includes('ВВЕДИТЕ КОД')) {
+                    div.innerHTML = `${entry.text} <span class="cursor-blink"></span>`;
+                } else {
+                    div.textContent = entry.text || '\u00A0';
+                }
+
                 output.appendChild(div);
                 scrollToBottom();
 
                 lineIndex++;
-                const nextDelay = entry.delay || 200;
+                const nextDelay = entry.delay || 180;
                 setTimeout(typeLine, nextDelay);
             }
 
@@ -641,68 +752,308 @@
             }
 
             // ============================================================
-            // 5. КНОПКИ ДЕЙСТВИЙ
+            // 5. ГЛАВНАЯ СТРАНИЦА
             // ============================================================
-            function showActions() {
-                const container = document.createElement('div');
-                container.className = 'actions';
-                container.innerHTML = `
-                    <button class="btn btn-primary" id="btnAccept">ПРИНЯТЬ</button>
-                    <button class="btn btn-danger" id="btnReject">ОТКАЗАТЬСЯ</button>
-                    <button class="btn" id="btnInfo">ЗАПРОС ДАННЫХ</button>
+            function showMainPage() {
+                if (isMainPageShown) return;
+                isMainPageShown = true;
+
+                // Очищаем вывод, но оставляем загрузочные строки
+                output.innerHTML = '';
+
+                // Создаём структуру главной страницы
+                const mainDiv = document.createElement('div');
+                mainDiv.className = 'main-panel';
+                mainDiv.innerHTML = `
+                    <!-- Левое меню -->
+                    <div class="menu-panel">
+                        <div class="menu-item active" data-page="tasks">📋 ЗАДАНИЯ</div>
+                        <div class="menu-item" data-page="archive">📦 АРХИВ</div>
+                        <div class="menu-item" data-page="comms">📡 СВЯЗЬ</div>
+                        <div class="menu-item" data-page="profile">👤 ПРОФИЛЬ</div>
+                        <div class="menu-item" style="margin-top:12px; color:var(--red);" data-page="logout">⏻ ВЫХОД</div>
+                    </div>
+
+                    <!-- Центральный контент -->
+                    <div class="content-panel" id="contentPanel">
+                        <div class="section-title">▸ АКТИВНЫЕ ЗАДАНИЯ</div>
+                        <div id="taskList"></div>
+                    </div>
+
+                    <!-- Правая панель — лог -->
+                    <div class="log-panel">
+                        <div class="section-title">▸ ЛОГ ДЕЙСТВИЙ</div>
+                        <div id="logContainer">
+                            <div class="log-entry"><span class="time">[СИСТЕМА]</span> <span class="action-green">СЕССИЯ ЗАПУЩЕНА</span></div>
+                        </div>
+                    </div>
                 `;
-                output.appendChild(container);
+
+                output.appendChild(mainDiv);
                 scrollToBottom();
 
-                document.getElementById('btnAccept').addEventListener('click', () => {
-                    addLine('> КОДОВОЕ СЛОВО ПРИНЯТО. ЗАДАНИЕ ПОДТВЕРЖДЕНО.', 'green');
-                    addLine('> ОПЕРАТИВНИК QUARTZ, ВЫ НАЗНАЧЕНЫ ИСПОЛНИТЕЛЕМ.', 'bright');
-                    addLine('> ВРЕМЯ ВЫПОЛНЕНИЯ: 72 ЧАСА.', 'dim');
-                    addLine('> ДАННЫЕ ЗАФИКСИРОВАНЫ В СИСТЕМЕ.', 'dim');
-                    disableButtons();
+                // Рендерим задания
+                renderTasks();
+
+                // Добавляем логи
+                addLog('СИСТЕМА', 'ЗАГРУЗКА ДАННЫХ ЗАВЕРШЕНА', 'action-green');
+
+                // Обработчики меню
+                document.querySelectorAll('.menu-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                        this.classList.add('active');
+                        const page = this.dataset.page;
+                        if (page === 'tasks') {
+                            renderTasks();
+                            addLog('СИСТЕМА', 'ПЕРЕХОД К ЗАДАНИЯМ', 'action');
+                        } else if (page === 'archive') {
+                            renderArchive();
+                            addLog('СИСТЕМА', 'ОТКРЫТ АРХИВ', 'action');
+                        } else if (page === 'comms') {
+                            renderComms();
+                            addLog('СИСТЕМА', 'ОТКРЫТ КАНАЛ СВЯЗИ', 'action');
+                        } else if (page === 'profile') {
+                            renderProfile();
+                            addLog('СИСТЕМА', 'ПРОСМОТР ПРОФИЛЯ', 'action');
+                        } else if (page === 'logout') {
+                            addLog('СИСТЕМА', 'ЗАПРОС ВЫХОДА', 'action-red');
+                            setTimeout(() => {
+                                location.reload();
+                            }, 800);
+                        }
+                    });
                 });
 
-                document.getElementById('btnReject').addEventListener('click', () => {
-                    addLine('> ОТКАЗ ЗАФИКСИРОВАН. ЗАДАНИЕ БУДЕТ ПЕРЕДАНО ДРУГОМУ АГЕНТУ.', 'red');
-                    addLine('> ВАШ ПРОФИЛЬ ПОМЕЧЕН. ОЖИДАЙТЕ СВЯЗИ С КОМАНДОВАНИЕМ.', 'dim');
-                    disableButtons();
-                });
-
-                document.getElementById('btnInfo').addEventListener('click', () => {
-                    addLine('> ЗАПРОС ДОПОЛНИТЕЛЬНЫХ ДАННЫХ ОТПРАВЛЕН.', 'dim');
-                    addLine('> ОЖИДАЙТЕ ОТВЕТА В ТЕЧЕНИЕ 5 МИНУТ.', 'dim');
-                });
-            }
-
-            function addLine(text, cls = '') {
-                const div = document.createElement('div');
-                div.className = `line ${cls}`.trim();
-                div.textContent = text;
-                output.appendChild(div);
-                scrollToBottom();
-            }
-
-            function disableButtons() {
-                document.querySelectorAll('.actions .btn').forEach(btn => {
-                    btn.disabled = true;
-                    btn.style.opacity = '0.25';
-                });
-                setTimeout(() => {
-                    const div = document.createElement('div');
-                    div.className = 'line dim';
-                    div.textContent = '⏻ СЕССИЯ ЗАВЕРШЕНА. ОЖИДАЙТЕ НОВЫХ ЗАДАНИЙ.';
-                    div.style.marginTop = '16px';
-                    div.style.paddingTop = '14px';
-                    div.style.borderTop = '1px solid rgba(255,255,255,0.03)';
-                    div.style.fontSize = '11px';
-                    div.style.color = '#444';
-                    output.appendChild(div);
-                    scrollToBottom();
-                }, 600);
+                // Активируем эффекты на главной
+                setInterval(triggerGlitch, 3000);
             }
 
             // ============================================================
-            // 6. СЧЁТЧИК ВРЕМЕНИ
+            // 6. РЕНДЕРИНГ ЗАДАНИЙ
+            // ============================================================
+            function renderTasks() {
+                const container = document.getElementById('taskList');
+                if (!container) return;
+                container.innerHTML = '';
+
+                // Уведомление о новом задании
+                const notif = document.createElement('div');
+                notif.className = 'notification';
+                notif.innerHTML = `
+                    <span class="text">📨 НОВОЕ СООБЩЕНИЕ ОТ КОМАНДОВАНИЯ</span>
+                    <button class="btn-small" id="notifBtn">ОТКРЫТЬ</button>
+                `;
+                container.appendChild(notif);
+
+                document.getElementById('notifBtn').addEventListener('click', () => {
+                    addLog('СИСТЕМА', 'ОТКРЫТО УВЕДОМЛЕНИЕ', 'action');
+                    // Показываем первое задание
+                    showTaskDetail(0);
+                });
+
+                TASKS.forEach((task, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'task-card';
+                    card.innerHTML = `
+                        <div class="code">${task.code} // ${task.clearance}</div>
+                        <div class="title">${task.title}</div>
+                        <div class="meta">
+                            <span class="status-active">● ${task.status}</span>
+                            <span class="priority-high">⚡ ${task.priority}</span>
+                            <span style="color:var(--text-dim);">${task.body.length} пунктов</span>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => {
+                        addLog('СИСТЕМА', `ОТКРЫТО ЗАДАНИЕ ${task.code}`, 'action');
+                        showTaskDetail(index);
+                    });
+                    container.appendChild(card);
+                });
+                scrollToBottom();
+            }
+
+            // ============================================================
+            // 7. ДЕТАЛЬНЫЙ ПРОСМОТР ЗАДАНИЯ
+            // ============================================================
+            function showTaskDetail(index) {
+                const task = TASKS[index];
+                if (!task) return;
+
+                const panel = document.getElementById('contentPanel');
+                if (!panel) return;
+
+                panel.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <div class="section-title" style="margin-bottom:0;">▸ ЗАДАНИЕ ${task.code}</div>
+                        <button class="btn-small" id="backBtn" style="font-size:8px; padding:4px 12px; background:transparent; border:1px solid rgba(255,255,255,0.05); color:var(--text-dim); cursor:pointer; font-family:var(--font);">← НАЗАД</button>
+                    </div>
+                    <div style="border:1px solid rgba(255,255,255,0.03); padding:14px 16px;">
+                        <div style="color:var(--red); font-size:9px; letter-spacing:0.1em; margin-bottom:4px;">${task.clearance} // ${task.classification || 'СЕКРЕТНО'}</div>
+                        <div style="color:var(--text-bright); font-size:15px; font-weight:700; margin:4px 0 6px;">${task.title}</div>
+                        <div style="font-size:9px; color:var(--text-dim); display:flex; gap:14px; flex-wrap:wrap; margin-bottom:10px;">
+                            <span style="color:var(--green);">● ${task.status}</span>
+                            <span style="color:var(--red);">⚡ ${task.priority}</span>
+                            <span>⏱ ${task.body[3] || '72 часа'}</span>
+                        </div>
+                        <div style="border-top:1px solid rgba(255,255,255,0.03); padding-top:10px;">
+                            ${task.body.map(p => `<p style="margin:4px 0; font-size:12px;">${p}</p>`).join('')}
+                        </div>
+                        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
+                            <button class="btn btn-primary" id="acceptTaskBtn">ПРИНЯТЬ</button>
+                            <button class="btn btn-danger" id="rejectTaskBtn">ОТКАЗАТЬСЯ</button>
+                            <button class="btn" id="infoTaskBtn">ЗАПРОС ДАННЫХ</button>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('backBtn').addEventListener('click', () => {
+                    addLog('СИСТЕМА', 'ВОЗВРАТ К СПИСКУ ЗАДАНИЙ', 'action');
+                    renderTasks();
+                    const panel2 = document.getElementById('contentPanel');
+                    if (panel2) {
+                        panel2.innerHTML = `
+                            <div class="section-title">▸ АКТИВНЫЕ ЗАДАНИЯ</div>
+                            <div id="taskList"></div>
+                        `;
+                        renderTasks();
+                    }
+                });
+
+                document.getElementById('acceptTaskBtn').addEventListener('click', () => {
+                    addLog('ЗАДАНИЕ', `ПРИНЯТО: ${task.code}`, 'action-green');
+                    const msg = document.createElement('div');
+                    msg.style.cssText =
+                        'color:var(--green); font-size:11px; margin-top:8px; padding:8px; border:1px solid rgba(0,255,65,0.1);';
+                    msg.textContent = '✓ ЗАДАНИЕ ПРИНЯТО. ДАННЫЕ ЗАФИКСИРОВАНЫ.';
+                    document.querySelector('.task-body')?.appendChild(msg);
+                });
+
+                document.getElementById('rejectTaskBtn').addEventListener('click', () => {
+                    addLog('ЗАДАНИЕ', `ОТКАЗ ОТ ${task.code}`, 'action-red');
+                    const msg = document.createElement('div');
+                    msg.style.cssText =
+                        'color:var(--red); font-size:11px; margin-top:8px; padding:8px; border:1px solid rgba(255,26,26,0.1);';
+                    msg.textContent = '✗ ОТКАЗ ЗАФИКСИРОВАН. ЗАДАНИЕ ПЕРЕДАНО ДРУГОМУ АГЕНТУ.';
+                    document.querySelector('.task-body')?.appendChild(msg);
+                });
+
+                document.getElementById('infoTaskBtn').addEventListener('click', () => {
+                    addLog('ЗАДАНИЕ', `ЗАПРОС ДАННЫХ: ${task.code}`, 'action');
+                    const msg = document.createElement('div');
+                    msg.style.cssText =
+                        'color:var(--amber); font-size:11px; margin-top:8px; padding:8px; border:1px solid rgba(255,179,71,0.1);';
+                    msg.textContent = '⏳ ЗАПРОС ОТПРАВЛЕН. ОЖИДАЙТЕ ОТВЕТА.';
+                    document.querySelector('.task-body')?.appendChild(msg);
+                });
+
+                scrollToBottom();
+            }
+
+            // ============================================================
+            // 8. АРХИВ
+            // ============================================================
+            function renderArchive() {
+                const panel = document.getElementById('contentPanel');
+                if (!panel) return;
+                panel.innerHTML = `
+                    <div class="section-title">▸ АРХИВ ВЫПОЛНЕННЫХ ЗАДАНИЙ</div>
+                    <div style="color:var(--text-dim); font-size:11px; padding:20px 0; text-align:center; border:1px solid rgba(255,255,255,0.03);">
+                        АРХИВ ПУСТ. <span style="color:var(--text);">НЕТ ВЫПОЛНЕННЫХ ЗАДАНИЙ.</span>
+                    </div>
+                `;
+                scrollToBottom();
+            }
+
+            // ============================================================
+            // 9. СВЯЗЬ
+            // ============================================================
+            function renderComms() {
+                const panel = document.getElementById('contentPanel');
+                if (!panel) return;
+                panel.innerHTML = `
+                    <div class="section-title">▸ КАНАЛ СВЯЗИ С КОМАНДОВАНИЕМ</div>
+                    <div style="border:1px solid rgba(255,255,255,0.03); padding:14px;">
+                        <div style="font-size:10px; color:var(--text-dim); margin-bottom:8px;">ВВЕДИТЕ СООБЩЕНИЕ ДЛЯ КОМАНДОВАНИЯ:</div>
+                        <textarea id="commsInput" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.05); color:var(--text); padding:10px; font-family:var(--font); font-size:11px; min-height:80px; resize:vertical;"></textarea>
+                        <button class="btn btn-primary" id="commsSendBtn" style="margin-top:10px;">ОТПРАВИТЬ</button>
+                        <div id="commsResponse" style="margin-top:10px;"></div>
+                    </div>
+                `;
+
+                document.getElementById('commsSendBtn').addEventListener('click', () => {
+                    const input = document.getElementById('commsInput');
+                    const response = document.getElementById('commsResponse');
+                    if (!input.value.trim()) {
+                        response.innerHTML = '<span style="color:var(--red); font-size:10px;">⚠ СООБЩЕНИЕ НЕ МОЖЕТ БЫТЬ ПУСТЫМ</span>';
+                        return;
+                    }
+                    response.innerHTML = '<span style="color:var(--amber); font-size:10px;">⏳ ШИФРОВАНИЕ СООБЩЕНИЯ...</span>';
+                    setTimeout(() => {
+                        response.innerHTML =
+                            '<span style="color:var(--green); font-size:10px;">✓ СООБЩЕНИЕ ОТПРАВЛЕНО. ОЖИДАЙТЕ ОТВЕТА.</span>';
+                        addLog('СВЯЗЬ', 'СООБЩЕНИЕ ОТПРАВЛЕНО КОМАНДОВАНИЮ', 'action-green');
+                        input.value = '';
+                    }, 1200);
+                });
+                scrollToBottom();
+            }
+
+            // ============================================================
+            // 10. ПРОФИЛЬ
+            // ============================================================
+            function renderProfile() {
+                const panel = document.getElementById('contentPanel');
+                if (!panel) return;
+                panel.innerHTML = `
+                    <div class="section-title">▸ ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ</div>
+                    <div style="border:1px solid rgba(255,255,255,0.03); padding:16px;">
+                        <div style="display:grid; grid-template-columns:120px 1fr; gap:6px; font-size:11px;">
+                            <span style="color:var(--text-dim);">ПОЗЫВНОЙ:</span>
+                            <span style="color:var(--text-bright);">СОТРУДНИК</span>
+                            <span style="color:var(--text-dim);">УРОВЕНЬ ДОПУСКА:</span>
+                            <span style="color:var(--red);">3</span>
+                            <span style="color:var(--text-dim);">СТАТУС:</span>
+                            <span style="color:var(--green);">АКТИВЕН</span>
+                            <span style="color:var(--text-dim);">ВРЕМЯ В СИСТЕМЕ:</span>
+                            <span style="color:var(--text);" id="profileTime">--:--:--</span>
+                            <span style="color:var(--text-dim);">ВЫПОЛНЕНО ЗАДАНИЙ:</span>
+                            <span style="color:var(--text);">0</span>
+                        </div>
+                    </div>
+                `;
+                // Обновляем время в профиле
+                const updateProfileTime = () => {
+                    const el = document.getElementById('profileTime');
+                    if (el) el.textContent = sessionTimeEl.textContent;
+                };
+                setInterval(updateProfileTime, 1000);
+                scrollToBottom();
+            }
+
+            // ============================================================
+            // 11. ЛОГ ДЕЙСТВИЙ
+            // ============================================================
+            function addLog(source, message, type = 'action') {
+                const container = document.getElementById('logContainer');
+                if (!container) return;
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                entry.innerHTML = `
+                    <span class="time">[${time}]</span>
+                    <span class="${type}">${source} // ${message}</span>
+                `;
+                container.appendChild(entry);
+                // Ограничиваем количество записей
+                while (container.children.length > 30) {
+                    container.removeChild(container.firstChild);
+                }
+                scrollToBottom();
+            }
+
+            // ============================================================
+            // 12. СЧЁТЧИК ВРЕМЕНИ
             // ============================================================
             let seconds = 0;
 
@@ -715,10 +1066,10 @@
             }
 
             // ============================================================
-            // 7. ГЛИТЧ-ЭФФЕКТЫ
+            // 13. ГЛИТЧ-ЭФФЕКТЫ
             // ============================================================
             function triggerGlitch() {
-                if (Math.random() > 0.12) return;
+                if (Math.random() > 0.08) return;
                 glitchOverlay.classList.add('active');
                 setTimeout(() => {
                     glitchOverlay.classList.remove('active');
@@ -726,39 +1077,35 @@
             }
 
             // ============================================================
-            // 8. ДОПОЛНИТЕЛЬНЫЕ ТЕХНИЧЕСКИЕ СООБЩЕНИЯ (АТМОСФЕРА)
+            // 14. ЗАПУСК
             // ============================================================
-            function addRandomMessage() {
-                if (Math.random() > 0.6) return;
+            setTimeout(typeLine, 300);
+            setInterval(updateTime, 1000);
+            setInterval(triggerGlitch, 2000);
+
+            // Дополнительные случайные сообщения (атмосфера)
+            setInterval(() => {
+                if (Math.random() > 0.5 || !isMainPageShown) return;
                 const msgs = [
-                    '> СИНХРОНИЗАЦИЯ ДАННЫХ...',
-                    '> ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ...',
-                    '> ОБНОВЛЕНИЕ КЭША БЕЗОПАСНОСТИ...',
-                    '> ОПРОС УЗЛОВ СЕТИ...',
-                    '> СКАНИРОВАНИЕ ОКРУЖАЮЩЕЙ СРЕДЫ...',
-                    '> ВЕРИФИКАЦИЯ ПОСЛЕДНИХ ИЗМЕНЕНИЙ...',
-                    '> ПРОВЕРКА АКТИВНЫХ ПРОЦЕССОВ...'
+                    'СИНХРОНИЗАЦИЯ ДАННЫХ...',
+                    'ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ...',
+                    'ОБНОВЛЕНИЕ КЭША БЕЗОПАСНОСТИ...',
+                    'ОПРОС УЗЛОВ СЕТИ...',
+                    'СКАНИРОВАНИЕ ОКРУЖАЮЩЕЙ СРЕДЫ...',
+                    'ВЕРИФИКАЦИЯ АКТИВНЫХ ПРОЦЕССОВ...'
                 ];
                 const div = document.createElement('div');
                 div.className = 'line dim';
-                div.textContent = msgs[Math.floor(Math.random() * msgs.length)];
-                div.style.opacity = '0.2';
-                div.style.fontSize = '10px';
-                div.style.color = '#444';
+                div.textContent = '> ' + msgs[Math.floor(Math.random() * msgs.length)];
+                div.style.opacity = '0.15';
+                div.style.fontSize = '9px';
+                div.style.color = '#333';
                 output.appendChild(div);
                 scrollToBottom();
-                setTimeout(() => div.remove(), 1200);
-            }
+                setTimeout(() => div.remove(), 1500);
+            }, 5000);
 
-            // ============================================================
-            // 9. ЗАПУСК
-            // ============================================================
-            setTimeout(typeLine, 400);
-            setInterval(updateTime, 1000);
-            setInterval(triggerGlitch, 2500);
-            setInterval(addRandomMessage, 4000);
-
-            console.log('AURUM TERMINAL v5.0 // ЗАПУЩЕН');
+            console.log('AURUM SECURITY TERMINAL v6.0 // ЗАПУЩЕН');
         })();
     </script>
 </body>
