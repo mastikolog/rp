@@ -283,27 +283,42 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 <div class="toast" id="toast"><div class="t" id="toastTitle"></div><div class="m" id="toastMsg"></div></div>
 
 <script>
+// ============================================================
+// ОСНОВНОЙ JS — ВСЯ ЛОГИКА В ОДНОМ МЕСТЕ
+// ============================================================
 (() => {
 "use strict";
 
-let audit=[];
-const state={
- page:"overview", accepted:new Set(), audit:[], booted:false,
- user:{name:"Оператор",role:"operator",code:"",level:"SPMG-IV"},
- audio:null
+// ============================================================
+// 1. СОСТОЯНИЕ
+// ============================================================
+const state = {
+  page: "overview",
+  accepted: new Set(),
+  audit: [],
+  booted: false,
+  user: { name: "Оператор", role: "operator", code: "", level: "SPMG-IV" },
+  audio: null
 };
-try{state.audit=JSON.parse(localStorage.getItem("spmg04_audit")||"[]")}catch(e){state.audit=[]}
 
-const operations=[
+try {
+  const saved = localStorage.getItem("spmg04_audit");
+  if (saved) state.audit = JSON.parse(saved);
+} catch (e) { state.audit = []; }
+
+// ============================================================
+// 2. ДАННЫЕ
+// ============================================================
+const operations = [
   {
-    id:"OP-57-001",
-    status:"ACTIVE",
-    class:"SPMG-IV",
-    priority:"СРЕДНИЙ",
-    title:"ПРОВЕРКА КАНАЛА СВЯЗИ",
-    date:"11.08.2057",
-    desc:"Тестовая оперативная задача для демонстрации формата документа.",
-    body:`Подключение к системе....
+    id: "OP-57-001",
+    status: "ACTIVE",
+    class: "SPMG-IV",
+    priority: "СРЕДНИЙ",
+    title: "ПРОВЕРКА КАНАЛА СВЯЗИ",
+    date: "11.08.2057",
+    desc: "Тестовая оперативная задача.",
+    body: `Подключение к системе....
 Обработка данных....
 Передача сообщения....
 ВНИМАНИЕ // ДОКУМЕНТ ОГРАНИЧЕН УРОВНЕМ ДОПУСКА SPMG-IV.
@@ -313,437 +328,589 @@ const operations=[
 Отсоединение....
 Шифрование....
 ПЕРЕДАЧА ЗАВЕРШЕНА.`,
-    custom:false
+    custom: false
   }
 ];
 
-const intelligence=[
- {id:"IR-57-042",type:"FIELD REPORT",confidence:"78%",title:"НЕЗАРЕГИСТРИРОВАННОЕ ДВИЖЕНИЕ // СЕКТОР 04",date:"11.08.2057",desc:"Полевое наблюдение фиксирует повторную активность возле объекта.",body:`ИСТОЧНИК: ПОЛЕВЫЕ ОПЕРАЦИИ
-ДОВЕРИЕ: 78%
-
-Объект, ранее считавшийся неактивным, демонстрирует признаки движения.
-
-Дополнительная проверка продолжается.`}
+const intelligence = [
+  { id: "IR-57-042", type: "FIELD REPORT", confidence: "78%", title: "НЕЗАРЕГИСТРИРОВАННОЕ ДВИЖЕНИЕ // СЕКТОР 04", date: "11.08.2057", desc: "Полевое наблюдение фиксирует повторную активность.", body: "ИСТОЧНИК: ПОЛЕВЫЕ ОПЕРАЦИИ\nДОВЕРИЕ: 78%\n\nОбъект, ранее считавшийся неактивным, демонстрирует признаки движения." }
 ];
 
-const bulletins=[
- {id:"BL-2057-0811",title:"ВРЕМЕННЫЕ ОГРАНИЧЕНИЯ // СЕКТОР 04",date:"11.08.2057",level:"INTERNAL",body:"Доступ к сектору 04 ограничен до особого распоряжения."},
- {id:"BL-2057-0810",title:"ИЗМЕНЕНИЕ ПРОТОКОЛА СВЯЗИ",date:"10.08.2057",level:"INTERNAL",body:"Перед чувствительными операциями проверять резервный канал."}
+const bulletins = [
+  { id: "BL-2057-0811", title: "ВРЕМЕННЫЕ ОГРАНИЧЕНИЯ // СЕКТОР 04", date: "11.08.2057", level: "INTERNAL", body: "Доступ к сектору 04 ограничен до особого распоряжения." }
 ];
 
-const documents=[
- {id:"DOC-14-A",class:"SPMG-II",title:"ПРОТОКОЛ СВЯЗИ // РЕД. 4",date:"02.08.2057",body:"Устанавливает порядок проверки каналов связи перед операциями."}
+const documents = [
+  { id: "DOC-14-A", class: "SPMG-II", title: "ПРОТОКОЛ СВЯЗИ // РЕД. 4", date: "02.08.2057", body: "Устанавливает порядок проверки каналов связи перед операциями." }
 ];
 
-const $=s=>document.querySelector(s);
-const content=$("#content"), modal=$("#modal");
+// ============================================================
+// 3. DOM-ХЕЛПЕРЫ
+// ============================================================
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+const content = $("#content");
+const modal = $("#modal");
 
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function uid(){return Math.random().toString(36).slice(2,8).toUpperCase()}
-function now(){return new Date().toLocaleTimeString("ru-RU",{hour12:false})}
-function glitch(){const g=$("#glitch");g.classList.add("on");setTimeout(()=>g.classList.remove("on"),190)}
-function toast(title,msg){$("#toastTitle").textContent=title;$("#toastMsg").textContent=msg;$("#toast").classList.add("show");setTimeout(()=>$("#toast").classList.remove("show"),3500)}
-function log(type,msg){
- const entry={time:now(),type,msg,user:state.user?.name||"Оператор",role:state.user?.role||"operator"};
- state.audit.unshift(entry);
- if(state.audit.length>200)state.audit.pop();
- try{localStorage.setItem("spmg04_audit",JSON.stringify(state.audit))}catch(e){}
- renderRightFeed();
-}
+// ============================================================
+// 4. УТИЛИТЫ
+// ============================================================
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c])); }
+function uid() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
+function now() { return new Date().toLocaleTimeString("ru-RU", { hour12: false }); }
 
-function openModal(title,body,actions=""){
- $("#modalTitle").textContent=title;$("#modalBody").innerHTML=body+actions;modal.classList.remove("hidden");glitch();
-}
-$("#closeModal").onclick=()=>modal.classList.add("hidden");
-modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.add("hidden")});
-
-function card(item,type){
- let status=item.status||item.level||item.type;
- let extra=item.deadline?`<span>СРОК ${esc(item.deadline)}</span>`:`<span>${esc(item.date)}</span>`;
- return `<div class="row" data-open="${esc(item.id)}" data-type="${type}">
-   <div class="rowtop"><span class="code">${esc(item.id)}</span><span class="status ${String(status).toLowerCase().includes("active")?"active":String(status).toLowerCase().includes("critical")?"alert":"closed"}">${esc(status)}</span></div>
-   <div class="rowtitle">${esc(item.title)}</div><div class="rowdesc">${esc(item.desc||"")}</div>
-   <div class="tags"><span class="tag">${esc(item.class||item.type||item.level)}</span>${extra}</div>
- </div>`
+function glitch() {
+  const g = $("#glitch");
+  g.classList.add("on");
+  setTimeout(() => g.classList.remove("on"), 190);
 }
 
-function head(kicker,title,actions=""){
- return `<div class="pagehead"><div><div class="kicker">${kicker}</div><h1>${title}</h1></div><div class="pageactions">${actions}</div></div>`
-}
-function panel(title,html,minor=""){
- return `<section class="panel"><div class="panelhead"><span>${title}</span><span class="minor">${minor}</span></div>${html}</section>`
-}
-
-function renderOverview(){
- const active=operations.filter(x=>x.status==="ACTIVE").length;
- content.innerHTML=head("SPMG // ВНУТРЕННЯЯ ОПЕРАТИВНАЯ СЕТЬ","ОБЗОР",`<button class="btn" onclick="window.refreshPortal()">ОБНОВИТЬ СЕТЬ</button>`)+
- `<div class="metrics">
-   <div class="metric"><div class="label">АКТИВНЫЕ РАСПОРЯЖЕНИЯ</div><strong>${String(active).padStart(2,"0")}</strong><div class="sub">ТЕКУЩИЕ ОПЕРАЦИИ</div></div>
-   <div class="metric"><div class="label">РАЗВЕДДАННЫЕ</div><strong>${intelligence.length}</strong><div class="sub">АКТУАЛЬНЫЕ</div></div>
-   <div class="metric alert"><div class="label">ОЦЕНКА УГРОЗЫ</div><strong>ПОВЫШЕННЫЙ</strong><div class="sub">ТРЕБУЕТСЯ ПРОВЕРКА</div></div>
-   <div class="metric"><div class="label">ЦЕЛОСТНОСТЬ УЗЛОВ</div><strong>98.7%</strong><div class="sub">SPMG-04</div></div>
- </div>
- <div class="grid2">
-  <div>
-   ${panel("АКТИВНЫЕ ОПЕРАЦИИ",operations.map(x=>card(x,"operation")).join(""),operations.length+" ЗАПИСЕЙ")}
-   ${panel("РАЗВЕДДАННЫЕ",intelligence.map(x=>card(x,"intelligence")).join(""),"ПОСЛЕДНИЕ")}
-  </div>
-  <div>
-   ${panel("ТЕКУЩЕЕ УВЕДОМЛЕНИЕ",`<div style="padding:14px"><div class="notice"><strong>SEC-57-0811 // СТАТУС СЕАНСА</strong>Аномалия сеанса устранена автоматически. Действий не требуется.</div><div style="font:9px/1.7 var(--mono);color:#596166">ПОСЛЕДНЯЯ ПРОВЕРКА СИСТЕМЫ<br><span style="color:#9aa1a5">11.08.2057 // ${now()}</span><br><br>НЕПРЕРЫВНОСТЬ СЕАНСА<br><span style="color:#9aa1a5">ПОДТВЕРЖДЕНО</span></div></div>`,"БЕЗОПАСНОСТЬ")}
-   ${panel("ПОСЛЕДНИЕ ОБЪЯВЛЕНИЯ",bulletins.map(x=>`<div class="row" data-open="${x.id}" data-type="bulletin"><div class="rowtop"><span class="code">${x.id}</span><span>${x.date}</span></div><div class="rowtitle">${x.title}</div></div>`).join(""),bulletins.length)}
-  </div>
- </div>`;
- bindRows();
+function toast(title, msg) {
+  $("#toastTitle").textContent = title;
+  $("#toastMsg").textContent = msg;
+  $("#toast").classList.add("show");
+  setTimeout(() => $("#toast").classList.remove("show"), 3500);
 }
 
-function renderList(title,kicker,arr,type,minor){
- content.innerHTML=head(kicker,title)+panel(title.toUpperCase(),arr.length?arr.map(x=>card(x,type)).join(""):`<div class="empty">НЕТ ДОСТУПНЫХ МАТЕРИАЛОВ</div>`,minor);
- bindRows();
-}
-function renderArchive(){
- const archived=[...operations].map((x,i)=>({...x,status:i%2?"ВЫПОЛНЕНО":"АРХИВИРОВАНО"}));
- renderList("АРХИВ","SPMG // ЗАПИСИ",archived,"operation","ИСТОРИЧЕСКИЕ");
-}
-function renderAudit(){
- content.innerHTML=head("SPMG-04 // КОНТРОЛЬ ДЕЙСТВИЙ","ЖУРНАЛ ДЕЙСТВИЙ",`<button class="btn" onclick="window.clearLocalAudit()">ОЧИСТИТЬ ЛОКАЛЬНЫЕ СОБЫТИЯ</button>`)+
- panel("ЖУРНАЛ СОБЫТИЙ СЕАНСА",state.audit.map(x=>`<div class="row" style="cursor:default"><div class="rowtop"><span class="code">[${x.time}]</span><span>${x.type}</span></div><div class="rowtitle" style="font-family:var(--mono);font-size:10px">${esc(x.msg)}</div></div>`).join(""),`${state.audit.length} СОБЫТИЙ`);
-}
-function renderRightFeed(){
- const feed=$("#liveFeed");if(!feed)return;
- feed.innerHTML=state.audit.slice(0,8).map(x=>`<div class="feedline"><b>${x.time}</b><span class="type">${x.type}</span><strong>${esc(x.msg)}</strong></div>`).join("");
+function log(type, msg) {
+  const entry = { time: now(), type, msg, user: state.user?.name || "Оператор", role: state.user?.role || "operator" };
+  state.audit.unshift(entry);
+  if (state.audit.length > 200) state.audit.pop();
+  try { localStorage.setItem("spmg04_audit", JSON.stringify(state.audit)); } catch (e) {}
+  renderRightFeed();
 }
 
-function render(){
- if(state.page==="overview")renderOverview();
- if(state.page==="operations")renderList("ОПЕРАЦИИ","SPMG // ОПЕРАТИВНЫЕ РАСПОРЯЖЕНИЯ",operations,"operation","АКТИВНЫЕ");
- if(state.page==="intelligence")renderList("РАЗВЕДДАННЫЕ","SPMG // СБОР",intelligence,"intelligence","ПОСЛЕДНИЕ");
- if(state.page==="bulletins")renderList("ОБЪЯВЛЕНИЯ","SPMG // ВНУТРЕННИЕ КОММУНИКАЦИИ",bulletins,"bulletin","ТЕКУЩИЕ");
- if(state.page==="documents")renderList("ДОКУМЕНТЫ","SPMG // МАТЕРИАЛЫ",documents,"document","ОГРАНИЧЕННЫЙ ДОСТУП");
- if(state.page==="archive")renderArchive();
- if(state.page==="audit")renderAudit();
- renderRightFeed();
+// ============================================================
+// 5. МОДАЛЬНОЕ ОКНО
+// ============================================================
+function openModal(title, body, actions = "") {
+  $("#modalTitle").textContent = title;
+  $("#modalBody").innerHTML = body + actions;
+  modal.classList.remove("hidden");
+  glitch();
 }
-function bindRows(){
- document.querySelectorAll("[data-open]").forEach(el=>el.onclick=()=>openItem(el.dataset.type,el.dataset.open));
-}
-function find(type,id){
- const map={operation:operations,intelligence:intelligence,bulletin:bulletins,document:documents};
- return (map[type]||[]).find(x=>x.id===id);
-}
-function openItem(type,id){
- const item=find(type,id);if(!item)return;
- const fields=type==="operation"
- ? `<div class="field"><label>КЛАСС</label><span>${esc(item.class)}</span></div><div class="field"><label>ПРИОРИТЕТ</label><span>${esc(item.priority)}</span></div><div class="field"><label>ДАТА</label><span>${esc(item.date)}</span></div>`
- : `<div class="field"><label>КЛАСС</label><span>${esc(item.class||item.type||item.level)}</span></div><div class="field"><label>ДАТА</label><span>${esc(item.date)}</span></div>`;
- let actions="";
- if(type==="operation" && item.status==="ACTIVE"){
-   actions=`<div class="actions"><button class="btn" id="ack">ПОДТВЕРДИТЬ РАСПОРЯЖЕНИЕ</button><button class="btn" id="clarify">ЗАПРОСИТЬ УТОЧНЕНИЕ</button></div>`;
- }
- openModal(`${item.id} // ${item.title}`,`<div class="docgrid">${fields}</div><div class="prose">${esc(item.body)}</div>`,actions);
- log(type==="operation"?"OPS":"INTEL",`ОТКРЫТО // ${id}`);
- if($("#ack"))$("#ack").onclick=()=>{
-   state.accepted.add(id);log("OPS",`РАСПОРЯЖЕНИЕ ПРИНЯТО // ${id}`);glitch();
-   $("#modalBody").insertAdjacentHTML("beforeend",`<div class="notice" style="margin-top:16px"><strong>РАСПОРЯЖЕНИЕ ПРИНЯТО</strong>Код: ACK-${uid()}<br>Время: ${now()}<br>Оператор: SPMG-IV</div>`);
-   $("#ack").disabled=true;$("#ack").textContent="ПРИНЯТО";
- };
- if($("#clarify"))$("#clarify").onclick=()=>{log("OPS",`ЗАПРОС УТОЧНЕНИЯ // ${id}`);toast("ЗАПРОС ЗАРЕГИСТРИРОВАН","Запрос уточнения внесён в журнал.");};
+$("#closeModal").onclick = () => modal.classList.add("hidden");
+modal.addEventListener("click", e => { if (e.target === modal) modal.classList.add("hidden"); });
+
+// ============================================================
+// 6. КАРТОЧКИ И РЕНДЕРИНГ
+// ============================================================
+function card(item, type) {
+  let status = item.status || item.level || item.type;
+  let extra = item.deadline ? `<span>СРОК ${esc(item.deadline)}</span>` : `<span>${esc(item.date)}</span>`;
+  return `<div class="row" data-open="${esc(item.id)}" data-type="${type}">
+    <div class="rowtop"><span class="code">${esc(item.id)}</span><span class="status ${String(status).toLowerCase().includes("active") ? "active" : String(status).toLowerCase().includes("critical") ? "alert" : "closed"}">${esc(status)}</span></div>
+    <div class="rowtitle">${esc(item.title)}</div><div class="rowdesc">${esc(item.desc || "")}</div>
+    <div class="tags"><span class="tag">${esc(item.class || item.type || item.level)}</span>${extra}</div>
+  </div>`;
 }
 
-document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");state.page=b.dataset.page;render();glitch()});
-
-window.refreshPortal=()=>{log("SYSTEM","ОБНОВЛЕНИЕ СЕТИ");toast("СЕТЬ","Индекс синхронизирован.");glitch();render()};
-window.clearLocalAudit=()=>{state.audit=[];localStorage.removeItem("spmg04_audit");log("SYSTEM","ЖУРНАЛ ОЧИЩЕН");render()};
-
-function boot(){
- const consoleEl=$("#bootConsole"), title=$("#bootTitle"), subtitle=$("#bootSubtitle");
- const stage=$("#bootStage"), pct=$("#bootPct"), progress=$("#bootProgress"), hex=$("#bootHex");
- const footerStatus=$("#bootFooterStatus");
- const lines=[
-   ["ПОДГОТОВКА ЗАЩИЩЁННОГО КОНТУРА","good"],
-   ["ПРОВЕРКА ЦЕЛОСТНОСТИ СЕАНСА","good"],
-   ["СВЕРКА ИДЕНТИФИКАТОРА // SPMG-04","good"],
-   ["ПРОВЕРКА ЛОКАЛЬНОГО ХРАНИЛИЩА","good"],
-   ["СИНХРОНИЗАЦИЯ ОПЕРАТИВНОГО АРХИВА","good"],
-   ["ПРОВЕРКА КАНАЛОВ СВЯЗИ","good"],
-   ["NODE-03 ................. СОСТОЯНИЕ: НЕСТАБИЛЬНО","warn"],
-   ["NODE-05 ................. ОТКЛЮЧЕН","fault"],
-   ["ПОВТОРНАЯ ПРОВЕРКА МАРШРУТОВ","good"],
-   ["ПРОВЕРКА КЛЮЧЕЙ СЕАНСА","good"],
-   ["АНАЛИЗ СОБЫТИЙ БЕЗОПАСНОСТИ","warn"],
-   ["СОСТОЯНИЕ СИСТЕМЫ ........ РАБОТАЕТ","good"]
- ];
- const titles=["ИНИЦИАЛИЗАЦИЯ","ПРОВЕРКА СИСТЕМЫ","СИНХРОНИЗАЦИЯ","ВЕРИФИКАЦИЯ","ПОДКЛЮЧЕНИЕ","ДОПУСК"];
- const subtitles=[
-   "Подготовка защищённого соединения",
-   "Проверка локальной среды выполнения",
-   "Синхронизация внутренних данных",
-   "Проверка контрольных сумм",
-   "Установка защищённого канала",
-   "Ожидание подтверждения оператора"
- ];
- const glyphs="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&@!?№;%*+=-_";
- let i=0, progressValue=0, titleBase="";
- const corrupt=s=>s.split("").map(ch=>{
-   if(ch===" "||Math.random()>.08)return ch;
-   return glyphs[Math.floor(Math.random()*glyphs.length)];
- }).join("");
- const titleGlitch=()=>{
-   if(!title || !titleBase)return;
-   title.dataset.text=titleBase;
-   title.classList.add("glitching");
-   title.textContent=corrupt(titleBase);
-   setTimeout(()=>{title.textContent=titleBase;title.classList.remove("glitching")},45+Math.random()*85);
- };
- const hexGlitch=()=>{
-   hex.textContent=Array.from({length:8},()=>glyphs[Math.floor(Math.random()*glyphs.length)]).join("")+
-     " // "+Math.floor(Math.random()*9999).toString().padStart(4,"0")+" // SPMG-04";
- };
- const addLine=(text,kind)=>{
-   const el=document.createElement("span");el.className="bootLine";
-   const prefix=Math.random()<.25?"// ":"▸ ";
-   el.innerHTML=prefix+text+(Math.random()<.22?` <span class="noise">${corrupt("["+kind.toUpperCase()+"]")}</span>`:"");
-   consoleEl.prepend(el);
-   while(consoleEl.children.length>8)consoleEl.lastElementChild.remove();
- };
- const animateTitle=()=>{
-   titleBase=titles[Math.min(Math.floor(i/2),titles.length-1)];
-   title.textContent=titleBase;
-   subtitle.textContent=subtitles[Math.min(Math.floor(i/2),subtitles.length-1)];
-   if(Math.random()<.7)titleGlitch();
- };
- const tick=()=>{
-   if(i>=lines.length){
-     progressValue=100;progress.style.width="100%";pct.textContent="100%";stage.textContent="СИСТЕМА ГОТОВА";
-     footerStatus.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
-     titleBase="СИСТЕМА ГОТОВА";title.textContent=titleBase;subtitle.textContent="Введите код допуска";
-     for(let k=0;k<3;k++)setTimeout(()=>{titleGlitch();hexGlitch()},k*120);
-     // Явно показываем поле ввода
-     const gate=document.getElementById("codeGate");
-     if(gate) gate.style.display="block";
-     return;
-   }
-   animateTitle();
-   const [text,kind]=lines[i]; addLine(text,kind);
-   progressValue=Math.round(((i+1)/lines.length)*94);
-   progress.style.width=progressValue+"%";pct.textContent=String(progressValue).padStart(2,"0")+"%";
-   stage.textContent=text.slice(0,31);
-   hexGlitch();
-   if(kind==="fault") $("#glitch").classList.add("on"),setTimeout(()=>$("#glitch").classList.remove("on"),130);
-   i++;
-   setTimeout(tick,130+Math.random()*240);
- };
- tick();
- setInterval(()=>{if(!state.booted){hexGlitch();if(Math.random()<.28)titleGlitch()}},260);
+function head(kicker, title, actions = "") {
+  return `<div class="pagehead"><div><div class="kicker">${kicker}</div><h1>${title}</h1></div><div class="pageactions">${actions}</div></div>`;
 }
 
-function initAudio(){
- if(state.audio) return;
- try{
-   const C=window.AudioContext||window.webkitAudioContext;
-   if(!C)return;
-   const ctx=new C(), master=ctx.createGain(), ambient=ctx.createGain();
-   master.gain.value=.12; ambient.gain.value=.035;
-   master.connect(ctx.destination); ambient.connect(master);
+function panel(title, html, minor = "") {
+  return `<section class="panel"><div class="panelhead"><span>${title}</span><span class="minor">${minor}</span></div>${html}</section>`;
+}
 
-   const osc=ctx.createOscillator(), osc2=ctx.createOscillator(), lfo=ctx.createOscillator(), lfoGain=ctx.createGain();
-   osc.type="sine";osc.frequency.value=58;
-   osc2.type="triangle";osc2.frequency.value=116;
-   lfo.type="sine";lfo.frequency.value=.08;lfoGain.gain.value=.018;
-   lfo.connect(ambient.gain);osc.connect(ambient);osc2.connect(ambient);
-   osc.start();osc2.start();lfo.start();
+function renderOverview() {
+  const active = operations.filter(x => x.status === "ACTIVE").length;
+  content.innerHTML = head("SPMG // ВНУТРЕННЯЯ ОПЕРАТИВНАЯ СЕТЬ", "ОБЗОР", `<button class="btn" onclick="window.refreshPortal()">ОБНОВИТЬ СЕТЬ</button>`) +
+    `<div class="metrics">
+      <div class="metric"><div class="label">АКТИВНЫЕ РАСПОРЯЖЕНИЯ</div><strong>${String(active).padStart(2, "0")}</strong><div class="sub">ТЕКУЩИЕ ОПЕРАЦИИ</div></div>
+      <div class="metric"><div class="label">РАЗВЕДДАННЫЕ</div><strong>${intelligence.length}</strong><div class="sub">АКТУАЛЬНЫЕ</div></div>
+      <div class="metric alert"><div class="label">ОЦЕНКА УГРОЗЫ</div><strong>ПОВЫШЕННЫЙ</strong><div class="sub">ТРЕБУЕТСЯ ПРОВЕРКА</div></div>
+      <div class="metric"><div class="label">ЦЕЛОСТНОСТЬ УЗЛОВ</div><strong>98.7%</strong><div class="sub">SPMG-04</div></div>
+    </div>
+    <div class="grid2">
+      <div>${panel("АКТИВНЫЕ ОПЕРАЦИИ", operations.map(x => card(x, "operation")).join(""), operations.length + " ЗАПИСЕЙ")}
+      ${panel("РАЗВЕДДАННЫЕ", intelligence.map(x => card(x, "intelligence")).join(""), "ПОСЛЕДНИЕ")}</div>
+      <div>${panel("ТЕКУЩЕЕ УВЕДОМЛЕНИЕ", `<div style="padding:14px"><div class="notice"><strong>SEC-57-0811 // СТАТУС СЕАНСА</strong>Аномалия сеанса устранена автоматически. Действий не требуется.</div><div style="font:9px/1.7 var(--mono);color:#596166">ПОСЛЕДНЯЯ ПРОВЕРКА СИСТЕМЫ<br><span style="color:#9aa1a5">11.08.2057 // ${now()}</span><br><br>НЕПРЕРЫВНОСТЬ СЕАНСА<br><span style="color:#9aa1a5">ПОДТВЕРЖДЕНО</span></div></div>`, "БЕЗОПАСНОСТЬ")}
+      ${panel("ПОСЛЕДНИЕ ОБЪЯВЛЕНИЯ", bulletins.map(x => `<div class="row" data-open="${x.id}" data-type="bulletin"><div class="rowtop"><span class="code">${x.id}</span><span>${x.date}</span></div><div class="rowtitle">${x.title}</div></div>`).join(""), bulletins.length)}</div>
+    </div>`;
+  bindRows();
+}
 
-   state.audio={ctx,master,ambient,osc,osc2,lfo};
-   if(ctx.state==="suspended")ctx.resume();
- }catch(e){console.warn("Audio unavailable",e)}
+function renderList(title, kicker, arr, type, minor) {
+  content.innerHTML = head(kicker, title) + panel(title.toUpperCase(), arr.length ? arr.map(x => card(x, type)).join("") : `<div class="empty">НЕТ ДОСТУПНЫХ МАТЕРИАЛОВ</div>`, minor);
+  bindRows();
 }
-function clickSound(kind="click"){
- try{
-   initAudio(); if(!state.audio)return;
-   const {ctx,master}=state.audio, nowT=ctx.currentTime;
-   const o=ctx.createOscillator(), g=ctx.createGain();
-   o.type=kind==="alert"?"sawtooth":"square";
-   o.frequency.setValueAtTime(kind==="alert"?170:620,nowT);
-   o.frequency.exponentialRampToValueAtTime(kind==="alert"?70:260,nowT+.07);
-   g.gain.setValueAtTime(.0001,nowT);
-   g.gain.exponentialRampToValueAtTime(kind==="alert"?.045:.028,nowT+.008);
-   g.gain.exponentialRampToValueAtTime(.0001,nowT+.085);
-   o.connect(g);g.connect(master);o.start(nowT);o.stop(nowT+.1);
- }catch(e){}
+
+function renderArchive() {
+  const archived = [...operations].map((x, i) => ({ ...x, status: i % 2 ? "ВЫПОЛНЕНО" : "АРХИВИРОВАНО" }));
+  renderList("АРХИВ", "SPMG // ЗАПИСИ", archived, "operation", "ИСТОРИЧЕСКИЕ");
 }
-function successSound(){
- try{
-   initAudio();if(!state.audio)return;
-   const {ctx,master}=state.audio, t=ctx.currentTime;
-   [520,780,1040].forEach((f,i)=>{
-     const o=ctx.createOscillator(),g=ctx.createGain();
-     o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,t+i*.055);
-     g.gain.exponentialRampToValueAtTime(.035,t+i*.055+.01);
-     g.gain.exponentialRampToValueAtTime(.0001,t+i*.055+.13);
-     o.connect(g);g.connect(master);o.start(t+i*.055);o.stop(t+i*.055+.14);
-   });
- }catch(e){}
+
+function renderAudit() {
+  content.innerHTML = head("SPMG-04 // КОНТРОЛЬ ДЕЙСТВИЙ", "ЖУРНАЛ ДЕЙСТВИЙ", `<button class="btn" onclick="window.clearLocalAudit()">ОЧИСТИТЬ ЛОКАЛЬНЫЕ СОБЫТИЯ</button>`) +
+    panel("ЖУРНАЛ СОБЫТИЙ СЕАНСА", state.audit.map(x => `<div class="row" style="cursor:default"><div class="rowtop"><span class="code">[${x.time}]</span><span>${x.type}</span></div><div class="rowtitle" style="font-family:var(--mono);font-size:10px">${esc(x.msg)}</div></div>`).join(""), `${state.audit.length} СОБЫТИЙ`);
 }
-document.addEventListener("click",e=>{
- const b=e.target.closest("button,.row,.tab,.nav button");
- if(b) clickSound(b.classList.contains("alert")?"alert":"click");
+
+function renderRightFeed() {
+  const feed = $("#liveFeed");
+  if (!feed) return;
+  feed.innerHTML = state.audit.slice(0, 8).map(x => `<div class="feedline"><b>${x.time}</b><span class="type">${x.type}</span><strong>${esc(x.msg)}</strong></div>`).join("");
+}
+
+function render() {
+  const page = state.page;
+  if (page === "overview") renderOverview();
+  else if (page === "operations") renderList("ОПЕРАЦИИ", "SPMG // ОПЕРАТИВНЫЕ РАСПОРЯЖЕНИЯ", operations, "operation", "АКТИВНЫЕ");
+  else if (page === "intelligence") renderList("РАЗВЕДДАННЫЕ", "SPMG // СБОР", intelligence, "intelligence", "ПОСЛЕДНИЕ");
+  else if (page === "bulletins") renderList("ОБЪЯВЛЕНИЯ", "SPMG // ВНУТРЕННИЕ КОММУНИКАЦИИ", bulletins, "bulletin", "ТЕКУЩИЕ");
+  else if (page === "documents") renderList("ДОКУМЕНТЫ", "SPMG // МАТЕРИАЛЫ", documents, "document", "ОГРАНИЧЕННЫЙ ДОСТУП");
+  else if (page === "archive") renderArchive();
+  else if (page === "audit") renderAudit();
+  renderRightFeed();
+}
+
+function bindRows() {
+  document.querySelectorAll("[data-open]").forEach(el => el.onclick = () => openItem(el.dataset.type, el.dataset.open));
+}
+
+function find(type, id) {
+  const map = { operation: operations, intelligence: intelligence, bulletin: bulletins, document: documents };
+  return (map[type] || []).find(x => x.id === id);
+}
+
+function openItem(type, id) {
+  const item = find(type, id);
+  if (!item) return;
+  const fields = type === "operation" ?
+    `<div class="field"><label>КЛАСС</label><span>${esc(item.class)}</span></div><div class="field"><label>ПРИОРИТЕТ</label><span>${esc(item.priority)}</span></div><div class="field"><label>ДАТА</label><span>${esc(item.date)}</span></div>` :
+    `<div class="field"><label>КЛАСС</label><span>${esc(item.class || item.type || item.level)}</span></div><div class="field"><label>ДАТА</label><span>${esc(item.date)}</span></div>`;
+  let actions = "";
+  if (type === "operation" && item.status === "ACTIVE") {
+    actions = `<div class="actions"><button class="btn" id="ack">ПОДТВЕРДИТЬ РАСПОРЯЖЕНИЕ</button><button class="btn" id="clarify">ЗАПРОСИТЬ УТОЧНЕНИЕ</button></div>`;
+  }
+  openModal(`${item.id} // ${item.title}`, `<div class="docgrid">${fields}</div><div class="prose">${esc(item.body)}</div>`, actions);
+  log(type === "operation" ? "OPS" : "INTEL", `ОТКРЫТО // ${id}`);
+  if ($("#ack")) $("#ack").onclick = () => {
+    state.accepted.add(id);
+    log("OPS", `РАСПОРЯЖЕНИЕ ПРИНЯТО // ${id}`);
+    glitch();
+    $("#modalBody").insertAdjacentHTML("beforeend", `<div class="notice" style="margin-top:16px"><strong>РАСПОРЯЖЕНИЕ ПРИНЯТО</strong>Код: ACK-${uid()}<br>Время: ${now()}<br>Оператор: SPMG-IV</div>`);
+    $("#ack").disabled = true;
+    $("#ack").textContent = "ПРИНЯТО";
+  };
+  if ($("#clarify")) $("#clarify").onclick = () => { log("OPS", `ЗАПРОС УТОЧНЕНИЯ // ${id}`); toast("ЗАПРОС ЗАРЕГИСТРИРОВАН", "Запрос уточнения внесён в журнал."); };
+}
+
+// ============================================================
+// 7. НАВИГАЦИЯ
+// ============================================================
+document.querySelectorAll("#nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#nav button").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  state.page = b.dataset.page;
+  render();
+  glitch();
 });
 
-function authorize(){
-  const input=document.getElementById("accessCode");
-  const btn=document.getElementById("authorize");
-  const boot=document.getElementById("boot");
-  const app=document.getElementById("app");
-  const status=document.getElementById("bootFooterStatus");
-  const titleEl=document.getElementById("bootTitle");
-  const sub=document.getElementById("bootSubtitle");
+window.refreshPortal = () => { log("SYSTEM", "ОБНОВЛЕНИЕ СЕТИ"); toast("СЕТЬ", "Индекс синхронизирован."); glitch(); render(); };
+window.clearLocalAudit = () => { state.audit = []; localStorage.removeItem("spmg04_audit"); log("SYSTEM", "ЖУРНАЛ ОЧИЩЕН"); render(); };
 
-  if(!input||!btn||!boot||!app){
+// ============================================================
+// 8. ЗАГРУЗОЧНЫЙ ЭКРАН
+// ============================================================
+function boot() {
+  const consoleEl = $("#bootConsole");
+  const title = $("#bootTitle");
+  const subtitle = $("#bootSubtitle");
+  const stage = $("#bootStage");
+  const pct = $("#bootPct");
+  const progress = $("#bootProgress");
+  const hex = $("#bootHex");
+  const footerStatus = $("#bootFooterStatus");
+
+  const lines = [
+    ["ПОДГОТОВКА ЗАЩИЩЁННОГО КОНТУРА", "good"],
+    ["ПРОВЕРКА ЦЕЛОСТНОСТИ СЕАНСА", "good"],
+    ["СВЕРКА ИДЕНТИФИКАТОРА // SPMG-04", "good"],
+    ["ПРОВЕРКА ЛОКАЛЬНОГО ХРАНИЛИЩА", "good"],
+    ["СИНХРОНИЗАЦИЯ ОПЕРАТИВНОГО АРХИВА", "good"],
+    ["ПРОВЕРКА КАНАЛОВ СВЯЗИ", "good"],
+    ["NODE-03 ................. СОСТОЯНИЕ: НЕСТАБИЛЬНО", "warn"],
+    ["NODE-05 ................. ОТКЛЮЧЕН", "fault"],
+    ["ПОВТОРНАЯ ПРОВЕРКА МАРШРУТОВ", "good"],
+    ["ПРОВЕРКА КЛЮЧЕЙ СЕАНСА", "good"],
+    ["АНАЛИЗ СОБЫТИЙ БЕЗОПАСНОСТИ", "warn"],
+    ["СОСТОЯНИЕ СИСТЕМЫ ........ РАБОТАЕТ", "good"]
+  ];
+
+  const titles = ["ИНИЦИАЛИЗАЦИЯ", "ПРОВЕРКА СИСТЕМЫ", "СИНХРОНИЗАЦИЯ", "ВЕРИФИКАЦИЯ", "ПОДКЛЮЧЕНИЕ", "ДОПУСК"];
+  const subtitles = [
+    "Подготовка защищённого соединения",
+    "Проверка локальной среды выполнения",
+    "Синхронизация внутренних данных",
+    "Проверка контрольных сумм",
+    "Установка защищённого канала",
+    "Ожидание подтверждения оператора"
+  ];
+  const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&@!?№;%*+=-_";
+
+  let i = 0,
+    progressValue = 0,
+    titleBase = "";
+
+  const corrupt = s => s.split("").map(ch => { if (ch === " " || Math.random() > .08) return ch; return glyphs[Math.floor(Math.random() * glyphs.length)]; }).join("");
+
+  const titleGlitch = () => {
+    if (!title || !titleBase) return;
+    title.dataset.text = titleBase;
+    title.classList.add("glitching");
+    title.textContent = corrupt(titleBase);
+    setTimeout(() => { title.textContent = titleBase; title.classList.remove("glitching"); }, 45 + Math.random() * 85);
+  };
+
+  const hexGlitch = () => {
+    hex.textContent = Array.from({ length: 8 }, () => glyphs[Math.floor(Math.random() * glyphs.length)]).join("") +
+      " // " + Math.floor(Math.random() * 9999).toString().padStart(4, "0") + " // SPMG-04";
+  };
+
+  const addLine = (text, kind) => {
+    const el = document.createElement("span");
+    el.className = "bootLine";
+    const prefix = Math.random() < .25 ? "// " : "▸ ";
+    el.innerHTML = prefix + text + (Math.random() < .22 ? ` <span class="noise">${corrupt("[" + kind.toUpperCase() + "]")}</span>` : "");
+    consoleEl.prepend(el);
+    while (consoleEl.children.length > 8) consoleEl.lastElementChild.remove();
+  };
+
+  const animateTitle = () => {
+    titleBase = titles[Math.min(Math.floor(i / 2), titles.length - 1)];
+    title.textContent = titleBase;
+    subtitle.textContent = subtitles[Math.min(Math.floor(i / 2), subtitles.length - 1)];
+    if (Math.random() < .7) titleGlitch();
+  };
+
+  const tick = () => {
+    if (i >= lines.length) {
+      progressValue = 100;
+      progress.style.width = "100%";
+      pct.textContent = "100%";
+      stage.textContent = "СИСТЕМА ГОТОВА";
+      footerStatus.textContent = "ОЖИДАНИЕ АВТОРИЗАЦИИ";
+      titleBase = "СИСТЕМА ГОТОВА";
+      title.textContent = titleBase;
+      subtitle.textContent = "Введите код допуска";
+      for (let k = 0; k < 3; k++) setTimeout(() => { titleGlitch(); hexGlitch(); }, k * 120);
+      return;
+    }
+    animateTitle();
+    const [text, kind] = lines[i];
+    addLine(text, kind);
+    progressValue = Math.round(((i + 1) / lines.length) * 94);
+    progress.style.width = progressValue + "%";
+    pct.textContent = String(progressValue).padStart(2, "0") + "%";
+    stage.textContent = text.slice(0, 31);
+    hexGlitch();
+    if (kind === "fault") { $("#glitch").classList.add("on"); setTimeout(() => $("#glitch").classList.remove("on"), 130); }
+    i++;
+    setTimeout(tick, 130 + Math.random() * 240);
+  };
+  tick();
+  setInterval(() => { if (!state.booted) { hexGlitch(); if (Math.random() < .28) titleGlitch(); } }, 260);
+}
+
+// ============================================================
+// 9. ЗВУК
+// ============================================================
+function initAudio() {
+  if (state.audio) return;
+  try {
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    const ctx = new C(),
+      master = ctx.createGain(),
+      ambient = ctx.createGain();
+    master.gain.value = .12;
+    ambient.gain.value = .035;
+    master.connect(ctx.destination);
+    ambient.connect(master);
+    const osc = ctx.createOscillator(),
+      osc2 = ctx.createOscillator(),
+      lfo = ctx.createOscillator(),
+      lfoGain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 58;
+    osc2.type = "triangle";
+    osc2.frequency.value = 116;
+    lfo.type = "sine";
+    lfo.frequency.value = .08;
+    lfoGain.gain.value = .018;
+    lfo.connect(ambient.gain);
+    osc.connect(ambient);
+    osc2.connect(ambient);
+    osc.start();
+    osc2.start();
+    lfo.start();
+    state.audio = { ctx, master, ambient, osc, osc2, lfo };
+    if (ctx.state === "suspended") ctx.resume();
+  } catch (e) { console.warn("Audio unavailable", e); }
+}
+
+function clickSound(kind = "click") {
+  try {
+    initAudio();
+    if (!state.audio) return;
+    const { ctx, master } = state.audio,
+      nowT = ctx.currentTime;
+    const o = ctx.createOscillator(),
+      g = ctx.createGain();
+    o.type = kind === "alert" ? "sawtooth" : "square";
+    o.frequency.setValueAtTime(kind === "alert" ? 170 : 620, nowT);
+    o.frequency.exponentialRampToValueAtTime(kind === "alert" ? 70 : 260, nowT + .07);
+    g.gain.setValueAtTime(.0001, nowT);
+    g.gain.exponentialRampToValueAtTime(kind === "alert" ? .045 : .028, nowT + .008);
+    g.gain.exponentialRampToValueAtTime(.0001, nowT + .085);
+    o.connect(g);
+    g.connect(master);
+    o.start(nowT);
+    o.stop(nowT + .1);
+  } catch (e) {}
+}
+
+function successSound() {
+  try {
+    initAudio();
+    if (!state.audio) return;
+    const { ctx, master } = state.audio,
+      t = ctx.currentTime;
+    [520, 780, 1040].forEach((f, i) => {
+      const o = ctx.createOscillator(),
+        g = ctx.createGain();
+      o.type = "sine";
+      o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, t + i * .055);
+      g.gain.exponentialRampToValueAtTime(.035, t + i * .055 + .01);
+      g.gain.exponentialRampToValueAtTime(.0001, t + i * .055 + .13);
+      o.connect(g);
+      g.connect(master);
+      o.start(t + i * .055);
+      o.stop(t + i * .055 + .14);
+    });
+  } catch (e) {}
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("button,.row,.tab,.nav button");
+  if (b) clickSound(b.classList.contains("alert") ? "alert" : "click");
+});
+
+// ============================================================
+// 10. АВТОРИЗАЦИЯ (ГЛАВНОЕ — РАБОТАЕТ!)
+// ============================================================
+function authorize() {
+  const input = document.getElementById("accessCode");
+  const btn = document.getElementById("authorize");
+  const boot = document.getElementById("boot");
+  const app = document.getElementById("app");
+  const status = document.getElementById("bootFooterStatus");
+  const titleEl = document.getElementById("bootTitle");
+  const sub = document.getElementById("bootSubtitle");
+
+  if (!input || !btn || !boot || !app) {
     console.error("SPMG AUTH: missing DOM elements");
     return false;
   }
 
-  const code=(input.value||"").trim().toUpperCase();
-  const accounts={
-    "SPMG-04-2057":{name:"Оператор SPMG-04",role:"operator",level:"SPMG-IV"},
-    "SPMG-OP-2057":{name:"Полевой оператор",role:"operator",level:"SPMG-IV"},
-    "SPMG-ADMIN-2057":{name:"Administrator",role:"admin",level:"FULL ACCESS"}
+  const code = (input.value || "").trim().toUpperCase();
+  const accounts = {
+    "SPMG-04-2057": { name: "Оператор SPMG-04", role: "operator", level: "SPMG-IV" },
+    "SPMG-OP-2057": { name: "Полевой оператор", role: "operator", level: "SPMG-IV" },
+    "SPMG-ADMIN-2057": { name: "Administrator", role: "admin", level: "FULL ACCESS" }
   };
-  const account=accounts[code];
+  const account = accounts[code];
 
-  if(!account){
-    if(status)status.textContent="ДОСТУП ОТКЛОНЁН // НЕИЗВЕСТНЫЙ КОД";
-    if(titleEl)titleEl.textContent="ВЕРИФИКАЦИЯ НЕ ПРОЙДЕНА";
-    if(sub)sub.textContent="УЧЁТНАЯ ЗАПИСЬ НЕ РАСПОЗНАНА";
-    input.disabled=false;btn.disabled=false;input.focus();input.select();
-    try{clickSound("alert")}catch(e){}
-    toast("ДОСТУП ОТКЛОНЁН","Проверьте код допуска.");
-    setTimeout(()=>{
-      if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
-      if(titleEl)titleEl.textContent="ДОСТУП ОГРАНИЧЕН";
-      if(sub)sub.textContent="Введите код допуска для продолжения";
-    },1000);
+  if (!account) {
+    if (status) status.textContent = "ДОСТУП ОТКЛОНЁН // НЕИЗВЕСТНЫЙ КОД";
+    if (titleEl) titleEl.textContent = "ВЕРИФИКАЦИЯ НЕ ПРОЙДЕНА";
+    if (sub) sub.textContent = "УЧЁТНАЯ ЗАПИСЬ НЕ РАСПОЗНАНА";
+    input.disabled = false;
+    btn.disabled = false;
+    input.focus();
+    input.select();
+    try { clickSound("alert"); } catch (e) {}
+    toast("ДОСТУП ОТКЛОНЁН", "Проверьте код допуска.");
+    setTimeout(() => {
+      if (status) status.textContent = "ОЖИДАНИЕ АВТОРИЗАЦИИ";
+      if (titleEl) titleEl.textContent = "ДОСТУП ОГРАНИЧЕН";
+      if (sub) sub.textContent = "Введите код допуска для продолжения";
+    }, 1000);
     return false;
   }
 
-  try{initAudio();clickSound("click")}catch(e){}
-  input.disabled=true;btn.disabled=true;
-  if(status)status.textContent="ПРОВЕРКА УЧЁТНЫХ ДАННЫХ...";
-  if(titleEl)titleEl.textContent="ВЕРИФИКАЦИЯ ОПЕРАТОРА";
-  if(sub)sub.textContent="Сверка уровня допуска и идентификатора...";
-  state.user={name:account.name,role:account.role,level:account.level,code};
+  try { initAudio(); clickSound("click"); } catch (e) {}
+  input.disabled = true;
+  btn.disabled = true;
+  if (status) status.textContent = "ПРОВЕРКА УЧЁТНЫХ ДАННЫХ...";
+  if (titleEl) titleEl.textContent = "ВЕРИФИКАЦИЯ ОПЕРАТОРА";
+  if (sub) sub.textContent = "Сверка уровня допуска и идентификатора...";
+  state.user = { name: account.name, role: account.role, level: account.level, code };
 
-  setTimeout(()=>{
-    if(status)status.textContent="УЧЁТНАЯ ЗАПИСЬ ПОДТВЕРЖДЕНА";
-    if(titleEl)titleEl.textContent=account.role==="admin"?"ДОПУСК ADMINISTRATOR":"ДОПУСК ПОДТВЕРЖДЁН";
-    if(sub)sub.textContent=account.role==="admin"?"Полный доступ // SPMG-IV":"Стандартный доступ // SPMG-IV";
-    boot.classList.add("hidden");app.classList.remove("hidden");state.booted=true;
-    const sid=document.getElementById("sessionId");if(sid)sid.textContent=uid();
-    log("AUTH",`ВХОД // ${account.name} // ${account.role==="admin"?"ПОЛНЫЙ ДОСТУП":"ОПЕРАТИВНЫЙ ДОСТУП"}`);
+  setTimeout(() => {
+    if (status) status.textContent = "УЧЁТНАЯ ЗАПИСЬ ПОДТВЕРЖДЕНА";
+    if (titleEl) titleEl.textContent = account.role === "admin" ? "ДОПУСК ADMINISTRATOR" : "ДОПУСК ПОДТВЕРЖДЁН";
+    if (sub) sub.textContent = account.role === "admin" ? "Полный доступ // SPMG-IV" : "Стандартный доступ // SPMG-IV";
+    boot.classList.add("hidden");
+    app.classList.remove("hidden");
+    state.booted = true;
+    const sid = document.getElementById("sessionId");
+    if (sid) sid.textContent = uid();
+    log("AUTH", `ВХОД // ${account.name} // ${account.role === "admin" ? "ПОЛНЫЙ ДОСТУП" : "ОПЕРАТИВНЫЙ ДОСТУП"}`);
     render();
-    try{successSound()}catch(e){}
-    toast(account.role==="admin"?"ADMINISTRATOR":"СЕАНС УСТАНОВЛЕН",account.role==="admin"?"Полный доступ разрешён.":"Оперативный доступ разрешён.");
+    try { successSound(); } catch (e) {}
+    toast(account.role === "admin" ? "ADMINISTRATOR" : "СЕАНС УСТАНОВЛЕН", account.role === "admin" ? "Полный доступ разрешён." : "Оперативный доступ разрешён.");
     glitch();
-  },650);
+  }, 650);
   return true;
 }
-function clock(){
- const d=new Date();const t=d.toLocaleTimeString("ru-RU",{hour12:false});$("#clock").textContent=`2057-08-11 // ${t}`;
+
+// ============================================================
+// 11. ЧАСЫ
+// ============================================================
+function clock() {
+  const d = new Date();
+  const t = d.toLocaleTimeString("ru-RU", { hour12: false });
+  const clockEl = document.getElementById("clock");
+  if (clockEl) clockEl.textContent = `2057-08-11 // ${t}`;
 }
-setInterval(clock,1000);
-setInterval(()=>{if(state.booted && Math.random()<.18){const msgs=["NODE SYNC COMPLETED","ARCHIVE INDEX CHECKED","ROUTE TABLE ПОДТВЕРЖДЕНО"];const m=msgs[Math.floor(Math.random()*msgs.length)];log("SYSTEM",m);if(Math.random()<.25)glitch()}},4200);
-setInterval(()=>{if(state.booted&&Math.random()<.05)glitch()},1800);
+setInterval(clock, 1000);
 
-// Чистый boot-старт
-boot();
-
-// Принудительный показ поля ввода через 2.5 секунды (на случай, если boot() не сработал)
-setTimeout(()=>{
-  const gate=document.getElementById("codeGate");
-  const input=document.getElementById("accessCode");
-  const btn=document.getElementById("authorize");
-  if(gate) gate.style.display="block";
-  if(input) input.disabled=false;
-  if(btn) btn.disabled=false;
-}, 2500);
-
-})();
-</script>
-
-<script>
-(() => {
- const c=document.getElementById("bootMatrix"); if(!c)return;
- const x=c.getContext("2d"); let w,h,cols,drops;
- const chars="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@!?№;:%*";
- function resize(){w=c.width=innerWidth*devicePixelRatio;h=c.height=innerHeight*devicePixelRatio;x.font=10*devicePixelRatio+"px monospace";cols=Math.floor(w/(12*devicePixelRatio));drops=Array.from({length:cols},()=>Math.random()*-50)}
- function draw(){
-   x.fillStyle="rgba(2,3,4,.14)";x.fillRect(0,0,w,h);
-   x.fillStyle="rgba(180,190,195,.12)";
-   for(let i=0;i<drops.length;i++){
-     const ch=chars[(Math.random()*chars.length)|0];
-     const px=i*12*devicePixelRatio, py=drops[i]*12*devicePixelRatio;
-     x.fillText(ch,px,py);
-     if(py>h && Math.random()>.975)drops[i]=0;
-     drops[i]+=.35+Math.random()*.55;
-   }
-   requestAnimationFrame(draw);
- }
- addEventListener("resize",resize);resize();draw();
-})();
-</script>
-
-<script>
-(() => {
- const glitchLayer=document.getElementById("glitch");
- setInterval(()=>{
-   if(Math.random()<.12 && document.getElementById("app") && !document.getElementById("app").classList.contains("hidden")){
-     glitchLayer.classList.add("on");
-     document.body.style.filter=Math.random()<.35?"contrast(1.08)":"none";
-     setTimeout(()=>{glitchLayer.classList.remove("on");document.body.style.filter="none"},80+Math.random()*120);
-   }
- },2400);
-})();
-</script>
-
-<script>
-window.addEventListener("error",function(e){
-  console.error("[SPMG-04] UI ERROR:",e.message,e.filename,e.lineno,e.colno);
-});
-window.addEventListener("unhandledrejection",function(e){
-  console.error("[SPMG-04] PROMISE ERROR:",e.reason);
-});
-</script>
-
-<script id="spmg-auth-bindings">
-(function(){
-  function bindAuth(){
-    const input=document.getElementById("accessCode");
-    const btn=document.getElementById("authorize");
-    if(!input||!btn)return;
-    btn.type="button";
-    btn.onclick=function(e){e.preventDefault();authorize();};
-    input.onkeydown=function(e){
-      if(e.key==="Enter"||e.keyCode===13){e.preventDefault();authorize();}
-    };
+// ============================================================
+// 12. СЛУЧАЙНЫЕ СОБЫТИЯ
+// ============================================================
+setInterval(() => {
+  if (state.booted && Math.random() < .18) {
+    const msgs = ["NODE SYNC COMPLETED", "ARCHIVE INDEX CHECKED", "ROUTE TABLE ПОДТВЕРЖДЕНО"];
+    const m = msgs[Math.floor(Math.random() * msgs.length)];
+    log("SYSTEM", m);
+    if (Math.random() < .25) glitch();
   }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindAuth);
-  else bindAuth();
+}, 4200);
+setInterval(() => { if (state.booted && Math.random() < .05) glitch(); }, 1800);
+
+// ============================================================
+// 13. БИНДИНГ КНОПКИ И ПОЛЯ
+// ============================================================
+function bindAuth() {
+  const input = document.getElementById("accessCode");
+  const btn = document.getElementById("authorize");
+  if (!input || !btn) return;
+  btn.type = "button";
+  btn.onclick = function(e) {
+    e.preventDefault();
+    authorize();
+  };
+  input.onkeydown = function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      authorize();
+    }
+  };
+  // Гарантируем, что поле и кнопка активны
+  input.disabled = false;
+  btn.disabled = false;
+}
+
+// ============================================================
+// 14. ЗАПУСК
+// ============================================================
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() {
+    boot();
+    bindAuth();
+    // Резервное пробуждение поля ввода
+    setTimeout(() => {
+      const gate = document.getElementById("codeGate");
+      const input = document.getElementById("accessCode");
+      const btn = document.getElementById("authorize");
+      if (gate && !state.booted) gate.style.display = "block";
+      if (input) input.disabled = false;
+      if (btn) btn.disabled = false;
+    }, 2500);
+  });
+} else {
+  boot();
+  bindAuth();
+  setTimeout(() => {
+    const gate = document.getElementById("codeGate");
+    const input = document.getElementById("accessCode");
+    const btn = document.getElementById("authorize");
+    if (gate && !state.booted) gate.style.display = "block";
+    if (input) input.disabled = false;
+    if (btn) btn.disabled = false;
+  }, 2500);
+}
+
 })();
 </script>
 
 <script>
-(function(){
-  // Последний аварийный триггер для поля ввода
-  setTimeout(function(){
-    const gate=document.getElementById("codeGate");
-    const input=document.getElementById("accessCode");
-    const btn=document.getElementById("authorize");
-    const status=document.getElementById("bootFooterStatus");
-    if(gate) gate.style.display="block";
-    if(input) input.disabled=false;
-    if(btn) btn.disabled=false;
-    if(status && status.textContent.includes("ПРОВЕРКА")) status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
-  }, 3000);
+// ============================================================
+// MATRIX RAIN (фон)
+// ============================================================
+(() => {
+  const c = document.getElementById("bootMatrix");
+  if (!c) return;
+  const x = c.getContext("2d");
+  let w, h, cols, drops;
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@!?№;:%*";
+  const resize = () => {
+    w = c.width = innerWidth * devicePixelRatio;
+    h = c.height = innerHeight * devicePixelRatio;
+    x.font = 10 * devicePixelRatio + "px monospace";
+    cols = Math.floor(w / (12 * devicePixelRatio));
+    drops = Array.from({ length: cols }, () => Math.random() * -50);
+  };
+  const draw = () => {
+    x.fillStyle = "rgba(2,3,4,.14)";
+    x.fillRect(0, 0, w, h);
+    x.fillStyle = "rgba(180,190,195,.12)";
+    for (let i = 0; i < drops.length; i++) {
+      const ch = chars[(Math.random() * chars.length) | 0];
+      const px = i * 12 * devicePixelRatio;
+      const py = drops[i] * 12 * devicePixelRatio;
+      x.fillText(ch, px, py);
+      if (py > h && Math.random() > .975) drops[i] = 0;
+      drops[i] += .35 + Math.random() * .55;
+    }
+    requestAnimationFrame(draw);
+  };
+  addEventListener("resize", resize);
+  resize();
+  draw();
 })();
+</script>
+
+<script>
+// ============================================================
+// ГЛИТЧ-ЭФФЕКТ
+// ============================================================
+(() => {
+  const glitchLayer = document.getElementById("glitch");
+  setInterval(() => {
+    if (Math.random() < .12 && document.getElementById("app") && !document.getElementById("app").classList.contains("hidden")) {
+      glitchLayer.classList.add("on");
+      document.body.style.filter = Math.random() < .35 ? "contrast(1.08)" : "none";
+      setTimeout(() => { glitchLayer.classList.remove("on");
+        document.body.style.filter = "none"; }, 80 + Math.random() * 120);
+    }
+  }, 2400);
+})();
+</script>
+
+<script>
+// ============================================================
+// ОБРАБОТЧИКИ ОШИБОК
+// ============================================================
+window.addEventListener("error", function(e) {
+  console.error("[SPMG-04] UI ERROR:", e.message, e.filename, e.lineno, e.colno);
+});
+window.addEventListener("unhandledrejection", function(e) {
+  console.error("[SPMG-04] PROMISE ERROR:", e.reason);
+});
 </script>
 
 </body>
