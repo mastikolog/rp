@@ -542,7 +542,7 @@ IV — CRITICAL
 Classification may be increased following additional intelligence.`}
 ];
 
-const audit=[
+audit=[
  ["14:18:42","SECURITY","SESSION ANOMALY RESOLVED"],
  ["14:17:03","SYSTEM","ARCHIVE INDEX SYNCHRONIZED"],
  ["14:11:27","INTEL","IR-57-042 PUBLISHED"],
@@ -1179,18 +1179,6 @@ boot();
 })();
 </script>
 
-(function(){
-  const input = document.getElementById("accessCode");
-  if(input){
-    input.addEventListener("keydown", function(e){
-      if(e.key === "Enter"){
-        e.preventDefault();
-        const btn = document.getElementById("authorize");
-        if(btn && !btn.disabled) authorize();
-      }
-    });
-  }
-})();
 
 <script>
 window.addEventListener("error", function(e){
@@ -1211,65 +1199,6 @@ window.addEventListener("unhandledrejection",function(e){
 });
 </script>
 
-(function(){
-  let bootStarted=false;
-  function startPortalBoot(){
-    if(bootStarted) return;
-    bootStarted=true;
-    try{
-      const boot=document.getElementById("boot");
-      const app=document.getElementById("app");
-      const status=document.getElementById("bootFooterStatus");
-      const title=document.getElementById("bootTitle");
-      const sub=document.getElementById("bootSubtitle");
-      const progress=document.getElementById("bootProgress");
-      if(!boot||!app){
-        console.error("SPMG BOOT: root elements missing");
-        return;
-      }
-
-      // Reset a possibly stale "initialization" state.
-      if(status)status.textContent="ПОДГОТОВКА ЗАЩИЩЁННОГО КАНАЛА...";
-      if(title)title.textContent="ИНИЦИАЛИЗАЦИЯ";
-      if(sub)sub.textContent="Запуск защищённого терминала...";
-      if(progress)progress.style.width="0%";
-
-      const stages=[
-        [180,12,"ПРОВЕРКА КОНТУРА..."],
-        [420,29,"СИНХРОНИЗАЦИЯ ВРЕМЕНИ..."],
-        [700,48,"ПРОВЕРКА ЦЕЛОСТНОСТИ..."],
-        [980,66,"ЗАГРУЗКА КРИПТОГРАФИЧЕСКОГО ПРОФИЛЯ..."],
-        [1260,82,"ПОДГОТОВКА КАНАЛА SPMG-04..."],
-        [1500,96,"СИСТЕМА ГОТОВА."]
-      ];
-      stages.forEach(([ms,p,msg])=>setTimeout(()=>{
-        if(progress)progress.style.width=p+"%";
-        if(status)status.textContent=msg;
-      },ms));
-
-      // The loading screen is only a pre-auth terminal.
-      // It MUST stop after a bounded time and expose the auth field.
-      setTimeout(()=>{
-        if(progress)progress.style.width="100%";
-        if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
-        if(title)title.textContent="ДОСТУП ОГРАНИЧЕН";
-        if(sub)sub.textContent="Введите код допуска для продолжения";
-        const input=document.getElementById("accessCode");
-        const btn=document.getElementById("authorize");
-        if(input){input.disabled=false;input.hidden=false;input.focus();}
-        if(btn){btn.disabled=false;btn.hidden=false;}
-        boot.classList.remove("initializing");
-      },1700);
-    }catch(e){
-      console.error("SPMG BOOT ERROR",e);
-      const status=document.getElementById("bootFooterStatus");
-      if(status)status.textContent="СИСТЕМА ГОТОВА // АВТОРИЗАЦИЯ ДОСТУПНА";
-    }
-  }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",startPortalBoot);
-  else startPortalBoot();
-})();
-
 <script id="spmg-auth-bindings">
 (function(){
   function bindAuth(){
@@ -1286,6 +1215,22 @@ window.addEventListener("unhandledrejection",function(e){
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindAuth);
   else bindAuth();
+
+  setTimeout(function(){
+    const boot=document.getElementById("boot");
+    const app=document.getElementById("app");
+    const gate=document.getElementById("codeGate");
+    const input=document.getElementById("accessCode");
+    const btn=document.getElementById("authorize");
+    const status=document.getElementById("bootFooterStatus");
+    if(boot && app && app.classList.contains("hidden") && gate){
+      gate.classList.remove("hidden");
+      if(input){input.disabled=false;input.hidden=false;}
+      if(btn){btn.disabled=false;btn.hidden=false;}
+      if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ // РЕЗЕРВНЫЙ КАНАЛ";
+      console.warn("[SPMG-04] Boot watchdog released authentication gate.");
+    }
+  },5000);
 })();
 </script>
 </body>
