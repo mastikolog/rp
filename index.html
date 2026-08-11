@@ -13,7 +13,7 @@
             --panel: #0a0a0a;
             --border: rgba(255, 255, 255, 0.04);
             --text: #c8c8c8;
-            --text-dim: #666;
+            --text-dim: #555;
             --text-bright: #f0f0f0;
             --green: #00ff41;
             --red: #ff1a1a;
@@ -133,6 +133,8 @@
                 var(--shadow),
                 0 0 0 1px rgba(255, 255, 255, 0.015);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         /* ============================================================
@@ -147,6 +149,7 @@
             background: rgba(0, 0, 0, 0.3);
             flex-wrap: wrap;
             gap: 8px;
+            flex-shrink: 0;
         }
 
         .header-left {
@@ -170,7 +173,8 @@
         }
 
         @keyframes dotPulse {
-            0%, 100% { opacity: 0.2; transform: scale(0.9); }
+            0%,
+            100% { opacity: 0.2; transform: scale(0.9); }
             50% { opacity: 1; transform: scale(1); }
         }
 
@@ -206,6 +210,7 @@
             line-height: 1.75;
             scrollbar-width: thin;
             scrollbar-color: rgba(255, 255, 255, 0.05) transparent;
+            flex: 1;
         }
 
         .terminal-body::-webkit-scrollbar {
@@ -386,6 +391,7 @@
             color: var(--text-dim);
             flex-wrap: wrap;
             gap: 6px;
+            flex-shrink: 0;
         }
 
         .footer .blink {
@@ -393,7 +399,8 @@
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 1; }
+            0%,
+            100% { opacity: 1; }
             50% { opacity: 0; }
         }
 
@@ -565,17 +572,24 @@
             };
 
             // ============================================================
-            // 3. ЛОГИ (ПОСЛЕДОВАТЕЛЬНОСТЬ ВЫВОДА)
+            // 3. ЛОГИ (РАСШИРЕННЫЙ ЗАГРУЗОЧНЫЙ ЭКРАН)
             // ============================================================
             const LOGS = [
-                { text: '> ПОДКЛЮЧЕНИЕ К СИСТЕМЕ AURUM...', cls: 'dim', delay: 280 },
-                { text: '> ПРОВЕРКА КАНАЛА СВЯЗИ...', cls: 'dim', delay: 220 },
-                { text: '> УСТАНОВЛЕНИЕ ЗАЩИЩЁННОГО СОЕДИНЕНИЯ...', cls: 'dim', delay: 320 },
-                { text: '> ВЕРИФИКАЦИЯ УЧЁТНЫХ ДАННЫХ...', cls: 'dim', delay: 260 },
-                { text: '> ДОСТУП РАЗРЁШЕН. ПРИВЕТСТВУЕМ, ОПЕРАТИВНИК QUARTZ.', cls: 'green', delay: 380 },
-                { text: '> ЗАГРУЗКА ЗАДАНИЯ...', cls: 'dim', delay: 240 },
-                { text: '> РАСШИФРОВКА ДАННЫХ...', cls: 'dim', delay: 310 },
-                { text: '> ГОТОВО.', cls: 'green', delay: 180 },
+                { text: '> ИНИЦИАЛИЗАЦИЯ ЯДРА СИСТЕМЫ AURUM...', cls: 'dim', delay: 180 },
+                { text: '> ЗАГРУЗКА МОДУЛЕЙ БЕЗОПАСНОСТИ...', cls: 'dim', delay: 220 },
+                { text: '> ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ СВЯЗИ...', cls: 'dim', delay: 190 },
+                { text: '> УСТАНОВЛЕНИЕ ЗАЩИЩЁННОГО СОЕДИНЕНИЯ...', cls: 'dim', delay: 240 },
+                { text: '> ВЕРИФИКАЦИЯ УЧЁТНЫХ ДАННЫХ ОПЕРАТИВНИКА...', cls: 'dim', delay: 260 },
+                { text: '> РАСШИФРОВКА ПРОФИЛЯ АГЕНТА...', cls: 'dim', delay: 210 },
+                { text: '> ПРОФИЛЬ: QUARTZ // ДОПУСК: УРОВЕНЬ 3', cls: 'green', delay: 200 },
+                { text: '> СИНХРОНИЗАЦИЯ С ЦЕНТРАЛЬНЫМ УЗЛОМ...', cls: 'dim', delay: 230 },
+                { text: '> ЗАГРУЗКА ПОСЛЕДНИХ ОПЕРАТИВНЫХ СВОДОК...', cls: 'dim', delay: 190 },
+                { text: '> ДОСТУП РАЗРЁШЕН. ПРИВЕТСТВУЕМ, ОПЕРАТИВНИК.', cls: 'green', delay: 300 },
+                { text: '> ЗАГРУЗКА АКТИВНОГО ЗАДАНИЯ...', cls: 'dim', delay: 180 },
+                { text: '> РАСШИФРОВКА ДАННЫХ...', cls: 'dim', delay: 260 },
+                { text: '> ПРОВЕРКА ЭЛЕКТРОННОЙ ПОДПИСИ...', cls: 'dim', delay: 210 },
+                { text: '> ПОДПИСЬ ВЕРИФИЦИРОВАНА.', cls: 'green', delay: 150 },
+                { text: '> ГОТОВО.', cls: 'green', delay: 120 },
                 { text: '', cls: 'separator', delay: 80 },
                 // Заголовок задания
                 { text: `[ ${TASK.classification} ]`, cls: 'red', delay: 200 },
@@ -590,8 +604,9 @@
                     delay: 130
                 })),
                 { text: '', cls: 'separator', delay: 100 },
-                { text: '> ЗАДАНИЕ ЗАГРУЖЕНО. ОЖИДАЙТЕ ДАЛЬНЕЙШИХ УКАЗАНИЙ.', cls: 'green', delay: 300 },
-                { text: '> ДЛЯ ПОДТВЕРЖДЕНИЯ ВВЕДИТЕ КОДОВОЕ СЛОВО.', cls: 'dim', delay: 240 },
+                { text: '> ЗАДАНИЕ ЗАГРУЖЕНО. ОЖИДАЙТЕ ДАЛЬНЕЙШИХ УКАЗАНИЙ.', cls: 'green', delay: 280 },
+                { text: '> ДЛЯ ПОДТВЕРЖДЕНИЯ ВВЕДИТЕ КОДОВОЕ СЛОВО.', cls: 'dim', delay: 200 },
+                { text: '> ИЛИ ИСПОЛЬЗУЙТЕ КНОПКИ УПРАВЛЕНИЯ.', cls: 'dim', delay: 160 },
             ];
 
             // ============================================================
@@ -643,6 +658,7 @@
                     addLine('> КОДОВОЕ СЛОВО ПРИНЯТО. ЗАДАНИЕ ПОДТВЕРЖДЕНО.', 'green');
                     addLine('> ОПЕРАТИВНИК QUARTZ, ВЫ НАЗНАЧЕНЫ ИСПОЛНИТЕЛЕМ.', 'bright');
                     addLine('> ВРЕМЯ ВЫПОЛНЕНИЯ: 72 ЧАСА.', 'dim');
+                    addLine('> ДАННЫЕ ЗАФИКСИРОВАНЫ В СИСТЕМЕ.', 'dim');
                     disableButtons();
                 });
 
@@ -710,32 +726,37 @@
             }
 
             // ============================================================
-            // 8. ЗАПУСК
+            // 8. ДОПОЛНИТЕЛЬНЫЕ ТЕХНИЧЕСКИЕ СООБЩЕНИЯ (АТМОСФЕРА)
             // ============================================================
-            setTimeout(typeLine, 400);
-            setInterval(updateTime, 1000);
-            setInterval(triggerGlitch, 3500);
-
-            // Дополнительные случайные сообщения (атмосфера)
-            setInterval(() => {
+            function addRandomMessage() {
                 if (Math.random() > 0.6) return;
                 const msgs = [
                     '> СИНХРОНИЗАЦИЯ ДАННЫХ...',
-                    '> ПРОВЕРКА ЦЕЛОСТНОСТИ...',
-                    '> ОБНОВЛЕНИЕ КЭША...',
+                    '> ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ...',
+                    '> ОБНОВЛЕНИЕ КЭША БЕЗОПАСНОСТИ...',
                     '> ОПРОС УЗЛОВ СЕТИ...',
-                    '> СКАНИРОВАНИЕ ОКРУЖЕНИЯ...'
+                    '> СКАНИРОВАНИЕ ОКРУЖАЮЩЕЙ СРЕДЫ...',
+                    '> ВЕРИФИКАЦИЯ ПОСЛЕДНИХ ИЗМЕНЕНИЙ...',
+                    '> ПРОВЕРКА АКТИВНЫХ ПРОЦЕССОВ...'
                 ];
                 const div = document.createElement('div');
                 div.className = 'line dim';
                 div.textContent = msgs[Math.floor(Math.random() * msgs.length)];
-                div.style.opacity = '0.25';
+                div.style.opacity = '0.2';
                 div.style.fontSize = '10px';
                 div.style.color = '#444';
                 output.appendChild(div);
                 scrollToBottom();
                 setTimeout(() => div.remove(), 1200);
-            }, 5500);
+            }
+
+            // ============================================================
+            // 9. ЗАПУСК
+            // ============================================================
+            setTimeout(typeLine, 400);
+            setInterval(updateTime, 1000);
+            setInterval(triggerGlitch, 2500);
+            setInterval(addRandomMessage, 4000);
 
             console.log('AURUM TERMINAL v5.0 // ЗАПУЩЕН');
         })();
