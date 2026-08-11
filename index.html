@@ -151,69 +151,14 @@ h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8
 @media(max-width:700px){.bootFrame{width:96vw;height:92vh}.bootHeader{padding:0 15px}.bootTelemetry span:not(:last-child){display:none}.bootCenter{padding:25px 18px}.bootConsole{height:130px}.bootFooter{padding:0 12px;font-size:7px}.bootFooter span:nth-child(2){display:none}.authRow{flex-wrap:wrap}.authPrefix{width:100%;padding-bottom:4px}.authRow input{width:100%;flex:auto}.authRow button{margin-left:0;margin-top:7px;width:100%}}
 </style>
 
-<style id="builder-css">
-.builderbox{width:min(900px,94vw);max-height:90vh}.builderbox .modalbody{overflow:auto}
-.buildergrid{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:10px;margin-bottom:12px}
-.buildergrid label,.builderfull{display:flex;flex-direction:column;gap:6px;font:8px var(--mono);letter-spacing:.08em;color:#70787d}
-.buildergrid input,.buildergrid select,.builderfull textarea{background:#07090a;border:1px solid #252b2f;color:#d9dddf;outline:none;padding:10px;font:10px/1.5 var(--mono);resize:vertical}
-.buildergrid input:focus,.buildergrid select:focus,.builderfull textarea:focus{border-color:#687176}
-.builderfull{margin-bottom:12px}.builderfull textarea{min-height:60px}
-.builderpreview{border-top:1px solid #1b2024;padding-top:12px;margin-top:8px}
-.transmission{margin-top:9px;border:1px solid #20262a;background:#060809;padding:16px;font:10px/1.75 var(--mono);white-space:pre-wrap;color:#aab0b4;min-height:130px;position:relative}
-.transmission:before{content:"ПЕРЕДАЧА // SPMG-04";display:block;color:#596167;font-size:8px;letter-spacing:.13em;margin-bottom:9px}
-.transmission .tx-secret{color:#c1a268}.transmission .tx-system{color:#737c82}.transmission .tx-end{color:#545c61}
-.builderfoot{display:flex;align-items:center;justify-content:space-between;gap:12px}.builderfoot span{font:8px var(--mono);color:#4f575c}
-.builderAdd{margin-left:8px}
-@media(max-width:800px){.buildergrid{grid-template-columns:1fr 1fr}.builderfoot{flex-direction:column;align-items:stretch}}
-@media(max-width:520px){.buildergrid{grid-template-columns:1fr}}
-</style>
-
-<style id="transmission-css">
-.prose{white-space:pre-wrap}
-.transmissionline{position:relative}
-.transmissionline.system{color:#6e777d}
-.transmissionline.secret{color:#b59b67}
-.transmissionline.encrypt{color:#596166}
-.txglitch{display:inline-block;min-width:.7em}
-</style>
-
 <style id="ru-type-fix">
 body,.app,.modal,.row,.panel,.side,.content{font-family:var(--sans)}
 button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.metric,.footer,.topbar,.boot{font-family:var(--mono)}
 .rowtitle,.paneltitle,h1,h2,h3{font-family:var(--sans);font-weight:600;letter-spacing:-.01em}
 </style>
 
-<style id="identity-css">
-.identityStrip{display:flex;align-items:center;gap:10px;font:8px var(--mono);color:#5c6469}
-.identityStrip .identityName{color:#9aa1a5}.identityStrip .identityRole{color:#626a6f}
-#nav button.hidden{display:none!important}
-.adminOnly{display:none}.isAdmin .adminOnly{display:block}
-</style>
-
-<style id="audit-admin-css">
-.auditRow{display:grid;grid-template-columns:140px 170px 110px 90px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid #171c20;font:8px var(--mono);color:#697177}
-.auditRow b{color:#9ba2a6;font-weight:500}.auditRow em{font-style:normal;color:#8c9498}.auditRow strong{font-weight:400;color:#848c91}.adminSession{display:grid;grid-template-columns:1fr 2fr;gap:8px;font:9px var(--mono);color:#555d62}.adminSession b{color:#9aa1a5;font-weight:500}
-@media(max-width:800px){.auditRow{grid-template-columns:1fr 1fr}.auditRow strong{grid-column:1/-1}.identityStrip{display:none}}
-</style>
-
-<style id="security-note-css">
-.securityNote{font:8px var(--mono);color:#454d52;line-height:1.6}
-</style>
-
-
-
 <style id="final-tools-css">
 .adminTools{display:flex;gap:8px;flex-wrap:wrap}.fileBtn{position:relative;overflow:hidden;display:inline-flex;align-items:center;cursor:pointer}.fileBtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
-</style>
-
-<style id="final-auth-visibility">
-#accessCode{display:block!important;visibility:visible!important;opacity:1!important}
-#authorize{display:inline-flex!important;visibility:visible!important;opacity:1!important}
-</style>
-
-<style id="spmg-auth-final-css">
-#codeGate{position:relative;z-index:20}
-#accessCode,#authorize{visibility:visible!important}
 </style>
 </head>
 <body>
@@ -257,7 +202,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 
       <div class="bootConsole" id="bootConsole"></div>
 
-      <div class="bootAuth hidden" id="codeGate">
+      <div class="bootAuth" id="codeGate">
         <div class="authLabel">ТРЕБУЕТСЯ ПОДТВЕРЖДЕНИЕ ОПЕРАТОРА</div>
         <div class="authRow">
           <div class="authPrefix">SPMG-04 //</div>
@@ -288,8 +233,6 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
   <nav class="nav" id="nav">
     <button class="active" data-page="overview">ОБЗОР <span class="count">01</span></button>
     <button data-page="operations">ОПЕРАЦИИ <span class="count">07</span></button>
-    <button data-page="builder">КОНСТРУКТОР <span class="count">+</span></button>
-    <button data-page="admin" class="hidden">АДМИНИСТРИРОВАНИЕ <span class="count">SYS</span></button>
     <button data-page="intelligence">РАЗВЕДДАННЫЕ <span class="count">12</span></button>
     <button data-page="bulletins">ОБЪЯВЛЕНИЯ <span class="count">03</span></button>
     <button data-page="documents">ДОКУМЕНТЫ <span class="count">18</span></button>
@@ -336,39 +279,6 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </div>
 
 
-<div class="modal hidden" id="builderModal">
-  <div class="modalbox builderbox">
-    <div class="modalhead"><h2>КОНСТРУКТОР ОПЕРАЦИИ</h2><button class="close" id="closeBuilder">×</button></div>
-    <div class="modalbody">
-      <div class="buildergrid">
-        <label>НАЗВАНИЕ ОПЕРАЦИИ<input id="bTitle" placeholder="Например: ПЕРЕХВАТ // СЕКТОР 04"></label>
-        <label>УРОВЕНЬ ДОПУСКА<select id="bClass"><option>SPMG-II</option><option selected>SPMG-IV</option><option>SPMG-V</option></select></label>
-        <label>ПРИОРИТЕТ<select id="bPriority"><option>НИЗКИЙ</option><option selected>СРЕДНИЙ</option><option>ВЫСОКИЙ</option><option>КРИТИЧЕСКИЙ</option></select></label>
-        <label>СРОК</label>
-      </div>
-      <label class="builderfull">КРАТКОЕ ОПИСАНИЕ<textarea id="bDesc" rows="3" placeholder="Что известно до начала операции..."></textarea></label>
-      <label class="builderfull">ТЕКСТ ОПЕРАЦИИ<textarea id="bBody" rows="12" placeholder="Подключение к системе....
-Обработка данных....
-Отправка сообщения....
-
-Внимание! Засекречено уровнем допуска 5.
-
-Текст задания...
-
-Отсоединение...
-Шифрование..."></textarea></label>
-      <div class="builderpreview">
-        <div class="sectionlabel">ПРЕДПРОСМОТР ПЕРЕД ПУБЛИКАЦИЕЙ</div>
-        <div id="builderPreview" class="transmission"></div>
-      </div>
-    </div>
-    <div class="modalfoot builderfoot">
-      <span>НОВАЯ ЗАПИСЬ БУДЕТ СОХРАНЕНА ЛОКАЛЬНО В ЭТОМ БРАУЗЕРЕ</span>
-      <button class="btn" id="saveOperation">ОПУБЛИКОВАТЬ ОПЕРАЦИЮ</button>
-    </div>
-  </div>
-</div>
-
 <div class="modal hidden" id="modal"><div class="modalbox"><div class="modalhead"><h2 id="modalTitle"></h2><button class="close" id="closeModal">×</button></div><div class="modalbody" id="modalBody"></div><div class="modalfoot">ФАКТ ДОСТУПА БУДЕТ ЗАПИСАН В ЖУРНАЛ ДЕЙСТВИЙ</div></div></div>
 <div class="toast" id="toast"><div class="t" id="toastTitle"></div><div class="m" id="toastMsg"></div></div>
 
@@ -378,11 +288,12 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 
 let audit=[];
 const state={
- page:"overview",accepted:new Set(),audit:[],booted:false,
+ page:"overview", accepted:new Set(), audit:[], booted:false,
  user:{name:"Оператор",role:"operator",code:"",level:"SPMG-IV"},
  audio:null
 };
 try{state.audit=JSON.parse(localStorage.getItem("spmg04_audit")||"[]")}catch(e){state.audit=[]}
+
 const operations=[
   {
     id:"OP-57-001",
@@ -393,120 +304,35 @@ const operations=[
     date:"11.08.2057",
     desc:"Тестовая оперативная задача для демонстрации формата документа.",
     body:`Подключение к системе....
-
 Обработка данных....
-
 Передача сообщения....
-
 ВНИМАНИЕ // ДОКУМЕНТ ОГРАНИЧЕН УРОВНЕМ ДОПУСКА SPMG-IV.
-
 Провести проверку указанного канала связи и подтвердить его доступность.
-
 Не раскрывать принадлежность к SPMG.
-
 После завершения передать краткий оперативный отчёт.
-
 Отсоединение....
-
 Шифрование....
-
 ПЕРЕДАЧА ЗАВЕРШЕНА.`,
     custom:false
   }
 ];
 
 const intelligence=[
- {id:"IR-57-042",type:"FIELD REPORT",confidence:"78%",title:"UNREGISTERED MOVEMENT // SECTOR 04",date:"11.08.2057",desc:"Field observation indicates repeated movement near a previously inactive facility.",body:`SOURCE: FIELD OPERATIONS
-CONFIDENCE: 78%
+ {id:"IR-57-042",type:"FIELD REPORT",confidence:"78%",title:"НЕЗАРЕГИСТРИРОВАННОЕ ДВИЖЕНИЕ // СЕКТОР 04",date:"11.08.2057",desc:"Полевое наблюдение фиксирует повторную активность возле объекта.",body:`ИСТОЧНИК: ПОЛЕВЫЕ ОПЕРАЦИИ
+ДОВЕРИЕ: 78%
 
-A previously inactive facility has shown signs of activity during three separate observation windows.
+Объект, ранее считавшийся неактивным, демонстрирует признаки движения.
 
-No direct attribution has been established.
-
-ANALYST NOTE
-
-Further collection is recommended before any operational conclusion is made.`},
- {id:"IR-57-041",type:"INTERCEPT",confidence:"31%",title:"UNIDENTIFIED TRANSMISSION",date:"11.08.2057",desc:"Short encrypted burst received by NODE-03.",body:`SOURCE: UNKNOWN
-CONFIDENCE: 31%
-
-TRANSMISSION LENGTH: 08.4 SEC
-ROUTE: UNKNOWN → NODE-03
-
-CONTENT: [ENCRYPTED]
-
-ANALYST NOTE
-
-Information cannot currently be independently verified.`},
- {id:"IR-57-039",type:"INCIDENT",confidence:"92%",title:"COMMUNICATION INTERRUPTION // NODE 05",date:"10.08.2057",desc:"Node offline following an unexplained interruption.",body:`NODE: NODE-05
-STATUS: ОТКЛЮЧЕН
-CONFIDENCE: 92%
-
-The node ceased responding at 22:17:09.
-No authorized maintenance window was scheduled.
-
-Investigation status: OPEN.`}
+Дополнительная проверка продолжается.`}
 ];
 
 const bulletins=[
- {id:"BL-2057-0811",title:"TEMPORARY MOVEMENT RESTRICTIONS // SECTOR 04",date:"11.08.2057",level:"INTERNAL",body:`ALL FIELD PERSONNEL
-
-Due to increased activity within Sector 04, non-essential movement through the affected area is temporarily suspended.
-
-This notice remains active until further instruction.
-
-SPMG OPERATIONS CONTROL`},
- {id:"BL-2057-0810",title:"COMMUNICATION PROTOCOL REVISION",date:"10.08.2057",level:"INTERNAL",body:`Effective immediately, field personnel are requested to verify secondary communication channels before commencing sensitive operations.
-
-Updated protocol reference: COM-7 / REV. 4.`},
- {id:"BL-2057-0808",title:"ARCHIVE MAINTENANCE WINDOW",date:"08.08.2057",level:"ROUTINE",body:`Scheduled archive maintenance has been completed.
-
-Some historical documents may remain temporarily unavailable while integrity verification continues.`}
+ {id:"BL-2057-0811",title:"ВРЕМЕННЫЕ ОГРАНИЧЕНИЯ // СЕКТОР 04",date:"11.08.2057",level:"INTERNAL",body:"Доступ к сектору 04 ограничен до особого распоряжения."},
+ {id:"BL-2057-0810",title:"ИЗМЕНЕНИЕ ПРОТОКОЛА СВЯЗИ",date:"10.08.2057",level:"INTERNAL",body:"Перед чувствительными операциями проверять резервный канал."}
 ];
 
 const documents=[
- {id:"DOC-14-A",class:"SPMG-II",title:"COMMUNICATION PROTOCOL // REV. 4",date:"02.08.2057",body:`PURPOSE
-
-Defines the approved procedure for establishing and maintaining internal field communications.
-
-REVISION
-
-4.0 // 02.08.2057
-
-STATUS
-
-ТЕКУЩИЕ`},
- {id:"DOC-12-D",class:"SPMG-IV",title:"FIELD REPORTING STANDARD",date:"17.07.2057",body:`All operational observations should be recorded using the approved reporting structure.
-
-Required elements:
-
-1. Time and location
-2. Observation
-3. Confidence assessment
-4. Immediate operational relevance
-5. Supporting material, where available`},
- {id:"DOC-09-B",class:"SPMG-V",title:"PROJECT VEIL // EXECUTIVE SUMMARY",date:"11.03.2057",restricted:true,body:`ДОСТУП ОГРАНИЧЕН
-
-ТЕКУЩИЕ CLEARANCE IS INSUFFICIENT.
-
-REQUIRED CLEARANCE: SPMG-V
-
-No additional material is available at this access level.`},
- {id:"DOC-07-C",class:"SPMG-III",title:"INCIDENT CLASSIFICATION MATRIX",date:"29.06.2057",body:`INCIDENT LEVELS
-
-I — ROUTINE
-II — OPERATIONAL
-III — SIGNIFICANT
-IV — CRITICAL
-
-Classification may be increased following additional intelligence.`}
-];
-
-audit=[
- ["14:18:42","SECURITY","SESSION ANOMALY RESOLVED"],
- ["14:17:03","SYSTEM","ARCHIVE INDEX SYNCHRONIZED"],
- ["14:11:27","INTEL","IR-57-042 PUBLISHED"],
- ["13:58:16","SYSTEM","NODE-03 STATUS UPDATED"],
- ["13:42:51","OPS","OP-57-041 REVIEWED"]
+ {id:"DOC-14-A",class:"SPMG-II",title:"ПРОТОКОЛ СВЯЗИ // РЕД. 4",date:"02.08.2057",body:"Устанавливает порядок проверки каналов связи перед операциями."}
 ];
 
 const $=s=>document.querySelector(s);
@@ -533,110 +359,13 @@ modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.add("hidd
 
 function card(item,type){
  let status=item.status||item.level||item.type;
- let extra=item.?`<span> ${esc(item.)}</span>`:`<span>${esc(item.date)}</span>`;
+ let extra=item.deadline?`<span>СРОК ${esc(item.deadline)}</span>`:`<span>${esc(item.date)}</span>`;
  return `<div class="row" data-open="${esc(item.id)}" data-type="${type}">
    <div class="rowtop"><span class="code">${esc(item.id)}</span><span class="status ${String(status).toLowerCase().includes("active")?"active":String(status).toLowerCase().includes("critical")?"alert":"closed"}">${esc(status)}</span></div>
    <div class="rowtitle">${esc(item.title)}</div><div class="rowdesc">${esc(item.desc||"")}</div>
    <div class="tags"><span class="tag">${esc(item.class||item.type||item.level)}</span>${extra}</div>
  </div>`
 }
-
-
-function localizeSeedContent(){
- const op={
- "OP-57-041":{
-  title:"ПЕРЕХВАТ СИГНАЛА // СЕКТОР 07",
-  desc:"В закрытом секторе обнаружен мобильный узел связи. Источник не установлен.",
-  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
-ОБРАБОТКА ДАННЫХ....
-ОБНАРУЖЕНА ПЕРЕДАЧА....
-ВНИМАНИЕ! ЗАСЕКРЕЧЕНО УРОВНЕМ ДОПУСКА SPMG-IV.
-ТЕКСТ ПЕРЕДАЧИ: источник сигнала не соответствует зарегистрированной инфраструктуре.
-ОПЕРАТИВНАЯ ЗАДАЧА:
-Установить местоположение узла, определить его назначение и получить данные для дальнейшего анализа.
-УСЛОВИЕ УСПЕХА:
-Источник подтверждён, первичный отчёт передан.
-УСЛОВИЕ ПРОВАЛА:
-Потеря сигнала без возможности восстановления следа либо раскрытие присутствия SPMG.
-ОТСОЕДИНЕНИЕ....
-ШИФРОВАНИЕ....`
- },
- "OP-57-038":{
-  title:"ПРОТОКОЛ КОНТАКТА // «СЕВЕРНАЯ ЗВЕЗДА»",
-  desc:"Проверенный контакт не вышел на связь по установленному каналу.",
-  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
-ПРОВЕРКА АРХИВА....
-КОНТАКТ: «СЕВЕРНАЯ ЗВЕЗДА»
-ВНИМАНИЕ! УРОВЕНЬ ДОПУСКА SPMG-III.
-Последняя подтверждённая передача: 09.08.2057 // 04:17.
-Ожидаемая связь не состоялась.
-ЗАДАЧА:
-Определить текущее состояние контакта и при необходимости установить резервный канал.
-ОГРАНИЧЕНИЕ:
-Не раскрывать принадлежность к SPMG.
-ОТСОЕДИНЕНИЕ....
-ШИФРОВАНИЕ....`
- },
- "OP-57-035":{
-  title:"ВОЗВРАТ // ДЕЛО 12-ДЕЛЬТА",
-  desc:"Копия закрытого дела вновь появилась в незащищённом информационном канале.",
-  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
-СВЕРКА АРХИВА....
-ОБЪЕКТ: ДЕЛО 12-ДЕЛЬТА
-ВНИМАНИЕ! МАТЕРИАЛ ЗАСЕКРЕЧЕН.
-Дело было закрыто и помещено в архив в 2055 году.
-Частичная копия обнаружена во внешнем канале.
-ЗАДАЧА:
-Установить источник копии и определить, был ли нарушен архивный контур.
-ПРИОРИТЕТ: ВЫСОКИЙ.
-ОТСОЕДИНЕНИЕ....
-ШИФРОВАНИЕ....`
- },
- "OP-57-031":{
-  title:"ПРОВЕРКА // УЗЕЛ 03",
-  desc:"Плановая проверка узла связи с нестабильной целостностью.",
-  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
-ДИАГНОСТИКА УЗЛА 03....
-ОБНАРУЖЕНЫ ПОВТОРНЫЕ ОШИБКИ ЦЕЛОСТНОСТИ.
-ЗАДАЧА:
-Проверить состояние узла и передать техническое наблюдение.
-СТАТУС:
-Плановая операция. При обнаружении дополнительных аномалий действовать по обстановке.
-ОТСОЕДИНЕНИЕ....
-ШИФРОВАНИЕ....`
- },
- "OP-57-026":{
-  title:"ПРОЕКТ «ВУАЛЬ» // ФАЗА 2",
-  desc:"Операция приостановлена до завершения центральной проверки.",
-  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
-СТАТУС: ПРИОСТАНОВЛЕНО.
-Дальнейшие действия запрещены до завершения центральной проверки.
-Ранее полученные материалы сохраняют исходный уровень секретности.
-ОТСОЕДИНЕНИЕ....
-ШИФРОВАНИЕ....`
- }};
- operations.forEach(x=>{if(op[x.id])Object.assign(x,op[x.id])});
- const intel={
- "IR-57-042":["НЕЗАРЕГИСТРИРОВАННОЕ ДВИЖЕНИЕ // СЕКТОР 04","Полевое наблюдение фиксирует повторную активность возле объекта, ранее считавшегося неактивным."],
- "IR-57-041":["НЕИДЕНТИФИЦИРОВАННАЯ ПЕРЕДАЧА","Короткий зашифрованный импульс получен узлом 03."],
- "IR-57-039":["ПРЕРЫВАНИЕ СВЯЗИ // УЗЕЛ 05","Узел 05 отключён после необъяснимого прерывания связи."]
- };
- intelligence.forEach(x=>{if(intel[x.id]){x.title=intel[x.id][0];x.desc=intel[x.id][1];x.body=`ИСТОЧНИК: ${x.type==="INTERCEPT"?"НЕ УСТАНОВЛЕН":"ПОЛЕВЫЕ ОПЕРАЦИИ"}\nДОВЕРИЕ: ${x.confidence}\n\n${x.desc}\n\nДополнительная проверка продолжается.`}});
- const bl={
- "BL-2057-0811":["ВРЕМЕННЫЕ ОГРАНИЧЕНИЯ ПЕРЕДВИЖЕНИЯ","С 22:00 доступ к отдельным участкам сектора 04 ограничивается. Перед выходом проверить резервный маршрут."],
- "BL-2057-0810":["ИЗМЕНЕНИЕ ПРОТОКОЛА СВЯЗИ","Перед началом чувствительных операций необходимо проверить резервный канал связи."],
- "BL-2057-0808":["ОКНО ТЕХНИЧЕСКОГО ОБСЛУЖИВАНИЯ АРХИВА","Плановое обслуживание архива завершено. Доступ к материалам восстановлен."]
- };
- bulletins.forEach(x=>{if(bl[x.id]){x.title=bl[x.id][0];x.body=bl[x.id][1]}});
- const docs={
- "DOC-14-A":["ПРОТОКОЛ СВЯЗИ // РЕДАКЦИЯ 4","Назначение\n\nУстановить единый порядок проверки каналов связи перед операциями.\n\nПРАВИЛО\n\nПри нестабильности основного канала использовать резервный и зарегистрировать событие."],
- "DOC-12-D":["СТАНДАРТ ПОЛЕВОЙ ОТЧЁТНОСТИ","Каждое оперативное наблюдение фиксируется в утверждённой структуре отчёта.\n\nМинимальный набор: время, место, источник, наблюдение, оценка и рекомендуемое действие."],
- "DOC-09-B":["ПРОЕКТ «ВУАЛЬ» // СВОДКА РУКОВОДСТВА","ДОСТУП ОГРАНИЧЕН\n\nМатериал доступен только сотрудникам с соответствующим уровнем допуска."],
- "DOC-07-C":["МАТРИЦА КЛАССИФИКАЦИИ ИНЦИДЕНТОВ","УРОВНИ ИНЦИДЕНТА\n\nI — локальное отклонение.\nII — подтверждённая нестабильность.\nIII — оперативная угроза.\nIV — критическое нарушение.\nV — компрометация контура."]
- };
- documents.forEach(x=>{if(docs[x.id]){x.title=docs[x.id][0];x.body=docs[x.id][1]}});
-}
-localizeSeedContent();
 
 function head(kicker,title,actions=""){
  return `<div class="pagehead"><div><div class="kicker">${kicker}</div><h1>${title}</h1></div><div class="pageactions">${actions}</div></div>`
@@ -647,195 +376,49 @@ function panel(title,html,minor=""){
 
 function renderOverview(){
  const active=operations.filter(x=>x.status==="ACTIVE").length;
- content.innerHTML=head("SPMG // ВНУТРЕННЯЯ ОПЕРАТИВНАЯ СЕТЬ","OVERVIEW",`<button class="btn" onclick="window.refreshPortal()">ОБНОВИТЬ СЕТЬ</button>`)+
+ content.innerHTML=head("SPMG // ВНУТРЕННЯЯ ОПЕРАТИВНАЯ СЕТЬ","ОБЗОР",`<button class="btn" onclick="window.refreshPortal()">ОБНОВИТЬ СЕТЬ</button>`)+
  `<div class="metrics">
    <div class="metric"><div class="label">АКТИВНЫЕ РАСПОРЯЖЕНИЯ</div><strong>${String(active).padStart(2,"0")}</strong><div class="sub">ТЕКУЩИЕ ОПЕРАЦИИ</div></div>
-   <div class="metric"><div class="label">РАЗВЕДДАННЫЕ</div><strong>12</strong><div class="sub">03 НЕ ПРОВЕРЕНО</div></div>
+   <div class="metric"><div class="label">РАЗВЕДДАННЫЕ</div><strong>${intelligence.length}</strong><div class="sub">АКТУАЛЬНЫЕ</div></div>
    <div class="metric alert"><div class="label">ОЦЕНКА УГРОЗЫ</div><strong>ПОВЫШЕННЫЙ</strong><div class="sub">ТРЕБУЕТСЯ ПРОВЕРКА</div></div>
    <div class="metric"><div class="label">ЦЕЛОСТНОСТЬ УЗЛОВ</div><strong>98.7%</strong><div class="sub">SPMG-04</div></div>
  </div>
  <div class="grid2">
   <div>
-   ${panel("АКТИВНЫЕ ОПЕРАЦИИ",operations.slice(0,3).map(x=>card(x,"operation")).join(""),"5 ЗАПИСЕЙ")}
-   ${panel("РАЗВЕДДАННЫЕ FEED",intelligence.slice(0,3).map(x=>card(x,"intelligence")).join(""),"ПОСЛЕДНИЕ")}
+   ${panel("АКТИВНЫЕ ОПЕРАЦИИ",operations.map(x=>card(x,"operation")).join(""),operations.length+" ЗАПИСЕЙ")}
+   ${panel("РАЗВЕДДАННЫЕ",intelligence.map(x=>card(x,"intelligence")).join(""),"ПОСЛЕДНИЕ")}
   </div>
   <div>
-   ${panel("ТЕКУЩЕЕ УВЕДОМЛЕНИЕ",`<div style="padding:14px"><div class="notice"><strong>SEC-57-0811 // SESSION ANOMALY</strong>A low-severity session inconsistency was detected and automatically resolved. No further action is required.</div><div style="font:9px/1.7 var(--mono);color:#596166">ПОСЛЕДНЯЯ ПРОВЕРКА СИСТЕМЫ<br><span style="color:#9aa1a5">11.08.2057 // ${now()}</span><br><br>НЕПРЕРЫВНОСТЬ СЕАНСА<br><span style="color:#9aa1a5">ПОДТВЕРЖДЕНО</span></div></div>`,"SECURITY")}
-   ${panel("ПОСЛЕДНИЕ ОБЪЯВЛЕНИЯ",bulletins.map(x=>`<div class="row" data-open="${x.id}" data-type="bulletin"><div class="rowtop"><span class="code">${x.id}</span><span>${x.date}</span></div><div class="rowtitle">${x.title}</div></div>`).join(""),"3")}
+   ${panel("ТЕКУЩЕЕ УВЕДОМЛЕНИЕ",`<div style="padding:14px"><div class="notice"><strong>SEC-57-0811 // СТАТУС СЕАНСА</strong>Аномалия сеанса устранена автоматически. Действий не требуется.</div><div style="font:9px/1.7 var(--mono);color:#596166">ПОСЛЕДНЯЯ ПРОВЕРКА СИСТЕМЫ<br><span style="color:#9aa1a5">11.08.2057 // ${now()}</span><br><br>НЕПРЕРЫВНОСТЬ СЕАНСА<br><span style="color:#9aa1a5">ПОДТВЕРЖДЕНО</span></div></div>`,"БЕЗОПАСНОСТЬ")}
+   ${panel("ПОСЛЕДНИЕ ОБЪЯВЛЕНИЯ",bulletins.map(x=>`<div class="row" data-open="${x.id}" data-type="bulletin"><div class="rowtop"><span class="code">${x.id}</span><span>${x.date}</span></div><div class="rowtitle">${x.title}</div></div>`).join(""),bulletins.length)}
   </div>
  </div>`;
  bindRows();
 }
 
 function renderList(title,kicker,arr,type,minor){
- content.innerHTML=head(kicker,title)+panel(title.toUpperCase(),arr.length?arr.map(x=>card(x,type)).join(""):`<div class="empty">NO MATERIAL AVAILABLE AT ТЕКУЩИЕ ACCESS LEVEL</div>`,minor);
+ content.innerHTML=head(kicker,title)+panel(title.toUpperCase(),arr.length?arr.map(x=>card(x,type)).join(""):`<div class="empty">НЕТ ДОСТУПНЫХ МАТЕРИАЛОВ</div>`,minor);
  bindRows();
 }
 function renderArchive(){
- const archived=[...operations].map((x,i)=>({...x,status:i%2?"COMPLETED":"ARCHIVED"}));
- renderList("Archive","SPMG // RECORDS",archived,"operation","ИСТОРИЧЕСКИЕ");
+ const archived=[...operations].map((x,i)=>({...x,status:i%2?"ВЫПОЛНЕНО":"АРХИВИРОВАНО"}));
+ renderList("АРХИВ","SPMG // ЗАПИСИ",archived,"operation","ИСТОРИЧЕСКИЕ");
 }
 function renderAudit(){
  content.innerHTML=head("SPMG-04 // КОНТРОЛЬ ДЕЙСТВИЙ","ЖУРНАЛ ДЕЙСТВИЙ",`<button class="btn" onclick="window.clearLocalAudit()">ОЧИСТИТЬ ЛОКАЛЬНЫЕ СОБЫТИЯ</button>`)+
- panel("ЖУРНАЛ СОБЫТИЙ СЕАНСА",audit.map(x=>`<div class="row" style="cursor:default"><div class="rowtop"><span class="code">[${x[0]}]</span><span>${x[1]}</span></div><div class="rowtitle" style="font-family:var(--mono);font-size:10px">${esc(x[2])}</div></div>`).join(""),`${audit.length} EVENTS`);
+ panel("ЖУРНАЛ СОБЫТИЙ СЕАНСА",state.audit.map(x=>`<div class="row" style="cursor:default"><div class="rowtop"><span class="code">[${x.time}]</span><span>${x.type}</span></div><div class="rowtitle" style="font-family:var(--mono);font-size:10px">${esc(x.msg)}</div></div>`).join(""),`${state.audit.length} СОБЫТИЙ`);
 }
-function renderRightFeed(){ audit=state.audit;
+function renderRightFeed(){
  const feed=$("#liveFeed");if(!feed)return;
- feed.innerHTML=audit.slice(0,8).map(x=>`<div class="feedline"><b>${x[0]}</b><span class="type">${x[1]}</span><strong>${esc(x[2])}</strong></div>`).join("");
-}
-
-function loadCustomOperations(){
- try{
-   const saved=JSON.parse(localStorage.getItem("spmg04_operations")||"[]");
-   if(Array.isArray(saved)) saved.forEach(x=>{if(x&&x.id&&!operations.some(o=>o.id===x.id))operations.unshift(x)});
- }catch(e){}
-}
-function saveCustomOperations(){
- localStorage.setItem("spmg04_operations",JSON.stringify(operations.filter(x=>x.custom)));
-}
-function openBuilder(){
- $("#builderModal").classList.remove("hidden");
- ["bTitle","bDesc","bBody","bDeadline"].forEach(id=>{$("#"+id).value=""});
- $("#bClass").value="SPMG-IV";$("#bPriority").value="ВЫСОКИЙ";
- updateBuilderPreview();
- setTimeout(()=>$("#bTitle").focus(),30);
-}
-function closeBuilder(){ $("#builderModal").classList.add("hidden"); }
-function updateBuilderPreview(){
- const body=$("#bBody").value.trim()||"Подключение к системе....\nОбработка данных....\nОтправка сообщения....\n\nВнимание! Засекречено уровнем допуска 5.\n\nТекст задания...\n\nОтсоединение....\nШифрование....";
- const lines=body.split("\n").map(line=>{
-   const t=line.trim().toUpperCase();
-   let cls="";
-   if(/ПОДКЛЮЧ|ОБРАБОТ|ОТПРАВ|ОТСОЕД|ШИФР/.test(t))cls="system";
-   if(/ВНИМАНИЕ|ЗАСЕКРЕЧ|ДОПУСК|КЛАСС/.test(t))cls="secret";
-   return `<span class="transmissionline ${cls}">${esc(line)}</span>`;
- }).join("\n");
- $("#builderPreview").innerHTML=lines;
-}
-
-function createOperation(){
-  if(state.user.role!=="admin"){toast("ДОСТУП ЗАПРЕЩЁН","Создание операций доступно только Administrator.");return}
-  const title=(document.getElementById("bTitle")?.value||"").trim();
-  const body=(document.getElementById("bBody")?.value||"").trim();
-  if(!title||!body){toast("ОШИБКА","Заполните название и текст операции.");return}
-  const op={
-    id:"OP-57-"+String(Date.now()).slice(-6),
-    status:"ACTIVE",
-    class:document.getElementById("bClass")?.value||"SPMG-IV",
-    priority:document.getElementById("bPriority")?.value||"СРЕДНИЙ",
-    title,date:"11.08.2057",
-    :(document.getElementById("bDeadline")?.value||"OPEN").trim(),
-    desc:(document.getElementById("bDesc")?.value||"").trim()||"Оперативное распоряжение SPMG-04.",
-    body,custom:true,createdBy:state.user.name
-  };
-  operations.unshift(op);
-  try{
-    localStorage.setItem("spmg04_operations",JSON.stringify(operations.filter(x=>x.custom)));
-    const check=JSON.parse(localStorage.getItem("spmg04_operations")||"[]");
-    if(!check.some(x=>x.id===op.id))throw new Error("Сохранение операции не подтверждено");
-  }catch(e){
-    operations=operations.filter(x=>x.id!==op.id);
-    console.error(e);
-    toast("ОШИБКА СОХРАНЕНИЯ","Операция не была записана.");
-    return;
-  }
-  log("OPS",`ОПЕРАЦИЯ СОЗДАНА // ${op.id} // ${op.title}`);
-  closeBuilder();
-  state.page="operations";
-  document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.page==="operations"));
-  render();
-  glitch();successSound();
-  toast("ОПЕРАЦИЯ СОЗДАНА",`${op.id} // запись подтверждена в локальном хранилище.`);
-}
-
-
-function applyRoleUI(){
- const lb=document.getElementById("logoutBtn"); if(lb)lb.onclick=logout;
- const admin=state.user.role==="admin";
- document.querySelectorAll('#nav [data-page="builder"],#nav [data-page="admin"]').forEach(el=>{
-   el.classList.toggle("hidden",!admin);
- });
- const role=document.getElementById("userRole");
- if(role)role.textContent=admin?"ADMINISTRATOR // FULL ACCESS":"ОПЕРАТОР // SPMG-IV";
- const user=document.getElementById("userName");
- if(user)user.textContent=state.user.name;
-}
-
-
-function exportPortalData(){
-  if(state.user.role!=="admin")return;
-  const data={
-    version:"SPMG-04/2057",
-    exportedAt:new Date().toISOString(),
-    operations:operations.filter(x=>x.custom),
-    audit:state.audit||[]
-  };
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="SPMG-04_portal_backup.json";a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  log("ADMIN","ЭКСПОРТ ДАННЫХ // JSON BACKUP");
-}
-function importPortalData(file){
-  if(state.user.role!=="admin"||!file)return;
-  const reader=new FileReader();
-  reader.onload=()=>{
-    try{
-      const data=JSON.parse(reader.result);
-      if(!data||!Array.isArray(data.operations))throw new Error("Неверный формат");
-      data.operations.forEach(x=>{if(x?.id&&!operations.some(o=>o.id===x.id))operations.unshift({...x,custom:true})});
-      localStorage.setItem("spmg04_operations",JSON.stringify(operations.filter(x=>x.custom)));
-      if(Array.isArray(data.audit)){state.audit=data.audit.slice(0,200);localStorage.setItem("spmg04_audit",JSON.stringify(state.audit))}
-      log("ADMIN","ИМПОРТ ДАННЫХ // JSON BACKUP");
-      render();toast("ИМПОРТ ЗАВЕРШЁН","Данные загружены и проверены.");
-    }catch(e){console.error(e);toast("ОШИБКА ИМПОРТА","Файл не соответствует формату SPMG-04.");}
-  };
-  reader.readAsText(file);
-}
-
-
-function logout(){
-  log("AUTH","ВЫХОД // "+(state.user.name||"ОПЕРАТОР"));
-  state.user={name:"Оператор",role:"operator",level:"SPMG-IV",code:""};
-  state.booted=false;
-  document.getElementById("app").classList.add("hidden");
-  document.getElementById("boot").classList.remove("hidden");
-  const input=document.getElementById("accessCode"),btn=document.getElementById("authorize");
-  if(input){input.value="";input.disabled=false}
-  if(btn)btn.disabled=false;
-  const title=document.getElementById("bootTitle"),sub=document.getElementById("bootSubtitle"),status=document.getElementById("bootFooterStatus");
-  if(title)title.textContent="ДОСТУП ОГРАНИЧЕН";
-  if(sub)sub.textContent="Введите код допуска для продолжения";
-  if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
+ feed.innerHTML=state.audit.slice(0,8).map(x=>`<div class="feedline"><b>${x.time}</b><span class="type">${x.type}</span><strong>${esc(x.msg)}</strong></div>`).join("");
 }
 
 function render(){
- applyRoleUI();
  if(state.page==="overview")renderOverview();
-
-if(state.page==="admin" && state.user.role==="admin"){
- const rows=state.audit.map((x,i)=>`<div class="auditRow"><span>${esc(x.time)}</span><b>${esc(x.user)}</b><span>${esc(x.role)}</span><em>${esc(x.type)}</em><strong>${esc(x.msg)}</strong></div>`).join("");
- content.innerHTML=head("SPMG-04 // ADMINISTRATIVE CONTROL","АДМИНИСТРИРОВАНИЕ",`<button class="btn" id="clearAudit">ОЧИСТИТЬ ЛОКАЛЬНЫЙ ЖУРНАЛ</button>`)
- +panel("ЖУРНАЛ АУДИТА",rows||`<div class="empty">ЖУРНАЛ ПУСТ</div>`,"LOCAL // 200 MAX")
- +panel("УПРАВЛЕНИЕ ДАННЫМИ",`<div class="adminTools"><button class="btn" id="exportData">ЭКСПОРТ JSON</button><label class="btn fileBtn">ИМПОРТ JSON<input type="file" id="importData" accept=".json,application/json"></label></div>`,"BACKUP / RESTORE")
- +panel("СЕССИЯ",`<div class="adminSession"><span>УЧЁТНАЯ ЗАПИСЬ</span><b>${esc(state.user.name)}</b><span>УРОВЕНЬ</span><b>FULL ACCESS</b><span>ХРАНИЛИЩЕ</span><b>LOCAL STORAGE</b></div>`,"ADMINISTRATOR");
- $("#clearAudit").onclick=()=>{state.audit=[];localStorage.removeItem("spmg04_audit");log("ADMIN","ЖУРНАЛ ОЧИЩЕН");render()};
- $("#exportData").onclick=exportPortalData;
- $("#importData").onchange=e=>importPortalData(e.target.files[0]);
-}
-
- if(state.page==="operations"){
-  content.innerHTML=head("SPMG // ОПЕРАТИВНЫЕ РАСПОРЯЖЕНИЯ","ОПЕРАЦИИ",`<button class="btn" id="openBuilder">+ НОВАЯ ОПЕРАЦИЯ</button>`)
-    +panel("АКТИВНЫЕ ОПЕРАЦИИ",operations.length?operations.map(x=>card(x,"operation")).join(""):`<div class="empty">НЕТ ДОСТУПНЫХ ОПЕРАЦИЙ</div>`,"АКТИВНЫЕ / ВСЕ");
-  bindRows(); $("#openBuilder").onclick=openBuilder;
-}
-if(state.page==="builder"){
-  content.innerHTML=head("SPMG-04 // СОЗДАНИЕ МАТЕРИАЛА","КОНСТРУКТОР ОПЕРАЦИЙ",`<button class="btn" id="openBuilder2">СОЗДАТЬ ОПЕРАЦИЮ</button>`)
-    +panel("ЛОКАЛЬНЫЕ ОПЕРАЦИИ",operations.filter(x=>x.custom).length?operations.filter(x=>x.custom).map(x=>card(x,"operation")).join(""):`<div class="empty">ПОЛЬЗОВАТЕЛЬСКИХ ОПЕРАЦИЙ ПОКА НЕТ</div>`,"СОХРАНЕНО В БРАУЗЕРЕ");
-  bindRows(); $("#openBuilder2").onclick=openBuilder;
-}
- if(state.page==="intelligence")renderList("Intelligence","SPMG // COLLECTION",intelligence,"intelligence","ПОСЛЕДНИЕ REPORTS");
- if(state.page==="bulletins")renderList("Bulletins","SPMG // INTERNAL COMMUNICATIONS",bulletins,"bulletin","ТЕКУЩИЕ");
- if(state.page==="documents")renderList("Documents","SPMG // CONTROLLED MATERIAL",documents,"document","ДОСТУП ОГРАНИЧЕН");
+ if(state.page==="operations")renderList("ОПЕРАЦИИ","SPMG // ОПЕРАТИВНЫЕ РАСПОРЯЖЕНИЯ",operations,"operation","АКТИВНЫЕ");
+ if(state.page==="intelligence")renderList("РАЗВЕДДАННЫЕ","SPMG // СБОР",intelligence,"intelligence","ПОСЛЕДНИЕ");
+ if(state.page==="bulletins")renderList("ОБЪЯВЛЕНИЯ","SPMG // ВНУТРЕННИЕ КОММУНИКАЦИИ",bulletins,"bulletin","ТЕКУЩИЕ");
+ if(state.page==="documents")renderList("ДОКУМЕНТЫ","SPMG // МАТЕРИАЛЫ",documents,"document","ОГРАНИЧЕННЫЙ ДОСТУП");
  if(state.page==="archive")renderArchive();
  if(state.page==="audit")renderAudit();
  renderRightFeed();
@@ -844,36 +427,32 @@ function bindRows(){
  document.querySelectorAll("[data-open]").forEach(el=>el.onclick=()=>openItem(el.dataset.type,el.dataset.open));
 }
 function find(type,id){
- const map={operation:operations,intelligence,intelligence_report:intelligence,bulletin:bulletins,document:documents};
+ const map={operation:operations,intelligence:intelligence,bulletin:bulletins,document:documents};
  return (map[type]||[]).find(x=>x.id===id);
 }
 function openItem(type,id){
  const item=find(type,id);if(!item)return;
- if(item.restricted){
-   openModal("ДОСТУП ОГРАНИЧЕН",`<div class="notice"><strong>НЕДОСТАТОЧНЫЙ УРОВЕНЬ ДОПУСКА</strong>Текущий допуск: SPMG-IV<br>Требуемый допуск: SPMG-V</div><div class="prose">${esc(item.body)}</div>`);
-   log("SECURITY",`ACCESS DENIED // ${id}`);return;
- }
  const fields=type==="operation"
- ? `<div class="field"><label>CLASSIFICATION</label><span>${esc(item.class)}</span></div><div class="field"><label>PRIORITY</label><span>${esc(item.priority)}</span></div><div class="field"><label>ISSUED</label><span>${esc(item.date)}</span></div><div class="field"><span>${esc(item.)}</span></div>`
- : `<div class="field"><label>CLASSIFICATION</label><span>${esc(item.class||item.level||item.type)}</span></div><div class="field"><label>RECORD DATE</label><span>${esc(item.date)}</span></div>`;
+ ? `<div class="field"><label>КЛАСС</label><span>${esc(item.class)}</span></div><div class="field"><label>ПРИОРИТЕТ</label><span>${esc(item.priority)}</span></div><div class="field"><label>ДАТА</label><span>${esc(item.date)}</span></div>`
+ : `<div class="field"><label>КЛАСС</label><span>${esc(item.class||item.type||item.level)}</span></div><div class="field"><label>ДАТА</label><span>${esc(item.date)}</span></div>`;
  let actions="";
  if(type==="operation" && item.status==="ACTIVE"){
    actions=`<div class="actions"><button class="btn" id="ack">ПОДТВЕРДИТЬ РАСПОРЯЖЕНИЕ</button><button class="btn" id="clarify">ЗАПРОСИТЬ УТОЧНЕНИЕ</button></div>`;
  }
  openModal(`${item.id} // ${item.title}`,`<div class="docgrid">${fields}</div><div class="prose">${esc(item.body)}</div>`,actions);
- log(type==="operation"?"OPS":"INTEL",`OPENED // ${id}`);
+ log(type==="operation"?"OPS":"INTEL",`ОТКРЫТО // ${id}`);
  if($("#ack"))$("#ack").onclick=()=>{
    state.accepted.add(id);log("OPS",`РАСПОРЯЖЕНИЕ ПРИНЯТО // ${id}`);glitch();
-   $("#modalBody").insertAdjacentHTML("beforeend",`<div class="notice" style="margin-top:16px"><strong>РАСПОРЯЖЕНИЕ ПРИНЯТО</strong>Reference: ACK-${uid()}<br>Time: ${now()}<br>Operator: SPMG-IV<br><br>Event entered into operational audit.</div>`);
-   $("#ack").disabled=true;$("#ack").textContent="ACKNOWLEDGED";
+   $("#modalBody").insertAdjacentHTML("beforeend",`<div class="notice" style="margin-top:16px"><strong>РАСПОРЯЖЕНИЕ ПРИНЯТО</strong>Код: ACK-${uid()}<br>Время: ${now()}<br>Оператор: SPMG-IV</div>`);
+   $("#ack").disabled=true;$("#ack").textContent="ПРИНЯТО";
  };
- if($("#clarify"))$("#clarify").onclick=()=>{log("OPS",`CLARIFICATION REQUESTED // ${id}`);toast("ЗАПРОС ЗАРЕГИСТРИРОВАН","Запрос уточнения внесён в журнал действий.");};
+ if($("#clarify"))$("#clarify").onclick=()=>{log("OPS",`ЗАПРОС УТОЧНЕНИЯ // ${id}`);toast("ЗАПРОС ЗАРЕГИСТРИРОВАН","Запрос уточнения внесён в журнал.");};
 }
 
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");state.page=b.dataset.page;render();glitch()});
 
-window.refreshPortal=()=>{log("SYSTEM","NETWORK REFRESH REQUESTED");toast("NETWORK","Operational index synchronized.");glitch();render()};
-window.clearLocalAudit=()=>{audit.splice(5);log("SYSTEM","LOCAL SESSION EVENTS PURGED");render()};
+window.refreshPortal=()=>{log("SYSTEM","ОБНОВЛЕНИЕ СЕТИ");toast("СЕТЬ","Индекс синхронизирован.");glitch();render()};
+window.clearLocalAudit=()=>{state.audit=[];localStorage.removeItem("spmg04_audit");log("SYSTEM","ЖУРНАЛ ОЧИЩЕН");render()};
 
 function boot(){
  const consoleEl=$("#bootConsole"), title=$("#bootTitle"), subtitle=$("#bootSubtitle");
@@ -935,10 +514,12 @@ function boot(){
  const tick=()=>{
    if(i>=lines.length){
      progressValue=100;progress.style.width="100%";pct.textContent="100%";stage.textContent="СИСТЕМА ГОТОВА";
-     footerStatus.textContent="ОЖИДАЕТСЯ АВТОРИЗАЦИЯ";
-     titleBase="СИСТЕМА ГОТОВА";title.textContent=titleBase;subtitle.textContent="Введите код допуска оператора";
+     footerStatus.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
+     titleBase="СИСТЕМА ГОТОВА";title.textContent=titleBase;subtitle.textContent="Введите код допуска";
      for(let k=0;k<3;k++)setTimeout(()=>{titleGlitch();hexGlitch()},k*120);
-     setTimeout(()=>$("#codeGate").classList.remove("hidden"),450);
+     // Явно показываем поле ввода
+     const gate=document.getElementById("codeGate");
+     if(gate) gate.style.display="block";
      return;
    }
    animateTitle();
@@ -954,30 +535,6 @@ function boot(){
  tick();
  setInterval(()=>{if(!state.booted){hexGlitch();if(Math.random()<.28)titleGlitch()}},260);
 }
-
-loadCustomOperations();
-$("#closeBuilder").onclick=closeBuilder;
-$("#builderModal").addEventListener("click",e=>{if(e.target.id==="builderModal")closeBuilder()});
-["bTitle","bDesc","bBody","bDeadline","bClass","bPriority"].forEach(id=>{
- const el=$("#"+id); el.addEventListener("input",updateBuilderPreview); el.addEventListener("change",updateBuilderPreview);
-});
-$("#saveOperation").onclick=createOperation;
-
-
-document.querySelectorAll("#nav button").forEach(btn=>{
- btn.addEventListener("click",()=>{
-   const page=btn.dataset.page;
-   if((page==="builder"||page==="admin")&&state.user.role!=="admin"){
-     toast("ДОСТУП ЗАПРЕЩЁН","Раздел доступен только Administrator.");
-     return;
-   }
-   log("NAV",`ОТКРЫТ РАЗДЕЛ // ${page}`);
- });
-});
-
-
-$("#accessCode").addEventListener("keydown",e=>{if(e.key==="Enter")authorize()});
-
 
 function initAudio(){
  if(state.audio) return;
@@ -1031,9 +588,6 @@ document.addEventListener("click",e=>{
  if(b) clickSound(b.classList.contains("alert")?"alert":"click");
 });
 
-
-
-
 function authorize(){
   const input=document.getElementById("accessCode");
   const btn=document.getElementById("authorize");
@@ -1062,7 +616,7 @@ function authorize(){
     if(sub)sub.textContent="УЧЁТНАЯ ЗАПИСЬ НЕ РАСПОЗНАНА";
     input.disabled=false;btn.disabled=false;input.focus();input.select();
     try{clickSound("alert")}catch(e){}
-    if(typeof toast==="function")toast("ДОСТУП ОТКЛОНЁН","Проверьте код допуска.");
+    toast("ДОСТУП ОТКЛОНЁН","Проверьте код допуска.");
     setTimeout(()=>{
       if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
       if(titleEl)titleEl.textContent="ДОСТУП ОГРАНИЧЕН";
@@ -1081,15 +635,14 @@ function authorize(){
   setTimeout(()=>{
     if(status)status.textContent="УЧЁТНАЯ ЗАПИСЬ ПОДТВЕРЖДЕНА";
     if(titleEl)titleEl.textContent=account.role==="admin"?"ДОПУСК ADMINISTRATOR":"ДОПУСК ПОДТВЕРЖДЁН";
-    if(sub)sub.textContent=account.role==="admin"?"Полный уровень управления // SPMG-IV":"Стандартный оперативный уровень // SPMG-IV";
+    if(sub)sub.textContent=account.role==="admin"?"Полный доступ // SPMG-IV":"Стандартный доступ // SPMG-IV";
     boot.classList.add("hidden");app.classList.remove("hidden");state.booted=true;
-    const sid=document.getElementById("sessionId");if(sid&&typeof uid==="function")sid.textContent=uid();
-    if(typeof log==="function")log("AUTH",`ВХОД // ${account.name} // ${account.role==="admin"?"ПОЛНЫЙ ДОСТУП":"ОПЕРАТИВНЫЙ ДОСТУП"}`);
-    if(typeof applyRoleUI==="function")applyRoleUI();
-    if(typeof render==="function")render();
+    const sid=document.getElementById("sessionId");if(sid)sid.textContent=uid();
+    log("AUTH",`ВХОД // ${account.name} // ${account.role==="admin"?"ПОЛНЫЙ ДОСТУП":"ОПЕРАТИВНЫЙ ДОСТУП"}`);
+    render();
     try{successSound()}catch(e){}
-    if(typeof toast==="function")toast(account.role==="admin"?"ADMINISTRATOR":"СЕАНС УСТАНОВЛЕН",account.role==="admin"?"Полный доступ к внутренней сети разрешён.":"Оперативный доступ к внутренней сети разрешён.");
-    if(typeof glitch==="function")glitch();
+    toast(account.role==="admin"?"ADMINISTRATOR":"СЕАНС УСТАНОВЛЕН",account.role==="admin"?"Полный доступ разрешён.":"Оперативный доступ разрешён.");
+    glitch();
   },650);
   return true;
 }
@@ -1097,9 +650,22 @@ function clock(){
  const d=new Date();const t=d.toLocaleTimeString("ru-RU",{hour12:false});$("#clock").textContent=`2057-08-11 // ${t}`;
 }
 setInterval(clock,1000);
-setInterval(()=>{if(state.booted && Math.random()<.18){const msgs=["NODE SYNC COMPLETED","ARCHIVE INDEX CHECKED","ROUTE TABLE ПОДТВЕРЖДЕНО","INCOMING TRANSMISSION RECEIVED","BACKGROUND INTEGRITY CHECK"];const m=msgs[Math.floor(Math.random()*msgs.length)];log("SYSTEM",m);if(Math.random()<.25)glitch()}},4200);
+setInterval(()=>{if(state.booted && Math.random()<.18){const msgs=["NODE SYNC COMPLETED","ARCHIVE INDEX CHECKED","ROUTE TABLE ПОДТВЕРЖДЕНО"];const m=msgs[Math.floor(Math.random()*msgs.length)];log("SYSTEM",m);if(Math.random()<.25)glitch()}},4200);
 setInterval(()=>{if(state.booted&&Math.random()<.05)glitch()},1800);
+
+// Чистый boot-старт
 boot();
+
+// Принудительный показ поля ввода через 2.5 секунды (на случай, если boot() не сработал)
+setTimeout(()=>{
+  const gate=document.getElementById("codeGate");
+  const input=document.getElementById("accessCode");
+  const btn=document.getElementById("authorize");
+  if(gate) gate.style.display="block";
+  if(input) input.disabled=false;
+  if(btn) btn.disabled=false;
+}, 2500);
+
 })();
 </script>
 
@@ -1138,17 +704,6 @@ boot();
 })();
 </script>
 
-
-<script>
-window.addEventListener("error", function(e){
-  const b=document.getElementById("authorize");
-  if(b) b.title="Ошибка интерфейса: "+(e.message||"неизвестная ошибка");
-  console.error("SPMG UI ERROR:", e.message, e.filename, e.lineno);
-});
-</script>
-
-
-
 <script>
 window.addEventListener("error",function(e){
   console.error("[SPMG-04] UI ERROR:",e.message,e.filename,e.lineno,e.colno);
@@ -1165,8 +720,6 @@ window.addEventListener("unhandledrejection",function(e){
     const btn=document.getElementById("authorize");
     if(!input||!btn)return;
     btn.type="button";
-    btn.disabled=false;
-    input.disabled=false;
     btn.onclick=function(e){e.preventDefault();authorize();};
     input.onkeydown=function(e){
       if(e.key==="Enter"||e.keyCode===13){e.preventDefault();authorize();}
@@ -1174,110 +727,24 @@ window.addEventListener("unhandledrejection",function(e){
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindAuth);
   else bindAuth();
+})();
+</script>
 
+<script>
+(function(){
+  // Последний аварийный триггер для поля ввода
   setTimeout(function(){
-    const boot=document.getElementById("boot");
-    const app=document.getElementById("app");
     const gate=document.getElementById("codeGate");
     const input=document.getElementById("accessCode");
     const btn=document.getElementById("authorize");
     const status=document.getElementById("bootFooterStatus");
-    if(boot && app && app.classList.contains("hidden") && gate){
-      gate.classList.remove("hidden");
-      if(input){input.disabled=false;input.hidden=false;}
-      if(btn){btn.disabled=false;btn.hidden=false;}
-      if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ // РЕЗЕРВНЫЙ КАНАЛ";
-      console.warn("[SPMG-04] Boot watchdog released authentication gate.");
-    }
-  },5000);
+    if(gate) gate.style.display="block";
+    if(input) input.disabled=false;
+    if(btn) btn.disabled=false;
+    if(status && status.textContent.includes("ПРОВЕРКА")) status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
+  }, 3000);
 })();
 </script>
 
-<script id="spmg-auth-final-binding">
-(function(){
-  function bindFinalAuth(){
-    const input=document.getElementById("accessCode");
-    const btn=document.getElementById("authorize");
-    const gate=document.getElementById("codeGate");
-    if(!input||!btn){
-      console.error("[SPMG-04] Auth DOM not found");
-      return;
-    }
-
-    btn.type="button";
-    btn.onclick=function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      if(typeof authorize==="function") authorize();
-    };
-
-    input.onkeydown=function(e){
-      if(e.key==="Enter" || e.keyCode===13){
-        e.preventDefault();
-        e.stopPropagation();
-        if(typeof authorize==="function") authorize();
-      }
-    };
-
-    // If boot() completed, never leave the credential gate disabled.
-    if(gate && !gate.classList.contains("hidden")){
-      input.disabled=false;
-      btn.disabled=false;
-    }
-  }
-
-  function releaseGate(){
-    const gate=document.getElementById("codeGate");
-    const input=document.getElementById("accessCode");
-    const btn=document.getElementById("authorize");
-    if(gate) gate.classList.remove("hidden");
-    if(input){input.disabled=false;input.hidden=false;}
-    if(btn){btn.disabled=false;btn.hidden=false;}
-  }
-
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",function(){
-      bindFinalAuth();
-      setTimeout(releaseGate, 2200);
-    });
-  }else{
-    bindFinalAuth();
-    setTimeout(releaseGate, 2200);
-  }
-})();
-</script>
-
-<script id="spmg-startup-fallback">
-setTimeout(function(){
-  const gate=document.getElementById("codeGate");
-  const input=document.getElementById("accessCode");
-  const btn=document.getElementById("authorize");
-  const status=document.getElementById("bootFooterStatus");
-  if(gate && input && btn && !document.getElementById("app")?.classList.contains("hidden")){
-    return;
-  }
-  if(gate){
-    gate.classList.remove("hidden");
-    input.disabled=false;
-    btn.disabled=false;
-  }
-  if(status) status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
-},3000);
-</script>
-
-<script id="spmg-seed-cleanup">
-(function(){
-  const KEY="spmg04_operations";
-  const FLAG="spmg04_seed_cleanup_v1";
-  try{
-    if(!localStorage.getItem(FLAG)){
-      const saved=JSON.parse(localStorage.getItem(KEY)||"[]");
-      const custom=saved.filter(x=>x && x.custom===true);
-      localStorage.setItem(KEY,JSON.stringify(custom));
-      localStorage.setItem(FLAG,"1");
-    }
-  }catch(e){console.warn("[SPMG-04] seed cleanup:",e);}
-})();
-</script>
 </body>
 </html>
