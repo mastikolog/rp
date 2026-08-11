@@ -3,27 +3,24 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AURUM // SECURITY TERMINAL v6.0</title>
+    <title>AURUM // TERMINAL v7.0</title>
     <style>
         /* ============================================================
            ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
            ============================================================ */
         :root {
-            --bg: #040404;
-            --panel: #0a0a0a;
-            --border: rgba(255, 255, 255, 0.03);
-            --text: #c0c0c0;
-            --text-dim: #4a4a4a;
-            --text-bright: #f0f0f0;
+            --bg: #000000;
+            --panel: #080808;
+            --border: rgba(255, 255, 255, 0.04);
+            --text: #b8b8b8;
+            --text-dim: #3a3a3a;
+            --text-bright: #e8e8e8;
             --green: #00ff41;
             --red: #ff1a1a;
             --cyan: #7df9ff;
-            --amber: #ffb347;
-            --glitch-color1: #ff1a1a;
-            --glitch-color2: #7df9ff;
-            --shadow: 0 0 80px rgba(0, 0, 0, 0.95);
-            --font: 'Share Tech Mono', 'Courier New', monospace;
-            --ease: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            --amber: #e6a800;
+            --font: 'Courier New', monospace;
+            --ease: 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         * {
@@ -32,15 +29,19 @@
             box-sizing: border-box;
         }
 
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             background: var(--bg);
             color: var(--text);
             font-family: var(--font);
-            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             position: relative;
         }
 
@@ -52,7 +53,7 @@
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.04;
+            opacity: 0.035;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E");
             animation: noiseAnim 0.4s steps(2) infinite;
         }
@@ -63,47 +64,28 @@
             100% { transform: translate(1%, -1%); }
         }
 
-        .grid {
+        .scanlines {
             position: fixed;
             inset: 0;
             z-index: 1;
             pointer-events: none;
-            opacity: 0.04;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            animation: gridMove 18s linear infinite;
-        }
-
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(40px, 40px); }
-        }
-
-        .scanlines {
-            position: fixed;
-            inset: 0;
-            z-index: 2;
-            pointer-events: none;
             background: repeating-linear-gradient(0deg,
                     transparent 0px,
                     transparent 3px,
-                    rgba(0, 0, 0, 0.12) 3px,
-                    rgba(0, 0, 0, 0.12) 4px);
-            opacity: 0.35;
+                    rgba(0, 0, 0, 0.1) 3px,
+                    rgba(0, 0, 0, 0.1) 4px);
+            opacity: 0.4;
         }
 
         .scan-bar {
             position: fixed;
             left: 0;
             width: 100%;
-            height: 1.5px;
-            z-index: 3;
+            height: 1px;
+            z-index: 2;
             pointer-events: none;
-            background: rgba(255, 255, 255, 0.01);
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.02);
-            animation: scanBarMove 7s linear infinite;
+            background: rgba(255, 255, 255, 0.008);
+            animation: scanBarMove 8s linear infinite;
         }
 
         @keyframes scanBarMove {
@@ -117,17 +99,12 @@
         .terminal-wrapper {
             position: relative;
             z-index: 10;
-            width: min(1024px, 94vw);
-            max-height: 94vh;
-            border: 1px solid var(--border);
+            width: 100vw;
+            height: 100vh;
             background: var(--panel);
-            box-shadow:
-                inset 0 0 100px rgba(255, 255, 255, 0.003),
-                var(--shadow),
-                0 0 0 1px rgba(255, 255, 255, 0.01);
-            overflow: hidden;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         /* ============================================================
@@ -137,12 +114,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 24px;
+            padding: 10px 28px;
             border-bottom: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.4);
-            flex-wrap: wrap;
-            gap: 6px;
+            background: rgba(0, 0, 0, 0.5);
             flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 4px;
         }
 
         .header-left {
@@ -167,14 +144,14 @@
 
         @keyframes dotPulse {
             0%,
-            100% { opacity: 0.15; transform: scale(0.8); }
+            100% { opacity: 0.2; transform: scale(0.8); }
             50% { opacity: 1; transform: scale(1); }
         }
 
         .header-brand {
             color: var(--text-bright);
             font-weight: 700;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.15em;
         }
 
         .header-right {
@@ -193,17 +170,14 @@
            ТЕЛО ТЕРМИНАЛА
            ============================================================ */
         .terminal-body {
-            position: relative;
-            padding: 20px 26px 18px;
-            min-height: 340px;
-            max-height: 68vh;
+            flex: 1;
+            padding: 20px 28px 18px;
             overflow-y: auto;
             overflow-x: hidden;
             font-size: 13px;
             line-height: 1.7;
             scrollbar-width: thin;
             scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
-            flex: 1;
         }
 
         .terminal-body::-webkit-scrollbar {
@@ -221,7 +195,7 @@
            СТРОКИ ТЕРМИНАЛА
            ============================================================ */
         .line {
-            padding: 2px 0;
+            padding: 1px 0;
             opacity: 0;
             animation: typeIn 0.05s forwards;
             word-wrap: break-word;
@@ -234,10 +208,10 @@
 
         .line.dim { color: var(--text-dim); }
         .line.bright { color: var(--text-bright); }
-        .line.green { color: var(--green); text-shadow: 0 0 12px rgba(0, 255, 65, 0.15); }
-        .line.red { color: var(--red); text-shadow: 0 0 12px rgba(255, 26, 26, 0.2); }
-        .line.cyan { color: var(--cyan); text-shadow: 0 0 8px rgba(125, 249, 255, 0.1); }
-        .line.amber { color: var(--amber); text-shadow: 0 0 8px rgba(255, 179, 71, 0.1); }
+        .line.green { color: var(--green); }
+        .line.red { color: var(--red); }
+        .line.cyan { color: var(--cyan); }
+        .line.amber { color: var(--amber); }
         .line.separator {
             border-top: 1px solid rgba(255, 255, 255, 0.02);
             padding: 0;
@@ -246,31 +220,33 @@
         }
 
         /* ============================================================
-           ГЛАВНАЯ СТРАНИЦА
+           ГЛАВНАЯ СТРАНИЦА (СЕТКА)
            ============================================================ */
-        .main-panel {
+        .main-grid {
             display: grid;
-            grid-template-columns: 200px 1fr 220px;
+            grid-template-columns: 200px 1fr 240px;
             gap: 16px;
-            padding: 4px 0;
+            height: 100%;
             opacity: 0;
-            animation: fadeIn 0.6s ease forwards;
+            animation: fadeIn 0.5s ease forwards;
         }
 
         @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(8px); }
+            0% { opacity: 0; transform: translateY(6px); }
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Левая панель — меню */
+        /* Левое меню */
         .menu-panel {
             border-right: 1px solid rgba(255, 255, 255, 0.03);
-            padding-right: 16px;
+            padding-right: 14px;
+            height: 100%;
+            overflow-y: auto;
         }
 
         .menu-item {
             display: block;
-            padding: 8px 12px;
+            padding: 8px 10px;
             color: var(--text-dim);
             text-decoration: none;
             font-size: 10px;
@@ -286,22 +262,42 @@
         .menu-item.active {
             color: var(--text-bright);
             border-left-color: var(--green);
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.015);
         }
 
-        .menu-item .badge {
-            float: right;
+        .menu-item.logout {
+            margin-top: 16px;
             color: var(--red);
-            font-size: 8px;
+            border-left-color: transparent;
         }
 
-        /* Центральная панель — контент */
+        .menu-item.logout:hover {
+            border-left-color: var(--red);
+            background: rgba(255, 26, 26, 0.04);
+        }
+
+        /* Центр — контент */
         .content-panel {
-            padding: 0 8px;
+            padding: 0 6px;
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
         }
 
-        .section-title {
-            font-size: 11px;
+        .content-panel::-webkit-scrollbar {
+            width: 3px;
+        }
+        .content-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .content-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+        }
+
+        .section-label {
+            font-size: 10px;
             letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--text-dim);
@@ -310,13 +306,13 @@
             margin-bottom: 12px;
         }
 
-        /* Карточка задания */
+        /* Карточка задания (РП-сообщение) */
         .task-card {
             border: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 12px 14px;
+            padding: 14px 16px;
             margin-bottom: 10px;
-            transition: all var(--ease);
             cursor: pointer;
+            transition: all var(--ease);
         }
 
         .task-card:hover {
@@ -324,82 +320,90 @@
             background: rgba(255, 255, 255, 0.01);
         }
 
-        .task-card .code {
+        .task-card .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .task-card .task-code {
             font-size: 9px;
             color: var(--text-dim);
             letter-spacing: 0.08em;
         }
 
-        .task-card .title {
-            font-size: 13px;
-            color: var(--text-bright);
-            margin: 2px 0 4px;
-            letter-spacing: 0.03em;
+        .task-card .task-clearance {
+            font-size: 8px;
+            color: var(--red);
+            letter-spacing: 0.1em;
+            border: 1px solid rgba(255, 26, 26, 0.15);
+            padding: 0 8px;
         }
 
-        .task-card .meta {
+        .task-card .task-title {
+            font-size: 13px;
+            color: var(--text-bright);
+            margin: 2px 0 6px;
+        }
+
+        .task-card .task-preview {
+            font-size: 11px;
+            color: var(--text-dim);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .task-card .task-meta {
             font-size: 9px;
             color: var(--text-dim);
             display: flex;
             gap: 14px;
+            margin-top: 6px;
             flex-wrap: wrap;
         }
 
-        .task-card .meta .status-active {
+        .task-card .task-meta .status {
             color: var(--green);
-        }
-        .task-card .meta .status-done {
-            color: var(--text-dim);
-        }
-        .task-card .meta .priority-high {
-            color: var(--red);
-        }
-
-        /* Уведомление */
-        .notification {
-            border: 1px solid rgba(125, 249, 255, 0.06);
-            background: rgba(125, 249, 255, 0.02);
-            padding: 10px 14px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .notification .text {
-            font-size: 11px;
-            color: var(--cyan);
-        }
-
-        .notification .btn-small {
-            font-size: 8px;
-            padding: 4px 12px;
-            background: transparent;
-            border: 1px solid rgba(125, 249, 255, 0.1);
-            color: var(--cyan);
-            cursor: pointer;
-            font-family: var(--font);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            transition: all var(--ease);
-        }
-
-        .notification .btn-small:hover {
-            border-color: var(--cyan);
-            background: rgba(125, 249, 255, 0.04);
         }
 
         /* Правая панель — лог */
         .log-panel {
             border-left: 1px solid rgba(255, 255, 255, 0.03);
-            padding-left: 16px;
+            padding-left: 14px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-container {
+            flex: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
+            padding-right: 4px;
+        }
+
+        .log-container::-webkit-scrollbar {
+            width: 3px;
+        }
+        .log-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .log-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
         }
 
         .log-entry {
             font-size: 9px;
             color: var(--text-dim);
             padding: 3px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.015);
         }
 
         .log-entry .time {
@@ -420,21 +424,130 @@
         }
 
         /* ============================================================
+           ДЕТАЛЬНОЕ ЗАДАНИЕ
+           ============================================================ */
+        .detail-view {
+            padding: 4px 0;
+        }
+
+        .detail-view .back-btn {
+            font-size: 9px;
+            color: var(--text-dim);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+            letter-spacing: 0.08em;
+            padding: 4px 0;
+            margin-bottom: 10px;
+        }
+
+        .detail-view .back-btn:hover {
+            color: var(--text-bright);
+        }
+
+        .detail-view .detail-header {
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+
+        .detail-view .detail-header .line {
+            font-size: 11px;
+            padding: 2px 0;
+            opacity: 1;
+            animation: none;
+        }
+
+        .detail-view .detail-body {
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 16px;
+            font-size: 12px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .detail-view .detail-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-dim);
+            font-family: var(--font);
+            font-size: 9px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all var(--ease);
+        }
+
+        .btn:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            color: var(--text-bright);
+        }
+
+        .btn-primary {
+            border-color: rgba(0, 255, 65, 0.1);
+            color: var(--green);
+        }
+        .btn-primary:hover {
+            border-color: var(--green);
+            background: rgba(0, 255, 65, 0.03);
+        }
+
+        .btn-danger {
+            border-color: rgba(255, 26, 26, 0.08);
+            color: var(--red);
+        }
+        .btn-danger:hover {
+            border-color: var(--red);
+            background: rgba(255, 26, 26, 0.03);
+        }
+
+        .btn:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           АРХИВ (ЗАГЛУШКА)
+           ============================================================ */
+        .archive-placeholder {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 11px;
+            letter-spacing: 0.05em;
+        }
+
+        .archive-placeholder .empty {
+            color: var(--text-dim);
+            font-size: 10px;
+        }
+
+        /* ============================================================
            ФУТЕР
            ============================================================ */
         .footer {
-            padding: 10px 24px 12px;
+            padding: 8px 28px 10px;
             border-top: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 9px;
             letter-spacing: 0.08em;
             color: var(--text-dim);
+            flex-shrink: 0;
             flex-wrap: wrap;
             gap: 4px;
-            flex-shrink: 0;
         }
 
         .footer .blink {
@@ -452,7 +565,7 @@
         }
 
         /* ============================================================
-           ГЛИТЧ-ЭФФЕКТЫ
+           ГЛИТЧ-ЭФФЕКТ
            ============================================================ */
         .glitch-overlay {
             position: fixed;
@@ -481,10 +594,10 @@
         /* ============================================================
            АДАПТИВ
            ============================================================ */
-        @media (max-width: 768px) {
-            .main-panel {
+        @media (max-width: 820px) {
+            .main-grid {
                 grid-template-columns: 1fr;
-                gap: 12px;
+                gap: 10px;
             }
             .menu-panel {
                 border-right: none;
@@ -493,31 +606,33 @@
                 padding-bottom: 8px;
                 display: flex;
                 flex-wrap: wrap;
-                gap: 4px;
+                gap: 2px;
+                height: auto;
             }
             .menu-item {
                 padding: 4px 10px;
                 font-size: 8px;
                 border-left: none;
                 border-bottom: 2px solid transparent;
+                margin-bottom: 0;
             }
             .menu-item:hover,
             .menu-item.active {
                 border-left: none;
                 border-bottom-color: var(--green);
             }
+            .menu-item.logout {
+                margin-top: 0;
+            }
             .log-panel {
                 border-left: none;
                 border-top: 1px solid rgba(255, 255, 255, 0.03);
                 padding-left: 0;
                 padding-top: 8px;
-            }
-            .terminal-wrapper {
-                width: 98vw;
-                max-height: 98vh;
+                height: 200px;
             }
             .header {
-                padding: 8px 14px;
+                padding: 6px 14px;
                 font-size: 8px;
             }
             .header-left {
@@ -528,15 +643,14 @@
                 font-size: 7px;
             }
             .terminal-body {
-                padding: 12px 12px 10px;
+                padding: 12px 14px 10px;
                 font-size: 11px;
-                max-height: 60vh;
             }
-            .task-card .title {
+            .task-card .task-title {
                 font-size: 12px;
             }
             .footer {
-                padding: 8px 14px;
+                padding: 6px 14px;
                 font-size: 7px;
             }
         }
@@ -547,22 +661,18 @@
                 padding: 10px 10px 8px;
             }
             .task-card {
-                padding: 8px 10px;
+                padding: 10px 12px;
             }
-            .task-card .title {
+            .task-card .task-title {
                 font-size: 11px;
             }
-            .notification {
-                flex-direction: column;
-                gap: 6px;
-                align-items: flex-start;
-            }
-            .header-brand {
+            .detail-view .detail-body {
                 font-size: 10px;
+                padding: 12px;
             }
-            .menu-item {
-                font-size: 7px;
-                padding: 3px 6px;
+            .btn {
+                padding: 6px 12px;
+                font-size: 8px;
             }
         }
 
@@ -580,7 +690,6 @@
         ФОНОВЫЕ ЭФФЕКТЫ
         ============================================================ -->
     <div class="noise"></div>
-    <div class="grid"></div>
     <div class="scanlines"></div>
     <div class="scan-bar"></div>
     <div class="glitch-overlay" id="glitchOverlay"></div>
@@ -596,7 +705,7 @@
                 <span class="dot"></span>
                 <span class="header-brand">AURUM</span>
                 <span style="color:var(--text-dim);">|</span>
-                <span>SECURITY TERMINAL v6.0</span>
+                <span>TERMINAL v7.0</span>
                 <span style="color:var(--text-dim); font-size:8px;">SECURE</span>
             </div>
             <div class="header-right">
@@ -643,75 +752,96 @@
             let isMainPageShown = false;
 
             // ============================================================
-            // 2. ДАННЫЕ ЗАДАНИЙ
+            // 2. ДАННЫЕ ЗАДАНИЙ (РП-СТИЛЬ)
             // ============================================================
             const TASKS = [{
+                id: 1,
                 code: 'OP-42/ALPHA',
-                title: 'СБОР РАЗВЕДДАННЫХ // СЕКТОР 7',
-                priority: 'ВЫСОКИЙ',
-                status: 'АКТИВНО',
-                clearance: 'LVL-3',
-                body: [
-                    'Цель: получить данные о передвижении отряда «ТЕНЬ» в секторе 7.',
-                    'Объект: группа из 4–6 человек, вооружение лёгкое.',
-                    'Метод: скрытное наблюдение, фотофиксация.',
-                    'Время выполнения: 72 часа.',
-                    'Кодовое слово: «ГОРИЗОНТ».'
-                ]
+                clearance: 'TOP SECRET // LVL-5',
+                title: 'ПЕРЕХВАТ КОММУНИКАЦИЙ В СЕКТОРЕ 7',
+                date: '12.08.2057',
+                sender: 'КОМАНДОВАНИЕ AURUM',
+                body: `Подключение к системе...
+        Обработка данных...
+        Отправка сообщения...
+
+        Внимание! Засекречено уровнем допуска 5.
+
+        Цель: перехватить и дешифровать коммуникации отряда «ТЕНЬ» в секторе 7.
+        Объект: мобильная станция связи, 4 человека охраны.
+        Метод: скрытное проникновение, установка перехватчика.
+        Время выполнения: 72 часа.
+        Кодовое слово: «ГОРИЗОНТ».
+
+        Отсоединение...
+        Шифрование...`
             }, {
+                id: 2,
                 code: 'OP-45/BETA',
+                clearance: 'TOP SECRET // LVL-4',
                 title: 'КОНТАКТ С АГЕНТОМ «СПУТНИК»',
-                priority: 'СРЕДНИЙ',
-                status: 'АКТИВНО',
-                clearance: 'LVL-2',
-                body: [
-                    'Цель: установить контакт с агентом «СПУТНИК» в точке 7B.',
-                    'Объект: передача данных о перемещениях противника.',
-                    'Метод: радиосвязь, кодовые фразы.',
-                    'Время выполнения: 48 часов.',
-                    'Кодовое слово: «МАЯК».'
-                ]
+                date: '10.08.2057',
+                sender: 'ОТДЕЛ ПОЛЕВЫХ ОПЕРАЦИЙ',
+                body: `Подключение к системе...
+        Обработка данных...
+        Отправка сообщения...
+
+        Внимание! Засекречено уровнем допуска 4.
+
+        Цель: установить контакт с агентом «СПУТНИК» в точке 7B.
+        Объект: передача пакета данных о перемещениях противника.
+        Метод: радиосвязь с использованием кодовых фраз.
+        Время выполнения: 48 часов.
+        Кодовое слово: «МАЯК».
+
+        Отсоединение...
+        Шифрование...`
             }, {
+                id: 3,
                 code: 'OP-48/GAMMA',
+                clearance: 'TOP SECRET // LVL-5',
                 title: 'ЭВАКУАЦИЯ ИЗ СЕКТОРА 12',
-                priority: 'КРИТИЧЕСКИЙ',
-                status: 'АКТИВНО',
-                clearance: 'LVL-4',
-                body: [
-                    'Цель: эвакуировать группу исследователей из сектора 12.',
-                    'Объект: гражданские лица, 7 человек.',
-                    'Метод: наземный транспорт, прикрытие.',
-                    'Время выполнения: 24 часа.',
-                    'Кодовое слово: «КОВЧЕГ».'
-                ]
+                date: '08.08.2057',
+                sender: 'КОМАНДОВАНИЕ AURUM',
+                body: `Подключение к системе...
+        Обработка данных...
+        Отправка сообщения...
+
+        Внимание! Засекречено уровнем допуска 5.
+
+        Цель: эвакуировать группу исследователей из сектора 12.
+        Объект: гражданские лица, 7 человек, без оружия.
+        Метод: наземный транспорт, прикрытие с воздуха.
+        Время выполнения: 24 часа.
+        Кодовое слово: «КОВЧЕГ».
+
+        Отсоединение...
+        Шифрование...`
             }];
 
             // ============================================================
-            // 3. ЗАГРУЗОЧНЫЕ ЛОГИ (СИСТЕМА БЕЗОПАСНОСТИ)
+            // 3. ЗАГРУЗОЧНЫЕ ЛОГИ
             // ============================================================
             const BOOT_LOGS = [
-                { text: '▸ ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ БЕЗОПАСНОСТИ AURUM...', cls: 'dim', delay: 140 },
-                { text: '▸ ЗАГРУЗКА КРИПТОГРАФИЧЕСКИХ МОДУЛЕЙ...', cls: 'dim', delay: 170 },
-                { text: '▸ ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ СВЯЗИ...', cls: 'dim', delay: 150 },
-                { text: '▸ УСТАНОВЛЕНИЕ ЗАЩИЩЁННОГО СОЕДИНЕНИЯ...', cls: 'dim', delay: 190 },
-                { text: '▸ ВЕРИФИКАЦИЯ УЧЁТНЫХ ДАННЫХ...', cls: 'dim', delay: 160 },
-                { text: '▸ РАСШИФРОВКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ...', cls: 'dim', delay: 200 },
-                { text: '▸ ПРОФИЛЬ: СОТРУДНИК // ДОПУСК: УРОВЕНЬ 3', cls: 'green', delay: 180 },
-                { text: '▸ ЗАПРОС КОДА ШИФРОВАНИЯ...', cls: 'amber', delay: 160 },
-                { text: '▸ ВВЕДИТЕ КОД: [СИСТЕМА ОЖИДАЕТ]', cls: 'bright', delay: 200 },
-                { text: '', cls: 'separator', delay: 100 },
-                // Ввод кода (имитация)
-                { text: '▸ КОД ПРИНЯТ: 7F-3A-92', cls: 'cyan', delay: 300 },
-                { text: '▸ РАСШИФРОВКА КЛЮЧА...', cls: 'dim', delay: 220 },
-                { text: '▸ КЛЮЧ ВЕРИФИЦИРОВАН.', cls: 'green', delay: 150 },
-                { text: '▸ ЗАПУСК СКАНИРОВАНИЯ ОКРУЖАЮЩЕЙ СРЕДЫ...', cls: 'dim', delay: 180 },
-                { text: '▸ УГРОЗ НЕ ОБНАРУЖЕНО.', cls: 'green', delay: 130 },
-                { text: '▸ СИНХРОНИЗАЦИЯ С ЦЕНТРАЛЬНЫМ УЗЛОМ...', cls: 'dim', delay: 200 },
-                { text: '▸ ОБНОВЛЕНИЕ СПИСКА АКТИВНЫХ ЗАДАНИЙ...', cls: 'dim', delay: 160 },
-                { text: '▸ ЗАГРУЗКА ДАННЫХ УСПЕШНА.', cls: 'green', delay: 140 },
-                { text: '▸ СИСТЕМА ГОТОВА К РАБОТЕ.', cls: 'green', delay: 180 },
-                { text: '', cls: 'separator', delay: 200 },
-                { text: '▸ ДОБРО ПОЖАЛОВАТЬ В СИСТЕМУ AURUM.', cls: 'bright', delay: 300 },
+                { text: '▸ ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ БЕЗОПАСНОСТИ AURUM...', cls: 'dim', delay: 120 },
+                { text: '▸ ЗАГРУЗКА КРИПТОГРАФИЧЕСКИХ МОДУЛЕЙ...', cls: 'dim', delay: 160 },
+                { text: '▸ ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ СВЯЗИ...', cls: 'dim', delay: 140 },
+                { text: '▸ УСТАНОВЛЕНИЕ ЗАЩИЩЁННОГО СОЕДИНЕНИЯ...', cls: 'dim', delay: 180 },
+                { text: '▸ ВЕРИФИКАЦИЯ УЧЁТНЫХ ДАННЫХ...', cls: 'dim', delay: 150 },
+                { text: '▸ РАСШИФРОВКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ...', cls: 'dim', delay: 190 },
+                { text: '▸ ПРОФИЛЬ: СОТРУДНИК // ДОПУСК: УРОВЕНЬ 3', cls: 'green', delay: 170 },
+                { text: '▸ ЗАПРОС КОДА ДОСТУПА...', cls: 'amber', delay: 150 },
+                { text: '▸ КОД ПРИНЯТ: 7F-3A-92', cls: 'cyan', delay: 250 },
+                { text: '▸ РАСШИФРОВКА КЛЮЧА...', cls: 'dim', delay: 200 },
+                { text: '▸ КЛЮЧ ВЕРИФИЦИРОВАН.', cls: 'green', delay: 130 },
+                { text: '▸ СКАНИРОВАНИЕ ОКРУЖАЮЩЕЙ СРЕДЫ...', cls: 'dim', delay: 160 },
+                { text: '▸ УГРОЗ НЕ ОБНАРУЖЕНО.', cls: 'green', delay: 120 },
+                { text: '▸ СИНХРОНИЗАЦИЯ С ЦЕНТРАЛЬНЫМ УЗЛОМ...', cls: 'dim', delay: 180 },
+                { text: '▸ ЗАГРУЗКА АКТИВНЫХ ЗАДАНИЙ...', cls: 'dim', delay: 140 },
+                { text: '▸ ДАННЫЕ ЗАГРУЖЕНЫ.', cls: 'green', delay: 120 },
+                { text: '▸ СИСТЕМА ГОТОВА К РАБОТЕ.', cls: 'green', delay: 200 },
+                { text: '', cls: 'separator', delay: 150 },
+                { text: '▸ ДОБРО ПОЖАЛОВАТЬ, СОТРУДНИК.', cls: 'bright', delay: 250 },
             ];
 
             // ============================================================
@@ -724,7 +854,7 @@
                 if (lineIndex >= BOOT_LOGS.length) {
                     if (!isBootComplete) {
                         isBootComplete = true;
-                        setTimeout(showMainPage, 600);
+                        setTimeout(showMainPage, 500);
                     }
                     return;
                 }
@@ -732,18 +862,12 @@
                 const entry = BOOT_LOGS[lineIndex];
                 const div = document.createElement('div');
                 div.className = `line ${entry.cls || ''}`.trim();
-
-                if (entry.text.includes('ВВЕДИТЕ КОД')) {
-                    div.innerHTML = `${entry.text} <span class="cursor-blink"></span>`;
-                } else {
-                    div.textContent = entry.text || '\u00A0';
-                }
-
+                div.textContent = entry.text || '\u00A0';
                 output.appendChild(div);
                 scrollToBottom();
 
                 lineIndex++;
-                const nextDelay = entry.delay || 180;
+                const nextDelay = entry.delay || 160;
                 setTimeout(typeLine, nextDelay);
             }
 
@@ -758,75 +882,60 @@
                 if (isMainPageShown) return;
                 isMainPageShown = true;
 
-                // Очищаем вывод, но оставляем загрузочные строки
                 output.innerHTML = '';
 
-                // Создаём структуру главной страницы
-                const mainDiv = document.createElement('div');
-                mainDiv.className = 'main-panel';
-                mainDiv.innerHTML = `
+                const grid = document.createElement('div');
+                grid.className = 'main-grid';
+                grid.innerHTML = `
                     <!-- Левое меню -->
                     <div class="menu-panel">
-                        <div class="menu-item active" data-page="tasks">📋 ЗАДАНИЯ</div>
-                        <div class="menu-item" data-page="archive">📦 АРХИВ</div>
-                        <div class="menu-item" data-page="comms">📡 СВЯЗЬ</div>
-                        <div class="menu-item" data-page="profile">👤 ПРОФИЛЬ</div>
-                        <div class="menu-item" style="margin-top:12px; color:var(--red);" data-page="logout">⏻ ВЫХОД</div>
+                        <div class="menu-item active" data-page="tasks">ЗАДАНИЯ</div>
+                        <div class="menu-item" data-page="archive">АРХИВ</div>
+                        <div class="menu-item logout" data-page="logout">ВЫХОД</div>
                     </div>
 
-                    <!-- Центральный контент -->
+                    <!-- Центр -->
                     <div class="content-panel" id="contentPanel">
-                        <div class="section-title">▸ АКТИВНЫЕ ЗАДАНИЯ</div>
+                        <div class="section-label">▸ АКТИВНЫЕ ЗАДАНИЯ</div>
                         <div id="taskList"></div>
                     </div>
 
-                    <!-- Правая панель — лог -->
+                    <!-- Лог -->
                     <div class="log-panel">
-                        <div class="section-title">▸ ЛОГ ДЕЙСТВИЙ</div>
-                        <div id="logContainer">
+                        <div class="section-label">▸ ЛОГ ДЕЙСТВИЙ</div>
+                        <div class="log-container" id="logContainer">
                             <div class="log-entry"><span class="time">[СИСТЕМА]</span> <span class="action-green">СЕССИЯ ЗАПУЩЕНА</span></div>
                         </div>
                     </div>
                 `;
 
-                output.appendChild(mainDiv);
-                scrollToBottom();
+                output.appendChild(grid);
 
-                // Рендерим задания
                 renderTasks();
-
-                // Добавляем логи
-                addLog('СИСТЕМА', 'ЗАГРУЗКА ДАННЫХ ЗАВЕРШЕНА', 'action-green');
+                addLog('СИСТЕМА', 'ДАННЫЕ ЗАГРУЖЕНЫ', 'action-green');
 
                 // Обработчики меню
                 document.querySelectorAll('.menu-item').forEach(item => {
                     item.addEventListener('click', function() {
+                        const page = this.dataset.page;
+                        if (page === 'logout') {
+                            addLog('СИСТЕМА', 'ЗАПРОС ВЫХОДА', 'action-red');
+                            setTimeout(() => location.reload(), 600);
+                            return;
+                        }
                         document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
                         this.classList.add('active');
-                        const page = this.dataset.page;
                         if (page === 'tasks') {
                             renderTasks();
                             addLog('СИСТЕМА', 'ПЕРЕХОД К ЗАДАНИЯМ', 'action');
                         } else if (page === 'archive') {
                             renderArchive();
                             addLog('СИСТЕМА', 'ОТКРЫТ АРХИВ', 'action');
-                        } else if (page === 'comms') {
-                            renderComms();
-                            addLog('СИСТЕМА', 'ОТКРЫТ КАНАЛ СВЯЗИ', 'action');
-                        } else if (page === 'profile') {
-                            renderProfile();
-                            addLog('СИСТЕМА', 'ПРОСМОТР ПРОФИЛЯ', 'action');
-                        } else if (page === 'logout') {
-                            addLog('СИСТЕМА', 'ЗАПРОС ВЫХОДА', 'action-red');
-                            setTimeout(() => {
-                                location.reload();
-                            }, 800);
                         }
                     });
                 });
 
-                // Активируем эффекты на главной
-                setInterval(triggerGlitch, 3000);
+                setInterval(triggerGlitch, 2500);
             }
 
             // ============================================================
@@ -837,40 +946,28 @@
                 if (!container) return;
                 container.innerHTML = '';
 
-                // Уведомление о новом задании
-                const notif = document.createElement('div');
-                notif.className = 'notification';
-                notif.innerHTML = `
-                    <span class="text">📨 НОВОЕ СООБЩЕНИЕ ОТ КОМАНДОВАНИЯ</span>
-                    <button class="btn-small" id="notifBtn">ОТКРЫТЬ</button>
-                `;
-                container.appendChild(notif);
-
-                document.getElementById('notifBtn').addEventListener('click', () => {
-                    addLog('СИСТЕМА', 'ОТКРЫТО УВЕДОМЛЕНИЕ', 'action');
-                    // Показываем первое задание
-                    showTaskDetail(0);
-                });
-
                 TASKS.forEach((task, index) => {
                     const card = document.createElement('div');
                     card.className = 'task-card';
                     card.innerHTML = `
-                        <div class="code">${task.code} // ${task.clearance}</div>
-                        <div class="title">${task.title}</div>
-                        <div class="meta">
-                            <span class="status-active">● ${task.status}</span>
-                            <span class="priority-high">⚡ ${task.priority}</span>
-                            <span style="color:var(--text-dim);">${task.body.length} пунктов</span>
+                        <div class="task-header">
+                            <span class="task-code">${task.code}</span>
+                            <span class="task-clearance">${task.clearance}</span>
+                        </div>
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-preview">${task.body.split('\n').slice(0, 2).join(' ')}</div>
+                        <div class="task-meta">
+                            <span class="status">● АКТИВНО</span>
+                            <span>${task.date}</span>
+                            <span>${task.sender}</span>
                         </div>
                     `;
                     card.addEventListener('click', () => {
-                        addLog('СИСТЕМА', `ОТКРЫТО ЗАДАНИЕ ${task.code}`, 'action');
+                        addLog('ЗАДАНИЕ', `ОТКРЫТО: ${task.code}`, 'action');
                         showTaskDetail(index);
                     });
                     container.appendChild(card);
                 });
-                scrollToBottom();
             }
 
             // ============================================================
@@ -884,155 +981,70 @@
                 if (!panel) return;
 
                 panel.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <div class="section-title" style="margin-bottom:0;">▸ ЗАДАНИЕ ${task.code}</div>
-                        <button class="btn-small" id="backBtn" style="font-size:8px; padding:4px 12px; background:transparent; border:1px solid rgba(255,255,255,0.05); color:var(--text-dim); cursor:pointer; font-family:var(--font);">← НАЗАД</button>
-                    </div>
-                    <div style="border:1px solid rgba(255,255,255,0.03); padding:14px 16px;">
-                        <div style="color:var(--red); font-size:9px; letter-spacing:0.1em; margin-bottom:4px;">${task.clearance} // ${task.classification || 'СЕКРЕТНО'}</div>
-                        <div style="color:var(--text-bright); font-size:15px; font-weight:700; margin:4px 0 6px;">${task.title}</div>
-                        <div style="font-size:9px; color:var(--text-dim); display:flex; gap:14px; flex-wrap:wrap; margin-bottom:10px;">
-                            <span style="color:var(--green);">● ${task.status}</span>
-                            <span style="color:var(--red);">⚡ ${task.priority}</span>
-                            <span>⏱ ${task.body[3] || '72 часа'}</span>
+                    <div class="detail-view">
+                        <button class="back-btn" id="backBtn">← НАЗАД К СПИСКУ</button>
+                        <div class="detail-header">
+                            <div class="line" style="font-size:10px; color:var(--text-dim);">${task.date} // ${task.sender}</div>
+                            <div class="line" style="font-size:11px; color:var(--red); letter-spacing:0.05em;">${task.clearance}</div>
+                            <div class="line" style="font-size:14px; color:var(--text-bright); font-weight:700; margin:4px 0;">${task.title}</div>
+                            <div class="line" style="font-size:10px; color:var(--green);">СТАТУС: АКТИВНО</div>
                         </div>
-                        <div style="border-top:1px solid rgba(255,255,255,0.03); padding-top:10px;">
-                            ${task.body.map(p => `<p style="margin:4px 0; font-size:12px;">${p}</p>`).join('')}
+                        <div class="detail-body">${task.body}</div>
+                        <div class="detail-actions">
+                            <button class="btn btn-primary" id="acceptBtn">ПРИНЯТЬ</button>
+                            <button class="btn btn-danger" id="rejectBtn">ОТКАЗАТЬСЯ</button>
                         </div>
-                        <div style="display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;">
-                            <button class="btn btn-primary" id="acceptTaskBtn">ПРИНЯТЬ</button>
-                            <button class="btn btn-danger" id="rejectTaskBtn">ОТКАЗАТЬСЯ</button>
-                            <button class="btn" id="infoTaskBtn">ЗАПРОС ДАННЫХ</button>
-                        </div>
+                        <div id="actionFeedback" style="margin-top:10px;"></div>
                     </div>
                 `;
 
                 document.getElementById('backBtn').addEventListener('click', () => {
-                    addLog('СИСТЕМА', 'ВОЗВРАТ К СПИСКУ ЗАДАНИЙ', 'action');
+                    addLog('СИСТЕМА', 'ВОЗВРАТ К СПИСКУ', 'action');
                     renderTasks();
-                    const panel2 = document.getElementById('contentPanel');
-                    if (panel2) {
-                        panel2.innerHTML = `
-                            <div class="section-title">▸ АКТИВНЫЕ ЗАДАНИЯ</div>
+                    const p = document.getElementById('contentPanel');
+                    if (p) {
+                        p.innerHTML = `
+                            <div class="section-label">▸ АКТИВНЫЕ ЗАДАНИЯ</div>
                             <div id="taskList"></div>
                         `;
                         renderTasks();
                     }
                 });
 
-                document.getElementById('acceptTaskBtn').addEventListener('click', () => {
+                document.getElementById('acceptBtn').addEventListener('click', () => {
+                    const fb = document.getElementById('actionFeedback');
+                    fb.innerHTML = `<span style="color:var(--green); font-size:11px;">→ ЗАДАНИЕ ПРИНЯТО. ДАННЫЕ ЗАФИКСИРОВАНЫ.</span>`;
                     addLog('ЗАДАНИЕ', `ПРИНЯТО: ${task.code}`, 'action-green');
-                    const msg = document.createElement('div');
-                    msg.style.cssText =
-                        'color:var(--green); font-size:11px; margin-top:8px; padding:8px; border:1px solid rgba(0,255,65,0.1);';
-                    msg.textContent = '✓ ЗАДАНИЕ ПРИНЯТО. ДАННЫЕ ЗАФИКСИРОВАНЫ.';
-                    document.querySelector('.task-body')?.appendChild(msg);
+                    document.getElementById('acceptBtn').disabled = true;
+                    document.getElementById('rejectBtn').disabled = true;
                 });
 
-                document.getElementById('rejectTaskBtn').addEventListener('click', () => {
+                document.getElementById('rejectBtn').addEventListener('click', () => {
+                    const fb = document.getElementById('actionFeedback');
+                    fb.innerHTML = `<span style="color:var(--red); font-size:11px;">→ ОТКАЗ ЗАФИКСИРОВАН. ЗАДАНИЕ ПЕРЕДАНО ДРУГОМУ АГЕНТУ.</span>`;
                     addLog('ЗАДАНИЕ', `ОТКАЗ ОТ ${task.code}`, 'action-red');
-                    const msg = document.createElement('div');
-                    msg.style.cssText =
-                        'color:var(--red); font-size:11px; margin-top:8px; padding:8px; border:1px solid rgba(255,26,26,0.1);';
-                    msg.textContent = '✗ ОТКАЗ ЗАФИКСИРОВАН. ЗАДАНИЕ ПЕРЕДАНО ДРУГОМУ АГЕНТУ.';
-                    document.querySelector('.task-body')?.appendChild(msg);
+                    document.getElementById('acceptBtn').disabled = true;
+                    document.getElementById('rejectBtn').disabled = true;
                 });
-
-                document.getElementById('infoTaskBtn').addEventListener('click', () => {
-                    addLog('ЗАДАНИЕ', `ЗАПРОС ДАННЫХ: ${task.code}`, 'action');
-                    const msg = document.createElement('div');
-                    msg.style.cssText =
-                        'color:var(--amber); font-size:11px; margin-top:8px; padding:8px; border:1px solid rgba(255,179,71,0.1);';
-                    msg.textContent = '⏳ ЗАПРОС ОТПРАВЛЕН. ОЖИДАЙТЕ ОТВЕТА.';
-                    document.querySelector('.task-body')?.appendChild(msg);
-                });
-
-                scrollToBottom();
             }
 
             // ============================================================
-            // 8. АРХИВ
+            // 8. АРХИВ (ЗАГЛУШКА)
             // ============================================================
             function renderArchive() {
                 const panel = document.getElementById('contentPanel');
                 if (!panel) return;
                 panel.innerHTML = `
-                    <div class="section-title">▸ АРХИВ ВЫПОЛНЕННЫХ ЗАДАНИЙ</div>
-                    <div style="color:var(--text-dim); font-size:11px; padding:20px 0; text-align:center; border:1px solid rgba(255,255,255,0.03);">
-                        АРХИВ ПУСТ. <span style="color:var(--text);">НЕТ ВЫПОЛНЕННЫХ ЗАДАНИЙ.</span>
+                    <div class="section-label">▸ АРХИВ</div>
+                    <div class="archive-placeholder">
+                        <div class="empty">АРХИВ ПУСТ</div>
+                        <div style="font-size:9px; color:var(--text-dim); margin-top:4px;">НЕТ ВЫПОЛНЕННЫХ ЗАДАНИЙ</div>
                     </div>
                 `;
-                scrollToBottom();
             }
 
             // ============================================================
-            // 9. СВЯЗЬ
-            // ============================================================
-            function renderComms() {
-                const panel = document.getElementById('contentPanel');
-                if (!panel) return;
-                panel.innerHTML = `
-                    <div class="section-title">▸ КАНАЛ СВЯЗИ С КОМАНДОВАНИЕМ</div>
-                    <div style="border:1px solid rgba(255,255,255,0.03); padding:14px;">
-                        <div style="font-size:10px; color:var(--text-dim); margin-bottom:8px;">ВВЕДИТЕ СООБЩЕНИЕ ДЛЯ КОМАНДОВАНИЯ:</div>
-                        <textarea id="commsInput" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.05); color:var(--text); padding:10px; font-family:var(--font); font-size:11px; min-height:80px; resize:vertical;"></textarea>
-                        <button class="btn btn-primary" id="commsSendBtn" style="margin-top:10px;">ОТПРАВИТЬ</button>
-                        <div id="commsResponse" style="margin-top:10px;"></div>
-                    </div>
-                `;
-
-                document.getElementById('commsSendBtn').addEventListener('click', () => {
-                    const input = document.getElementById('commsInput');
-                    const response = document.getElementById('commsResponse');
-                    if (!input.value.trim()) {
-                        response.innerHTML = '<span style="color:var(--red); font-size:10px;">⚠ СООБЩЕНИЕ НЕ МОЖЕТ БЫТЬ ПУСТЫМ</span>';
-                        return;
-                    }
-                    response.innerHTML = '<span style="color:var(--amber); font-size:10px;">⏳ ШИФРОВАНИЕ СООБЩЕНИЯ...</span>';
-                    setTimeout(() => {
-                        response.innerHTML =
-                            '<span style="color:var(--green); font-size:10px;">✓ СООБЩЕНИЕ ОТПРАВЛЕНО. ОЖИДАЙТЕ ОТВЕТА.</span>';
-                        addLog('СВЯЗЬ', 'СООБЩЕНИЕ ОТПРАВЛЕНО КОМАНДОВАНИЮ', 'action-green');
-                        input.value = '';
-                    }, 1200);
-                });
-                scrollToBottom();
-            }
-
-            // ============================================================
-            // 10. ПРОФИЛЬ
-            // ============================================================
-            function renderProfile() {
-                const panel = document.getElementById('contentPanel');
-                if (!panel) return;
-                panel.innerHTML = `
-                    <div class="section-title">▸ ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ</div>
-                    <div style="border:1px solid rgba(255,255,255,0.03); padding:16px;">
-                        <div style="display:grid; grid-template-columns:120px 1fr; gap:6px; font-size:11px;">
-                            <span style="color:var(--text-dim);">ПОЗЫВНОЙ:</span>
-                            <span style="color:var(--text-bright);">СОТРУДНИК</span>
-                            <span style="color:var(--text-dim);">УРОВЕНЬ ДОПУСКА:</span>
-                            <span style="color:var(--red);">3</span>
-                            <span style="color:var(--text-dim);">СТАТУС:</span>
-                            <span style="color:var(--green);">АКТИВЕН</span>
-                            <span style="color:var(--text-dim);">ВРЕМЯ В СИСТЕМЕ:</span>
-                            <span style="color:var(--text);" id="profileTime">--:--:--</span>
-                            <span style="color:var(--text-dim);">ВЫПОЛНЕНО ЗАДАНИЙ:</span>
-                            <span style="color:var(--text);">0</span>
-                        </div>
-                    </div>
-                `;
-                // Обновляем время в профиле
-                const updateProfileTime = () => {
-                    const el = document.getElementById('profileTime');
-                    if (el) el.textContent = sessionTimeEl.textContent;
-                };
-                setInterval(updateProfileTime, 1000);
-                scrollToBottom();
-            }
-
-            // ============================================================
-            // 11. ЛОГ ДЕЙСТВИЙ
+            // 9. ЛОГ ДЕЙСТВИЙ
             // ============================================================
             function addLog(source, message, type = 'action') {
                 const container = document.getElementById('logContainer');
@@ -1046,14 +1058,14 @@
                 `;
                 container.appendChild(entry);
                 // Ограничиваем количество записей
-                while (container.children.length > 30) {
+                while (container.children.length > 50) {
                     container.removeChild(container.firstChild);
                 }
-                scrollToBottom();
+                container.scrollTop = container.scrollHeight;
             }
 
             // ============================================================
-            // 12. СЧЁТЧИК ВРЕМЕНИ
+            // 10. СЧЁТЧИК ВРЕМЕНИ
             // ============================================================
             let seconds = 0;
 
@@ -1066,10 +1078,10 @@
             }
 
             // ============================================================
-            // 13. ГЛИТЧ-ЭФФЕКТЫ
+            // 11. ГЛИТЧ-ЭФФЕКТ
             // ============================================================
             function triggerGlitch() {
-                if (Math.random() > 0.08) return;
+                if (Math.random() > 0.06) return;
                 glitchOverlay.classList.add('active');
                 setTimeout(() => {
                     glitchOverlay.classList.remove('active');
@@ -1077,35 +1089,36 @@
             }
 
             // ============================================================
-            // 14. ЗАПУСК
+            // 12. ЗАПУСК
             // ============================================================
-            setTimeout(typeLine, 300);
+            setTimeout(typeLine, 200);
             setInterval(updateTime, 1000);
             setInterval(triggerGlitch, 2000);
 
-            // Дополнительные случайные сообщения (атмосфера)
+            // Случайные технические сообщения
             setInterval(() => {
-                if (Math.random() > 0.5 || !isMainPageShown) return;
+                if (Math.random() > 0.4 || !isMainPageShown) return;
                 const msgs = [
                     'СИНХРОНИЗАЦИЯ ДАННЫХ...',
                     'ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ...',
-                    'ОБНОВЛЕНИЕ КЭША БЕЗОПАСНОСТИ...',
+                    'ОБНОВЛЕНИЕ КЭША...',
                     'ОПРОС УЗЛОВ СЕТИ...',
-                    'СКАНИРОВАНИЕ ОКРУЖАЮЩЕЙ СРЕДЫ...',
-                    'ВЕРИФИКАЦИЯ АКТИВНЫХ ПРОЦЕССОВ...'
+                    'СКАНИРОВАНИЕ ОКРУЖЕНИЯ...'
                 ];
                 const div = document.createElement('div');
                 div.className = 'line dim';
                 div.textContent = '> ' + msgs[Math.floor(Math.random() * msgs.length)];
-                div.style.opacity = '0.15';
+                div.style.opacity = '0.12';
                 div.style.fontSize = '9px';
-                div.style.color = '#333';
-                output.appendChild(div);
-                scrollToBottom();
-                setTimeout(() => div.remove(), 1500);
-            }, 5000);
+                div.style.color = '#2a2a2a';
+                const outputEl = document.getElementById('output');
+                if (outputEl) {
+                    outputEl.appendChild(div);
+                    setTimeout(() => div.remove(), 1200);
+                }
+            }, 4000);
 
-            console.log('AURUM SECURITY TERMINAL v6.0 // ЗАПУЩЕН');
+            console.log('AURUM TERMINAL v7.0 // ЗАПУЩЕН');
         })();
     </script>
 </body>
