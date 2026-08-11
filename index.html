@@ -162,16 +162,28 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </style>
 </head>
 <body>
-<div id="noise"></div><div class="system-watermark">SPMG-04</div><div id="scan"></div><div id="vignette"></div><div id="glitch"></div>
+<!-- ============================================================
+     ФОНОВЫЕ ЭФФЕКТЫ (НЕ ТРОГАТЬ)
+     ============================================================ -->
+<div id="noise"></div>
+<div class="system-watermark">SPMG-04</div>
+<div id="scan"></div>
+<div id="vignette"></div>
+<div id="glitch"></div>
 
+<!-- ============================================================
+     ЗАГРУЗОЧНЫЙ ЭКРАН
+     ============================================================ -->
 <section class="boot" id="boot">
   <canvas id="bootMatrix"></canvas>
   <div class="bootScan"></div>
   <div class="bootNoise"></div>
   <div class="bootVignette"></div>
   <div class="bootFrame">
-    <div class="bootCorner tl"></div><div class="bootCorner tr"></div>
-    <div class="bootCorner bl"></div><div class="bootCorner br"></div>
+    <div class="bootCorner tl"></div>
+    <div class="bootCorner tr"></div>
+    <div class="bootCorner bl"></div>
+    <div class="bootCorner br"></div>
 
     <div class="bootHeader">
       <div class="bootLogo">
@@ -192,14 +204,11 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
       <div class="bootStatusLine"><span class="pulseDot"></span>ЗАЩИЩЁННЫЙ КОНТУР // ПОДКЛЮЧЕНИЕ</div>
       <div class="bootTitle" id="bootTitle">ИНИЦИАЛИЗАЦИЯ</div>
       <div class="bootSubtitle" id="bootSubtitle">Подготовка защищённого соединения</div>
-
       <div class="bootHex" id="bootHex">7F 04 A9 31 // 00 57 // SPMG</div>
-
       <div class="bootProgressWrap">
         <div class="bootProgressMeta"><span id="bootStage">ПОДГОТОВКА</span><span id="bootPct">00%</span></div>
         <div class="bootProgress"><i id="bootProgress"></i><b id="bootProgressNoise"></b></div>
       </div>
-
       <div class="bootConsole" id="bootConsole"></div>
 
       <div class="bootAuth" id="codeGate">
@@ -221,10 +230,21 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
   </div>
 </section>
 
+<!-- ============================================================
+     ОСНОВНОЙ ИНТЕРФЕЙС (ПОСЛЕ ВХОДА)
+     ============================================================ -->
 <div class="app hidden" id="app">
 <header class="topbar">
-  <div class="brand"><span class="mark"></span><span>TFB // SPMG</span><small>SPECIAL PROJECTS MANAGEMENT GROUP</small></div>
-  <div class="topmeta"><span>NODE <b>SPMG-04</b></span><span>SESSION <b id="sessionId">----</b></span><span class="signal">● LINK <b>СТАБИЛЬНО</b></span></div>
+  <div class="brand">
+    <span class="mark"></span>
+    <span>TFB // SPMG</span>
+    <small>SPECIAL PROJECTS MANAGEMENT GROUP</small>
+  </div>
+  <div class="topmeta">
+    <span>NODE <b>SPMG-04</b></span>
+    <span>SESSION <b id="sessionId">----</b></span>
+    <span class="signal">● LINK <b>СТАБИЛЬНО</b></span>
+  </div>
 </header>
 
 <div class="layout">
@@ -275,40 +295,38 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </aside>
 </div>
 
-<footer class="footer"><span>TFB // SPMG <b>INTERNAL OPERATIONS NETWORK</b></span><span id="clock">2057-08-11 // 00:00:00</span><span>AUTH <b>SPMG-IV</b> // SESSION ACTIVE</span></footer>
+<footer class="footer">
+  <span>TFB // SPMG <b>INTERNAL OPERATIONS NETWORK</b></span>
+  <span id="clock">2057-08-11 // 00:00:00</span>
+  <span>AUTH <b>SPMG-IV</b> // SESSION ACTIVE</span>
+</footer>
 </div>
 
+<!-- ============================================================
+     МОДАЛЬНОЕ ОКНО
+     ============================================================ -->
+<div class="modal hidden" id="modal">
+  <div class="modalbox">
+    <div class="modalhead">
+      <h2 id="modalTitle"></h2>
+      <button class="close" id="closeModal">×</button>
+    </div>
+    <div class="modalbody" id="modalBody"></div>
+    <div class="modalfoot">ФАКТ ДОСТУПА БУДЕТ ЗАПИСАН В ЖУРНАЛ ДЕЙСТВИЙ</div>
+  </div>
+</div>
 
-<div class="modal hidden" id="modal"><div class="modalbox"><div class="modalhead"><h2 id="modalTitle"></h2><button class="close" id="closeModal">×</button></div><div class="modalbody" id="modalBody"></div><div class="modalfoot">ФАКТ ДОСТУПА БУДЕТ ЗАПИСАН В ЖУРНАЛ ДЕЙСТВИЙ</div></div></div>
-<div class="toast" id="toast"><div class="t" id="toastTitle"></div><div class="m" id="toastMsg"></div></div>
+<div class="toast" id="toast">
+  <div class="t" id="toastTitle"></div>
+  <div class="m" id="toastMsg"></div>
+</div>
 
 <script>
 // ============================================================
-// ОСНОВНОЙ JS — ВСЯ ЛОГИКА В ОДНОМ МЕСТЕ
+// ВСЕ ДАННЫЕ ДЛЯ КАРТОЧЕК (МЕНЯЙ ТУТ)
 // ============================================================
-(() => {
-"use strict";
 
-// ============================================================
-// 1. СОСТОЯНИЕ
-// ============================================================
-const state = {
-  page: "overview",
-  accepted: new Set(),
-  audit: [],
-  booted: false,
-  user: { name: "Оператор", role: "operator", code: "", level: "SPMG-IV" },
-  audio: null
-};
-
-try {
-  const saved = localStorage.getItem("spmg04_audit");
-  if (saved) state.audit = JSON.parse(saved);
-} catch (e) { state.audit = []; }
-
-// ============================================================
-// 2. ДАННЫЕ
-// ============================================================
+// <<< ОПЕРАЦИИ — МЕНЯЙ НАЗВАНИЯ, СТАТУСЫ, ТЕКСТЫ >>>
 const operations = [
   {
     id: "OP-57-001",
@@ -332,29 +350,68 @@ const operations = [
   }
 ];
 
+// <<< РАЗВЕДДАННЫЕ — МЕНЯЙ ТЕКСТЫ >>>
 const intelligence = [
-  { id: "IR-57-042", type: "FIELD REPORT", confidence: "78%", title: "НЕЗАРЕГИСТРИРОВАННОЕ ДВИЖЕНИЕ // СЕКТОР 04", date: "11.08.2057", desc: "Полевое наблюдение фиксирует повторную активность.", body: "ИСТОЧНИК: ПОЛЕВЫЕ ОПЕРАЦИИ\nДОВЕРИЕ: 78%\n\nОбъект, ранее считавшийся неактивным, демонстрирует признаки движения." }
+  {
+    id: "IR-57-042",
+    type: "FIELD REPORT",
+    confidence: "78%",
+    title: "НЕЗАРЕГИСТРИРОВАННОЕ ДВИЖЕНИЕ // СЕКТОР 04",
+    date: "11.08.2057",
+    desc: "Полевое наблюдение фиксирует повторную активность.",
+    body: `ИСТОЧНИК: ПОЛЕВЫЕ ОПЕРАЦИИ
+ДОВЕРИЕ: 78%
+
+Объект, ранее считавшийся неактивным, демонстрирует признаки движения.`
+  }
 ];
 
+// <<< ОБЪЯВЛЕНИЯ — МЕНЯЙ ТЕКСТЫ >>>
 const bulletins = [
-  { id: "BL-2057-0811", title: "ВРЕМЕННЫЕ ОГРАНИЧЕНИЯ // СЕКТОР 04", date: "11.08.2057", level: "INTERNAL", body: "Доступ к сектору 04 ограничен до особого распоряжения." }
+  {
+    id: "BL-2057-0811",
+    title: "ВРЕМЕННЫЕ ОГРАНИЧЕНИЯ // СЕКТОР 04",
+    date: "11.08.2057",
+    level: "INTERNAL",
+    body: "Доступ к сектору 04 ограничен до особого распоряжения."
+  }
 ];
 
+// <<< ДОКУМЕНТЫ — МЕНЯЙ ТЕКСТЫ >>>
 const documents = [
-  { id: "DOC-14-A", class: "SPMG-II", title: "ПРОТОКОЛ СВЯЗИ // РЕД. 4", date: "02.08.2057", body: "Устанавливает порядок проверки каналов связи перед операциями." }
+  {
+    id: "DOC-14-A",
+    class: "SPMG-II",
+    title: "ПРОТОКОЛ СВЯЗИ // РЕД. 4",
+    date: "02.08.2057",
+    body: "Устанавливает порядок проверки каналов связи перед операциями."
+  }
 ];
 
 // ============================================================
-// 3. DOM-ХЕЛПЕРЫ
+// ОСТАЛЬНОЙ JS (НЕ ТРОГАТЬ)
 // ============================================================
+(() => {
+"use strict";
+
+const state = {
+  page: "overview",
+  accepted: new Set(),
+  audit: [],
+  booted: false,
+  user: { name: "Оператор", role: "operator", code: "", level: "SPMG-IV" }
+};
+
+try {
+  const saved = localStorage.getItem("spmg04_audit");
+  if (saved) state.audit = JSON.parse(saved);
+} catch (e) { state.audit = []; }
+
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
 const content = $("#content");
 const modal = $("#modal");
 
-// ============================================================
-// 4. УТИЛИТЫ
-// ============================================================
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c])); }
 function uid() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
 function now() { return new Date().toLocaleTimeString("ru-RU", { hour12: false }); }
@@ -380,9 +437,6 @@ function log(type, msg) {
   renderRightFeed();
 }
 
-// ============================================================
-// 5. МОДАЛЬНОЕ ОКНО
-// ============================================================
 function openModal(title, body, actions = "") {
   $("#modalTitle").textContent = title;
   $("#modalBody").innerHTML = body + actions;
@@ -392,9 +446,6 @@ function openModal(title, body, actions = "") {
 $("#closeModal").onclick = () => modal.classList.add("hidden");
 modal.addEventListener("click", e => { if (e.target === modal) modal.classList.add("hidden"); });
 
-// ============================================================
-// 6. КАРТОЧКИ И РЕНДЕРИНГ
-// ============================================================
 function card(item, type) {
   let status = item.status || item.level || item.type;
   let extra = item.deadline ? `<span>СРОК ${esc(item.deadline)}</span>` : `<span>${esc(item.date)}</span>`;
@@ -496,9 +547,6 @@ function openItem(type, id) {
   if ($("#clarify")) $("#clarify").onclick = () => { log("OPS", `ЗАПРОС УТОЧНЕНИЯ // ${id}`); toast("ЗАПРОС ЗАРЕГИСТРИРОВАН", "Запрос уточнения внесён в журнал."); };
 }
 
-// ============================================================
-// 7. НАВИГАЦИЯ
-// ============================================================
 document.querySelectorAll("#nav button").forEach(b => b.onclick = () => {
   document.querySelectorAll("#nav button").forEach(x => x.classList.remove("active"));
   b.classList.add("active");
@@ -510,9 +558,6 @@ document.querySelectorAll("#nav button").forEach(b => b.onclick = () => {
 window.refreshPortal = () => { log("SYSTEM", "ОБНОВЛЕНИЕ СЕТИ"); toast("СЕТЬ", "Индекс синхронизирован."); glitch(); render(); };
 window.clearLocalAudit = () => { state.audit = []; localStorage.removeItem("spmg04_audit"); log("SYSTEM", "ЖУРНАЛ ОЧИЩЕН"); render(); };
 
-// ============================================================
-// 8. ЗАГРУЗОЧНЫЙ ЭКРАН
-// ============================================================
 function boot() {
   const consoleEl = $("#bootConsole");
   const title = $("#bootTitle");
@@ -549,9 +594,7 @@ function boot() {
   ];
   const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&@!?№;%*+=-_";
 
-  let i = 0,
-    progressValue = 0,
-    titleBase = "";
+  let i = 0, progressValue = 0, titleBase = "";
 
   const corrupt = s => s.split("").map(ch => { if (ch === " " || Math.random() > .08) return ch; return glyphs[Math.floor(Math.random() * glyphs.length)]; }).join("");
 
@@ -613,94 +656,6 @@ function boot() {
   setInterval(() => { if (!state.booted) { hexGlitch(); if (Math.random() < .28) titleGlitch(); } }, 260);
 }
 
-// ============================================================
-// 9. ЗВУК
-// ============================================================
-function initAudio() {
-  if (state.audio) return;
-  try {
-    const C = window.AudioContext || window.webkitAudioContext;
-    if (!C) return;
-    const ctx = new C(),
-      master = ctx.createGain(),
-      ambient = ctx.createGain();
-    master.gain.value = .12;
-    ambient.gain.value = .035;
-    master.connect(ctx.destination);
-    ambient.connect(master);
-    const osc = ctx.createOscillator(),
-      osc2 = ctx.createOscillator(),
-      lfo = ctx.createOscillator(),
-      lfoGain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.value = 58;
-    osc2.type = "triangle";
-    osc2.frequency.value = 116;
-    lfo.type = "sine";
-    lfo.frequency.value = .08;
-    lfoGain.gain.value = .018;
-    lfo.connect(ambient.gain);
-    osc.connect(ambient);
-    osc2.connect(ambient);
-    osc.start();
-    osc2.start();
-    lfo.start();
-    state.audio = { ctx, master, ambient, osc, osc2, lfo };
-    if (ctx.state === "suspended") ctx.resume();
-  } catch (e) { console.warn("Audio unavailable", e); }
-}
-
-function clickSound(kind = "click") {
-  try {
-    initAudio();
-    if (!state.audio) return;
-    const { ctx, master } = state.audio,
-      nowT = ctx.currentTime;
-    const o = ctx.createOscillator(),
-      g = ctx.createGain();
-    o.type = kind === "alert" ? "sawtooth" : "square";
-    o.frequency.setValueAtTime(kind === "alert" ? 170 : 620, nowT);
-    o.frequency.exponentialRampToValueAtTime(kind === "alert" ? 70 : 260, nowT + .07);
-    g.gain.setValueAtTime(.0001, nowT);
-    g.gain.exponentialRampToValueAtTime(kind === "alert" ? .045 : .028, nowT + .008);
-    g.gain.exponentialRampToValueAtTime(.0001, nowT + .085);
-    o.connect(g);
-    g.connect(master);
-    o.start(nowT);
-    o.stop(nowT + .1);
-  } catch (e) {}
-}
-
-function successSound() {
-  try {
-    initAudio();
-    if (!state.audio) return;
-    const { ctx, master } = state.audio,
-      t = ctx.currentTime;
-    [520, 780, 1040].forEach((f, i) => {
-      const o = ctx.createOscillator(),
-        g = ctx.createGain();
-      o.type = "sine";
-      o.frequency.value = f;
-      g.gain.setValueAtTime(.0001, t + i * .055);
-      g.gain.exponentialRampToValueAtTime(.035, t + i * .055 + .01);
-      g.gain.exponentialRampToValueAtTime(.0001, t + i * .055 + .13);
-      o.connect(g);
-      g.connect(master);
-      o.start(t + i * .055);
-      o.stop(t + i * .055 + .14);
-    });
-  } catch (e) {}
-}
-
-document.addEventListener("click", e => {
-  const b = e.target.closest("button,.row,.tab,.nav button");
-  if (b) clickSound(b.classList.contains("alert") ? "alert" : "click");
-});
-
-// ============================================================
-// 10. АВТОРИЗАЦИЯ (ГЛАВНОЕ — РАБОТАЕТ!)
-// ============================================================
 function authorize() {
   const input = document.getElementById("accessCode");
   const btn = document.getElementById("authorize");
@@ -731,7 +686,6 @@ function authorize() {
     btn.disabled = false;
     input.focus();
     input.select();
-    try { clickSound("alert"); } catch (e) {}
     toast("ДОСТУП ОТКЛОНЁН", "Проверьте код допуска.");
     setTimeout(() => {
       if (status) status.textContent = "ОЖИДАНИЕ АВТОРИЗАЦИИ";
@@ -741,7 +695,6 @@ function authorize() {
     return false;
   }
 
-  try { initAudio(); clickSound("click"); } catch (e) {}
   input.disabled = true;
   btn.disabled = true;
   if (status) status.textContent = "ПРОВЕРКА УЧЁТНЫХ ДАННЫХ...";
@@ -760,16 +713,12 @@ function authorize() {
     if (sid) sid.textContent = uid();
     log("AUTH", `ВХОД // ${account.name} // ${account.role === "admin" ? "ПОЛНЫЙ ДОСТУП" : "ОПЕРАТИВНЫЙ ДОСТУП"}`);
     render();
-    try { successSound(); } catch (e) {}
     toast(account.role === "admin" ? "ADMINISTRATOR" : "СЕАНС УСТАНОВЛЕН", account.role === "admin" ? "Полный доступ разрешён." : "Оперативный доступ разрешён.");
     glitch();
   }, 650);
   return true;
 }
 
-// ============================================================
-// 11. ЧАСЫ
-// ============================================================
 function clock() {
   const d = new Date();
   const t = d.toLocaleTimeString("ru-RU", { hour12: false });
@@ -778,9 +727,6 @@ function clock() {
 }
 setInterval(clock, 1000);
 
-// ============================================================
-// 12. СЛУЧАЙНЫЕ СОБЫТИЯ
-// ============================================================
 setInterval(() => {
   if (state.booted && Math.random() < .18) {
     const msgs = ["NODE SYNC COMPLETED", "ARCHIVE INDEX CHECKED", "ROUTE TABLE ПОДТВЕРЖДЕНО"];
@@ -791,9 +737,6 @@ setInterval(() => {
 }, 4200);
 setInterval(() => { if (state.booted && Math.random() < .05) glitch(); }, 1800);
 
-// ============================================================
-// 13. БИНДИНГ КНОПКИ И ПОЛЯ
-// ============================================================
 function bindAuth() {
   const input = document.getElementById("accessCode");
   const btn = document.getElementById("authorize");
@@ -809,19 +752,14 @@ function bindAuth() {
       authorize();
     }
   };
-  // Гарантируем, что поле и кнопка активны
   input.disabled = false;
   btn.disabled = false;
 }
 
-// ============================================================
-// 14. ЗАПУСК
-// ============================================================
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function() {
     boot();
     bindAuth();
-    // Резервное пробуждение поля ввода
     setTimeout(() => {
       const gate = document.getElementById("codeGate");
       const input = document.getElementById("accessCode");
