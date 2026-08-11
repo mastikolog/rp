@@ -1,1125 +1,1180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AURUM // TERMINAL v7.0</title>
-    <style>
-        /* ============================================================
-           ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
-           ============================================================ */
-        :root {
-            --bg: #000000;
-            --panel: #080808;
-            --border: rgba(255, 255, 255, 0.04);
-            --text: #b8b8b8;
-            --text-dim: #3a3a3a;
-            --text-bright: #e8e8e8;
-            --green: #00ff41;
-            --red: #ff1a1a;
-            --cyan: #7df9ff;
-            --amber: #e6a800;
-            --font: 'Courier New', monospace;
-            --ease: 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--font);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        /* ============================================================
-           ФОНОВЫЕ ЭФФЕКТЫ
-           ============================================================ */
-        .noise {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.035;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E");
-            animation: noiseAnim 0.4s steps(2) infinite;
-        }
-
-        @keyframes noiseAnim {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(-1%, 1%); }
-            100% { transform: translate(1%, -1%); }
-        }
-
-        .scanlines {
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            background: repeating-linear-gradient(0deg,
-                    transparent 0px,
-                    transparent 3px,
-                    rgba(0, 0, 0, 0.1) 3px,
-                    rgba(0, 0, 0, 0.1) 4px);
-            opacity: 0.4;
-        }
-
-        .scan-bar {
-            position: fixed;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            z-index: 2;
-            pointer-events: none;
-            background: rgba(255, 255, 255, 0.008);
-            animation: scanBarMove 8s linear infinite;
-        }
-
-        @keyframes scanBarMove {
-            0% { top: -2px; }
-            100% { top: 100%; }
-        }
-
-        /* ============================================================
-           ОСНОВНОЙ КОНТЕЙНЕР
-           ============================================================ */
-        .terminal-wrapper {
-            position: relative;
-            z-index: 10;
-            width: 100vw;
-            height: 100vh;
-            background: var(--panel);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        /* ============================================================
-           ШАПКА
-           ============================================================ */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 28px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.5);
-            flex-shrink: 0;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-dim);
-        }
-
-        .dot {
-            display: inline-block;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--green);
-            animation: dotPulse 1.4s ease-in-out infinite;
-            box-shadow: 0 0 8px var(--green);
-        }
-
-        @keyframes dotPulse {
-            0%,
-            100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1); }
-        }
-
-        .header-brand {
-            color: var(--text-bright);
-            font-weight: 700;
-            letter-spacing: 0.15em;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 14px;
-            font-size: 9px;
-            letter-spacing: 0.08em;
-            color: var(--text-dim);
-        }
-
-        .header-right span {
-            color: var(--text);
-        }
-
-        /* ============================================================
-           ТЕЛО ТЕРМИНАЛА
-           ============================================================ */
-        .terminal-body {
-            flex: 1;
-            padding: 20px 28px 18px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            font-size: 13px;
-            line-height: 1.7;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
-        }
-
-        .terminal-body::-webkit-scrollbar {
-            width: 3px;
-        }
-        .terminal-body::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .terminal-body::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 2px;
-        }
-
-        /* ============================================================
-           СТРОКИ ТЕРМИНАЛА
-           ============================================================ */
-        .line {
-            padding: 1px 0;
-            opacity: 0;
-            animation: typeIn 0.05s forwards;
-            word-wrap: break-word;
-        }
-
-        @keyframes typeIn {
-            0% { opacity: 0; transform: translateY(2px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .line.dim { color: var(--text-dim); }
-        .line.bright { color: var(--text-bright); }
-        .line.green { color: var(--green); }
-        .line.red { color: var(--red); }
-        .line.cyan { color: var(--cyan); }
-        .line.amber { color: var(--amber); }
-        .line.separator {
-            border-top: 1px solid rgba(255, 255, 255, 0.02);
-            padding: 0;
-            margin: 8px 0;
-            opacity: 1;
-        }
-
-        /* ============================================================
-           ГЛАВНАЯ СТРАНИЦА (СЕТКА)
-           ============================================================ */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr 240px;
-            gap: 16px;
-            height: 100%;
-            opacity: 0;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(6px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Левое меню */
-        .menu-panel {
-            border-right: 1px solid rgba(255, 255, 255, 0.03);
-            padding-right: 14px;
-            height: 100%;
-            overflow-y: auto;
-        }
-
-        .menu-item {
-            display: block;
-            padding: 8px 10px;
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 10px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            border-left: 2px solid transparent;
-            transition: all var(--ease);
-            cursor: pointer;
-            margin-bottom: 2px;
-        }
-
-        .menu-item:hover,
-        .menu-item.active {
-            color: var(--text-bright);
-            border-left-color: var(--green);
-            background: rgba(255, 255, 255, 0.015);
-        }
-
-        .menu-item.logout {
-            margin-top: 16px;
-            color: var(--red);
-            border-left-color: transparent;
-        }
-
-        .menu-item.logout:hover {
-            border-left-color: var(--red);
-            background: rgba(255, 26, 26, 0.04);
-        }
-
-        /* Центр — контент */
-        .content-panel {
-            padding: 0 6px;
-            height: 100%;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
-        }
-
-        .content-panel::-webkit-scrollbar {
-            width: 3px;
-        }
-        .content-panel::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .content-panel::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 2px;
-        }
-
-        .section-label {
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            padding-bottom: 6px;
-            margin-bottom: 12px;
-        }
-
-        /* Карточка задания (РП-сообщение) */
-        .task-card {
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all var(--ease);
-        }
-
-        .task-card:hover {
-            border-color: rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.01);
-        }
-
-        .task-card .task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 4px;
-        }
-
-        .task-card .task-code {
-            font-size: 9px;
-            color: var(--text-dim);
-            letter-spacing: 0.08em;
-        }
-
-        .task-card .task-clearance {
-            font-size: 8px;
-            color: var(--red);
-            letter-spacing: 0.1em;
-            border: 1px solid rgba(255, 26, 26, 0.15);
-            padding: 0 8px;
-        }
-
-        .task-card .task-title {
-            font-size: 13px;
-            color: var(--text-bright);
-            margin: 2px 0 6px;
-        }
-
-        .task-card .task-preview {
-            font-size: 11px;
-            color: var(--text-dim);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .task-card .task-meta {
-            font-size: 9px;
-            color: var(--text-dim);
-            display: flex;
-            gap: 14px;
-            margin-top: 6px;
-            flex-wrap: wrap;
-        }
-
-        .task-card .task-meta .status {
-            color: var(--green);
-        }
-
-        /* Правая панель — лог */
-        .log-panel {
-            border-left: 1px solid rgba(255, 255, 255, 0.03);
-            padding-left: 14px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .log-container {
-            flex: 1;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
-            padding-right: 4px;
-        }
-
-        .log-container::-webkit-scrollbar {
-            width: 3px;
-        }
-        .log-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .log-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 2px;
-        }
-
-        .log-entry {
-            font-size: 9px;
-            color: var(--text-dim);
-            padding: 3px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.015);
-        }
-
-        .log-entry .time {
-            color: var(--text-dim);
-            margin-right: 8px;
-        }
-
-        .log-entry .action {
-            color: var(--text);
-        }
-
-        .log-entry .action-green {
-            color: var(--green);
-        }
-
-        .log-entry .action-red {
-            color: var(--red);
-        }
-
-        /* ============================================================
-           ДЕТАЛЬНОЕ ЗАДАНИЕ
-           ============================================================ */
-        .detail-view {
-            padding: 4px 0;
-        }
-
-        .detail-view .back-btn {
-            font-size: 9px;
-            color: var(--text-dim);
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-family: var(--font);
-            letter-spacing: 0.08em;
-            padding: 4px 0;
-            margin-bottom: 10px;
-        }
-
-        .detail-view .back-btn:hover {
-            color: var(--text-bright);
-        }
-
-        .detail-view .detail-header {
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 14px 16px;
-            margin-bottom: 10px;
-        }
-
-        .detail-view .detail-header .line {
-            font-size: 11px;
-            padding: 2px 0;
-            opacity: 1;
-            animation: none;
-        }
-
-        .detail-view .detail-body {
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 16px;
-            font-size: 12px;
-            line-height: 1.8;
-            white-space: pre-wrap;
-        }
-
-        .detail-view .detail-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 8px 18px;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: var(--text-dim);
-            font-family: var(--font);
-            font-size: 9px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all var(--ease);
-        }
-
-        .btn:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            color: var(--text-bright);
-        }
-
-        .btn-primary {
-            border-color: rgba(0, 255, 65, 0.1);
-            color: var(--green);
-        }
-        .btn-primary:hover {
-            border-color: var(--green);
-            background: rgba(0, 255, 65, 0.03);
-        }
-
-        .btn-danger {
-            border-color: rgba(255, 26, 26, 0.08);
-            color: var(--red);
-        }
-        .btn-danger:hover {
-            border-color: var(--red);
-            background: rgba(255, 26, 26, 0.03);
-        }
-
-        .btn:disabled {
-            opacity: 0.2;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        /* ============================================================
-           АРХИВ (ЗАГЛУШКА)
-           ============================================================ */
-        .archive-placeholder {
-            padding: 40px 20px;
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 11px;
-            letter-spacing: 0.05em;
-        }
-
-        .archive-placeholder .empty {
-            color: var(--text-dim);
-            font-size: 10px;
-        }
-
-        /* ============================================================
-           ФУТЕР
-           ============================================================ */
-        .footer {
-            padding: 8px 28px 10px;
-            border-top: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 9px;
-            letter-spacing: 0.08em;
-            color: var(--text-dim);
-            flex-shrink: 0;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .footer .blink {
-            animation: blink 1.2s step-end infinite;
-        }
-
-        @keyframes blink {
-            0%,
-            100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .footer .time {
-            color: var(--text);
-        }
-
-        /* ============================================================
-           ГЛИТЧ-ЭФФЕКТ
-           ============================================================ */
-        .glitch-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            pointer-events: none;
-            opacity: 0;
-            background: rgba(255, 255, 255, 0.01);
-            transition: opacity 0.05s ease;
-        }
-
-        .glitch-overlay.active {
-            opacity: 1;
-            animation: glitchFlash 0.12s ease;
-        }
-
-        @keyframes glitchFlash {
-            0% { opacity: 0; background: rgba(255, 255, 255, 0.02); }
-            20% { opacity: 1; background: rgba(255, 255, 255, 0.04); }
-            40% { opacity: 0.3; background: rgba(255, 0, 0, 0.02); }
-            60% { opacity: 0.8; background: rgba(0, 255, 255, 0.02); }
-            80% { opacity: 0.4; background: rgba(255, 255, 255, 0.03); }
-            100% { opacity: 0; }
-        }
-
-        /* ============================================================
-           АДАПТИВ
-           ============================================================ */
-        @media (max-width: 820px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-            .menu-panel {
-                border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-                padding-right: 0;
-                padding-bottom: 8px;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 2px;
-                height: auto;
-            }
-            .menu-item {
-                padding: 4px 10px;
-                font-size: 8px;
-                border-left: none;
-                border-bottom: 2px solid transparent;
-                margin-bottom: 0;
-            }
-            .menu-item:hover,
-            .menu-item.active {
-                border-left: none;
-                border-bottom-color: var(--green);
-            }
-            .menu-item.logout {
-                margin-top: 0;
-            }
-            .log-panel {
-                border-left: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.03);
-                padding-left: 0;
-                padding-top: 8px;
-                height: 200px;
-            }
-            .header {
-                padding: 6px 14px;
-                font-size: 8px;
-            }
-            .header-left {
-                gap: 6px;
-            }
-            .header-right {
-                gap: 8px;
-                font-size: 7px;
-            }
-            .terminal-body {
-                padding: 12px 14px 10px;
-                font-size: 11px;
-            }
-            .task-card .task-title {
-                font-size: 12px;
-            }
-            .footer {
-                padding: 6px 14px;
-                font-size: 7px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .terminal-body {
-                font-size: 10px;
-                padding: 10px 10px 8px;
-            }
-            .task-card {
-                padding: 10px 12px;
-            }
-            .task-card .task-title {
-                font-size: 11px;
-            }
-            .detail-view .detail-body {
-                font-size: 10px;
-                padding: 12px;
-            }
-            .btn {
-                padding: 6px 12px;
-                font-size: 8px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TFB // SPMG — Internal Operations Network</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#050607; --panel:#0a0c0e; --panel2:#0d1013; --line:#20252a;
+  --text:#d7d9da; --muted:#737a80; --dim:#444a4f; --white:#f2f3f3;
+  --amber:#c39a55; --red:#a84a4a; --cyan:#8fa8b5;
+  --mono:'DejaVu Sans Mono','Noto Sans Mono','Cascadia Mono','SFMono-Regular',monospace; --sans:'DejaVu Sans','Noto Sans','Segoe UI',system-ui,sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text)}
+body{font-family:var(--sans);overflow:hidden}
+button,input{font:inherit}
+button{color:inherit}
+::selection{background:#d7d9da;color:#050607}
+#noise,#scan,#vignette,#glitch{position:fixed;inset:0;pointer-events:none}
+#noise{z-index:90;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:noise .35s steps(2) infinite}
+#scan{z-index:91;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(255,255,255,.012) 5px 6px);opacity:.35}
+#scan:after{content:"";position:absolute;left:0;right:0;height:1px;background:rgba(210,220,225,.08);animation:sweep 11s linear infinite}
+#vignette{z-index:92;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.58) 100%)}
+#glitch{z-index:120;background:rgba(255,255,255,.018);opacity:0}
+#glitch.on{animation:glitch .18s steps(2)}
+@keyframes noise{50%{transform:translate(-.3%,.4%)}}
+@keyframes sweep{from{top:-2px}to{top:100%}}
+@keyframes glitch{0%{opacity:0}20%{opacity:1;transform:translateX(3px)}45%{opacity:.3;transform:translateX(-4px)}70%{opacity:.7;transform:translateX(1px)}100%{opacity:0}}
+.hidden{display:none!important}
+
+.boot{position:fixed;inset:0;z-index:100;background:#040506;display:flex;align-items:center;justify-content:center;padding:28px}
+.bootbox{width:min(760px,100%);font:12px/1.8 var(--mono);color:#aeb4b7}
+.bootmark{font:600 19px var(--mono);letter-spacing:.18em;color:var(--white);margin-bottom:28px}
+.bootline{min-height:22px}.bootline .ok{color:#bfc5c8}.bootline .warn{color:var(--amber)}
+.bootbar{height:2px;background:#1c2023;margin-top:18px;overflow:hidden}.bootbar i{display:block;width:0;height:100%;background:#b8bec1;transition:width .4s}
+.bootcode{margin-top:26px;border:1px solid var(--line);padding:18px;display:flex;gap:10px;align-items:center}
+.bootcode input{flex:1;background:#080a0c;border:1px solid #2b3034;color:var(--white);padding:10px 12px;outline:0;font-family:var(--mono);letter-spacing:.12em}
+.bootcode button{border:1px solid #363c41;background:#101316;padding:10px 16px;cursor:pointer;font:600 10px var(--mono);letter-spacing:.12em}
+.bootcode button:hover{border-color:#70777c;background:#171b1e}
+.boothint{color:#4e5559;font-size:10px;margin-top:8px}
+
+.app{position:relative;z-index:10;width:100vw;height:100vh;display:grid;grid-template-rows:54px 1fr 30px;background:linear-gradient(135deg,#060708,#090b0d 55%,#070809)}
+.topbar{border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:rgba(5,6,7,.9);backdrop-filter:blur(8px)}
+.brand{display:flex;align-items:center;gap:13px;font:600 11px var(--mono);letter-spacing:.14em}
+.brand .mark{width:8px;height:8px;border:1px solid #9da4a8;box-shadow:0 0 9px rgba(200,210,215,.25)}
+.brand small{color:var(--muted);font-weight:400}
+.topmeta{display:flex;gap:18px;color:var(--muted);font:10px var(--mono)}
+.topmeta b{color:var(--text);font-weight:500}
+.topmeta .signal{color:#aeb4b7}
+
+.layout{min-height:0;display:grid;grid-template-columns:205px minmax(0,1fr) 285px}
+.sidebar,.rightbar{min-height:0;background:rgba(6,8,9,.72)}
+.sidebar{border-right:1px solid var(--line);padding:18px 12px}
+.rightbar{border-left:1px solid var(--line);padding:18px 14px;overflow:auto}
+.navlabel,.sectionlabel{font:600 9px var(--mono);letter-spacing:.16em;color:#555d62;text-transform:uppercase}
+.nav{margin-top:12px;display:grid;gap:2px}
+.nav button{width:100%;border:0;background:transparent;text-align:left;padding:10px 11px;color:#70777c;cursor:pointer;font:500 10px var(--mono);letter-spacing:.09em;border-left:2px solid transparent}
+.nav button:hover{background:#0c0f11;color:#bfc4c7}
+.nav button.active{background:#0e1114;color:#eef0f1;border-left-color:#aab0b3}
+.nav .count{float:right;color:#555d62}.nav button.active .count{color:#aeb4b7}
+.sidebar-note{position:absolute;bottom:48px;width:180px;color:#3f4549;font:9px/1.65 var(--mono);border-top:1px solid var(--line);padding-top:12px}
+.content{min-width:0;min-height:0;overflow:auto;padding:25px 28px 32px}
+.content::-webkit-scrollbar,.rightbar::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-thumb,.rightbar::-webkit-scrollbar-thumb{background:#252a2e}
+
+.pagehead{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:18px}
+.kicker{font:9px var(--mono);letter-spacing:.15em;color:#5c6368;text-transform:uppercase}
+h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8e9e9}
+.pageactions{display:flex;gap:7px}.btn{border:1px solid #2a3034;background:#0c0f11;color:#9ba1a5;padding:8px 11px;cursor:pointer;font:500 9px var(--mono);letter-spacing:.08em}.btn:hover{border-color:#596168;color:#eef0f1}.btn.danger{color:#b06a6a;border-color:#3a2424}
+
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.metric{border:1px solid var(--line);background:rgba(12,15,17,.72);padding:12px 13px;min-height:76px}
+.metric .label{font:9px var(--mono);color:#555d62;letter-spacing:.1em}.metric strong{display:block;font:500 19px var(--mono);color:#dfe2e3;margin-top:8px}.metric .sub{font:9px var(--mono);color:#555d62;margin-top:3px}.metric.alert strong{color:#b99a69}
+
+.grid2{display:grid;grid-template-columns:1.35fr .85fr;gap:12px}
+.panel{border:1px solid var(--line);background:rgba(10,13,15,.76);margin-bottom:12px}
+.panelhead{padding:11px 13px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.panelhead span:first-child{font:600 9px var(--mono);letter-spacing:.13em;color:#777f84}.panelhead .minor{font:9px var(--mono);color:#444b50}
+.list{display:grid}
+.row{padding:12px 13px;border-bottom:1px solid #171b1e;cursor:pointer;transition:.2s}.row:last-child{border-bottom:0}.row:hover{background:#0e1113}
+.rowtop{display:flex;justify-content:space-between;gap:10px;font:9px var(--mono);color:#555d62}.code{color:#8d959a}.status{font-size:8px;letter-spacing:.1em}.status.active{color:#b3a078}.status.closed{color:#777f84}.status.alert{color:#b26c6c}
+.rowtitle{margin-top:5px;color:#d9dcdd;font-size:12px;font-weight:500}.rowdesc{margin-top:5px;color:#666e73;font:10px/1.5 var(--mono)}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.tag{border:1px solid #292f33;color:#646c71;padding:2px 5px;font:8px var(--mono)}
+.feed{font:9px/1.65 var(--mono)}.feedline{display:grid;grid-template-columns:68px 48px 1fr;gap:7px;padding:7px 11px;border-bottom:1px solid #15191c;color:#666e73}.feedline b{font-weight:400;color:#4d555a}.feedline .type{color:#8a9297}.feedline:hover{background:#0d1012}.feedline strong{font-weight:400;color:#9ba1a5}
+.signalbox{padding:13px;font:9px/1.8 var(--mono);color:#626a6f}.bar{height:3px;background:#1a1e21;margin:4px 0 10px}.bar i{display:block;height:100%;background:#858e93}.bar.amber i{background:#92794d}.bar.red i{background:#7c4747}
+.notice{border:1px solid #342c20;background:rgba(50,40,22,.13);padding:12px;color:#8c795a;font:9px/1.6 var(--mono);margin-bottom:12px}.notice strong{display:block;color:#b69b69;margin-bottom:4px}
+.empty{padding:32px;text-align:center;color:#4b5358;font:10px var(--mono)}
+
+.modal{position:fixed;inset:0;z-index:110;background:rgba(0,0,0,.68);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modalbox{width:min(760px,100%);max-height:88vh;overflow:auto;border:1px solid #343a3f;background:#090b0d;box-shadow:0 25px 80px rgba(0,0,0,.6)}
+.modalhead{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px}.modalhead h2{font-size:15px;margin:0;color:#e5e7e8}.close{background:transparent;border:0;color:#666e73;cursor:pointer;font:18px var(--mono)}
+.modalbody{padding:18px}.docgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}.field{border:1px solid #1d2226;padding:9px}.field label{display:block;font:8px var(--mono);color:#4f575c;letter-spacing:.1em;margin-bottom:5px}.field span{font:10px var(--mono);color:#b3b8bb}.prose{white-space:pre-wrap;color:#9da4a8;font:11px/1.75 var(--mono);border-top:1px solid var(--line);padding-top:15px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.modalfoot{border-top:1px solid var(--line);padding:10px 17px;color:#464e53;font:8px var(--mono)}
+
+.toast{position:fixed;right:20px;bottom:48px;z-index:130;width:min(380px,calc(100vw - 40px));border:1px solid #30363b;background:#0b0e10;box-shadow:0 15px 50px rgba(0,0,0,.5);padding:12px;transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s}.toast.show{transform:none;opacity:1}.toast .t{font:600 9px var(--mono);color:#aeb4b7;letter-spacing:.1em}.toast .m{font:9px/1.5 var(--mono);color:#697176;margin-top:5px}
+.footer{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;color:#4f575c;font:8px var(--mono);letter-spacing:.07em;background:#060708}.footer b{font-weight:400;color:#777f84}
+
+@media(max-width:1000px){.layout{grid-template-columns:180px 1fr}.rightbar{display:none}.metrics{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media(max-width:700px){body{overflow:auto}.app{height:auto;min-height:100vh;grid-template-rows:54px auto 30px}.layout{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid var(--line);padding:8px}.nav{display:flex;overflow:auto}.nav button{min-width:max-content;border-left:0;border-bottom:2px solid transparent}.nav button.active{border-left:0;border-bottom-color:#aab0b3}.sidebar-note{display:none}.content{padding:18px 12px 25px}.topmeta{display:none}.metrics{grid-template-columns:1fr 1fr}.docgrid{grid-template-columns:1fr}h1{font-size:20px}.pageactions{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+
+<style id="enhanced-russian-ui">
+.status{font-weight:600}
+.system-watermark{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-18deg);font:600 9vw var(--mono);letter-spacing:.2em;color:rgba(255,255,255,.012);pointer-events:none;z-index:0;white-space:nowrap}
+.content,.sidebar,.rightbar{position:relative;z-index:1}
+.row:after{content:"";display:block;height:1px;width:0;background:#70777c;opacity:.18;transition:width .5s var(--ease)}
+.row:hover:after{width:100%}
+.terminal-caret{display:inline-block;width:5px;height:10px;background:#9ca4a8;margin-left:4px;animation:caret 1s steps(2) infinite;vertical-align:-1px}
+@keyframes caret{50%{opacity:0}}
+</style>
+
+<style id="boot-overhaul">
+.boot{overflow:hidden;background:#020304;color:#d9dddf;isolation:isolate}
+.boot canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.16}
+.bootScan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.018) 3px 4px);mix-blend-mode:screen;opacity:.55}
+.bootScan:before{content:"";position:absolute;left:0;right:0;height:1px;background:rgba(220,230,235,.18);box-shadow:0 0 16px rgba(220,230,235,.08);animation:bootSweep 4.8s linear infinite}
+.bootNoise{position:absolute;inset:-20%;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:bootNoise .18s steps(2) infinite}
+.bootVignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 25%,rgba(0,0,0,.5) 75%,#000 100%)}
+.bootFrame{position:relative;width:min(1120px,92vw);height:min(720px,88vh);border:1px solid #24292d;background:rgba(3,5,6,.72);box-shadow:0 0 0 1px rgba(255,255,255,.015),0 40px 140px rgba(0,0,0,.7);display:flex;flex-direction:column;overflow:hidden}
+.bootFrame:before,.bootFrame:after{content:"";position:absolute;pointer-events:none}
+.bootFrame:before{inset:9px;border:1px solid rgba(255,255,255,.025)}
+.bootFrame:after{left:0;right:0;top:0;height:100%;background:linear-gradient(90deg,transparent 0 49.9%,rgba(255,255,255,.012) 50%,transparent 50.1%);opacity:.3}
+.bootCorner{position:absolute;width:18px;height:18px;border-color:#697176;z-index:2}
+.bootCorner.tl{left:9px;top:9px;border-left:1px solid;border-top:1px solid}.bootCorner.tr{right:9px;top:9px;border-right:1px solid;border-top:1px solid}
+.bootCorner.bl{left:9px;bottom:9px;border-left:1px solid;border-bottom:1px solid}.bootCorner.br{right:9px;bottom:9px;border-right:1px solid;border-bottom:1px solid}
+.bootHeader{height:66px;flex:none;border-bottom:1px solid #1d2226;padding:0 28px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,10,12,.65)}
+.bootLogo{display:flex;align-items:center;gap:13px}.bootLogoMark{width:11px;height:11px;border:1px solid #aeb4b8;box-shadow:0 0 12px rgba(200,210,215,.18);animation:logoPulse 2.2s ease-in-out infinite}
+.bootAgency{font:600 12px var(--mono);letter-spacing:.16em;color:#e2e5e6}.bootSub{font:8px var(--mono);letter-spacing:.12em;color:#555d62;margin-top:4px}
+.bootTelemetry{display:flex;gap:18px;color:#4e565b;font:8px var(--mono)}.bootTelemetry b{color:#899197;font-weight:500}
+.bootCenter{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px clamp(22px,6vw,80px);max-width:100%;z-index:1}
+.bootStatusLine{font:9px var(--mono);letter-spacing:.16em;color:#6e777d}.pulseDot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#9aa2a6;margin-right:8px;box-shadow:0 0 10px rgba(200,210,215,.3);animation:dotPulse 1s infinite}
+.bootTitle{font:600 clamp(30px,5vw,58px)/1 var(--mono);letter-spacing:.04em;color:#e5e7e8;margin-top:20px;position:relative;display:inline-block;text-shadow:0 0 24px rgba(210,220,225,.05)}
+.bootTitle.glitching{animation:titleJitter .12s steps(2)}
+.bootTitle.glitching:before,.bootTitle.glitching:after{content:attr(data-text);position:absolute;left:0;top:0;overflow:hidden;clip-path:inset(0 0 45% 0);opacity:.7}
+.bootTitle.glitching:before{transform:translateX(-3px);color:#aeb9bf}.bootTitle.glitching:after{transform:translateX(3px);color:#757e84;clip-path:inset(55% 0 0 0)}
+.bootSubtitle{font:11px var(--mono);color:#5f686e;margin-top:11px}
+.bootHex{font:9px var(--mono);color:#3e464b;letter-spacing:.12em;margin-top:18px;min-height:13px}
+.bootProgressWrap{margin-top:30px;width:min(700px,100%)}.bootProgressMeta{display:flex;justify-content:space-between;font:8px var(--mono);color:#586167;margin-bottom:7px}
+.bootProgress{height:3px;background:#15191c;position:relative;overflow:hidden}.bootProgress i{display:block;width:0;height:100%;background:#aeb5b8;box-shadow:0 0 12px rgba(210,220,225,.2);transition:width .18s linear}.bootProgress b{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12px,rgba(255,255,255,.18) 12px 13px);animation:progressNoise .45s linear infinite}
+.bootConsole{width:min(780px,100%);height:170px;margin-top:24px;border-top:1px solid #171c20;padding-top:10px;overflow:hidden;font:9px/1.8 var(--mono);color:#50595f;mask-image:linear-gradient(to bottom,black 70%,transparent)}
+.bootLine{white-space:pre;display:block}.bootLine .good{color:#788288}.bootLine .warn{color:#9d8256}.bootLine .fault{color:#8e5757}.bootLine .noise{color:#4a5257}
+.bootAuth{margin-top:20px;width:min(700px,100%);border:1px solid #2b3135;background:rgba(10,13,15,.84);padding:13px}.authLabel{font:8px var(--mono);letter-spacing:.12em;color:#858d92;margin-bottom:10px}.authRow{display:flex;align-items:center}.authPrefix{font:10px var(--mono);color:#555d62;padding:10px 0;margin-right:8px}.authRow input{min-width:0;flex:1;background:#07090a;border:1px solid #2a3034;color:#e3e6e7;padding:10px 11px;outline:none;font:10px var(--mono);letter-spacing:.1em}.authRow input:focus{border-color:#6c7479;box-shadow:0 0 0 1px rgba(160,170,175,.06)}.authRow button{border:1px solid #3b4247;background:#111518;color:#c4c9cb;padding:10px 14px;margin-left:7px;cursor:pointer;font:600 9px var(--mono);letter-spacing:.08em}.authRow button:hover{background:#181d20;border-color:#7b8388}.authHint{font:8px var(--mono);color:#444c51;margin-top:8px}
+.bootFooter{height:32px;flex:none;border-top:1px solid #1d2226;padding:0 22px;display:flex;align-items:center;justify-content:space-between;color:#454d52;font:8px var(--mono);letter-spacing:.08em;background:rgba(5,7,8,.75)}
+.bootFooter span:nth-child(2){color:#6c7479}
+.bootFooter span:nth-child(2):before{content:"● ";color:#8c9499;animation:dotPulse 1.1s infinite}
+@keyframes bootSweep{from{top:-1px}to{top:100%}}@keyframes bootNoise{50%{transform:translate(1.5%,-1%)}}@keyframes logoPulse{50%{box-shadow:0 0 18px rgba(200,210,215,.4)}}@keyframes dotPulse{50%{opacity:.25;transform:scale(.65)}}@keyframes titleJitter{0%{transform:translate(0)}25%{transform:translate(-3px,1px)}50%{transform:translate(3px,-1px)}75%{transform:translate(-1px,0)}100%{transform:translate(0)}}@keyframes progressNoise{to{transform:translateX(13px)}}
+@media(max-width:700px){.bootFrame{width:96vw;height:92vh}.bootHeader{padding:0 15px}.bootTelemetry span:not(:last-child){display:none}.bootCenter{padding:25px 18px}.bootConsole{height:130px}.bootFooter{padding:0 12px;font-size:7px}.bootFooter span:nth-child(2){display:none}.authRow{flex-wrap:wrap}.authPrefix{width:100%;padding-bottom:4px}.authRow input{width:100%;flex:auto}.authRow button{margin-left:0;margin-top:7px;width:100%}}
+</style>
+
+<style id="builder-css">
+.builderbox{width:min(900px,94vw);max-height:90vh}.builderbox .modalbody{overflow:auto}
+.buildergrid{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:10px;margin-bottom:12px}
+.buildergrid label,.builderfull{display:flex;flex-direction:column;gap:6px;font:8px var(--mono);letter-spacing:.08em;color:#70787d}
+.buildergrid input,.buildergrid select,.builderfull textarea{background:#07090a;border:1px solid #252b2f;color:#d9dddf;outline:none;padding:10px;font:10px/1.5 var(--mono);resize:vertical}
+.buildergrid input:focus,.buildergrid select:focus,.builderfull textarea:focus{border-color:#687176}
+.builderfull{margin-bottom:12px}.builderfull textarea{min-height:60px}
+.builderpreview{border-top:1px solid #1b2024;padding-top:12px;margin-top:8px}
+.transmission{margin-top:9px;border:1px solid #20262a;background:#060809;padding:16px;font:10px/1.75 var(--mono);white-space:pre-wrap;color:#aab0b4;min-height:130px;position:relative}
+.transmission:before{content:"ПЕРЕДАЧА // SPMG-04";display:block;color:#596167;font-size:8px;letter-spacing:.13em;margin-bottom:9px}
+.transmission .tx-secret{color:#c1a268}.transmission .tx-system{color:#737c82}.transmission .tx-end{color:#545c61}
+.builderfoot{display:flex;align-items:center;justify-content:space-between;gap:12px}.builderfoot span{font:8px var(--mono);color:#4f575c}
+.builderAdd{margin-left:8px}
+@media(max-width:800px){.buildergrid{grid-template-columns:1fr 1fr}.builderfoot{flex-direction:column;align-items:stretch}}
+@media(max-width:520px){.buildergrid{grid-template-columns:1fr}}
+</style>
+
+<style id="transmission-css">
+.prose{white-space:pre-wrap}
+.transmissionline{position:relative}
+.transmissionline.system{color:#6e777d}
+.transmissionline.secret{color:#b59b67}
+.transmissionline.encrypt{color:#596166}
+.txglitch{display:inline-block;min-width:.7em}
+</style>
+
+<style id="ru-type-fix">
+body,.app,.modal,.row,.panel,.side,.content{font-family:var(--sans)}
+button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.metric,.footer,.topbar,.boot{font-family:var(--mono)}
+.rowtitle,.paneltitle,h1,h2,h3{font-family:var(--sans);font-weight:600;letter-spacing:-.01em}
+</style>
+
+<style id="identity-css">
+.identityStrip{display:flex;align-items:center;gap:10px;font:8px var(--mono);color:#5c6469}
+.identityStrip .identityName{color:#9aa1a5}.identityStrip .identityRole{color:#626a6f}
+#nav button.hidden{display:none!important}
+.adminOnly{display:none}.isAdmin .adminOnly{display:block}
+</style>
+
+<style id="audit-admin-css">
+.auditRow{display:grid;grid-template-columns:140px 170px 110px 90px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid #171c20;font:8px var(--mono);color:#697177}
+.auditRow b{color:#9ba2a6;font-weight:500}.auditRow em{font-style:normal;color:#8c9498}.auditRow strong{font-weight:400;color:#848c91}.adminSession{display:grid;grid-template-columns:1fr 2fr;gap:8px;font:9px var(--mono);color:#555d62}.adminSession b{color:#9aa1a5;font-weight:500}
+@media(max-width:800px){.auditRow{grid-template-columns:1fr 1fr}.auditRow strong{grid-column:1/-1}.identityStrip{display:none}}
+</style>
+
+<style id="security-note-css">
+.securityNote{font:8px var(--mono);color:#454d52;line-height:1.6}
+</style>
+
+<style id="auth-hint-css">
+.authHint{margin-top:10px;font:8px var(--mono);color:#4d555a;letter-spacing:.08em;line-height:1.6}
+.authHint b{color:#717a80;font-weight:500}
+</style>
 </head>
 <body>
+<div id="noise"></div><div class="system-watermark">SPMG-04</div><div id="scan"></div><div id="vignette"></div><div id="glitch"></div>
 
-    <!-- ============================================================
-        ФОНОВЫЕ ЭФФЕКТЫ
-        ============================================================ -->
-    <div class="noise"></div>
-    <div class="scanlines"></div>
-    <div class="scan-bar"></div>
-    <div class="glitch-overlay" id="glitchOverlay"></div>
+<section class="boot" id="boot">
+  <canvas id="bootMatrix"></canvas>
+  <div class="bootScan"></div>
+  <div class="bootNoise"></div>
+  <div class="bootVignette"></div>
+  <div class="bootFrame">
+    <div class="bootCorner tl"></div><div class="bootCorner tr"></div>
+    <div class="bootCorner bl"></div><div class="bootCorner br"></div>
 
-    <!-- ============================================================
-        ТЕРМИНАЛ
-        ============================================================ -->
-    <div class="terminal-wrapper" id="terminalWrapper">
-
-        <!-- ШАПКА -->
-        <header class="header">
-            <div class="header-left">
-                <span class="dot"></span>
-                <span class="header-brand">AURUM</span>
-                <span style="color:var(--text-dim);">|</span>
-                <span>TERMINAL v7.0</span>
-                <span style="color:var(--text-dim); font-size:8px;">SECURE</span>
-            </div>
-            <div class="header-right">
-                <span>NODE: <span id="nodeId">WS-07</span></span>
-                <span>|</span>
-                <span>OP: <span id="opId">СОТРУДНИК</span></span>
-                <span>|</span>
-                <span>LVL: <span style="color:var(--red);">3</span></span>
-            </div>
-        </header>
-
-        <!-- ТЕЛО -->
-        <div class="terminal-body" id="terminalBody">
-            <div id="output"></div>
+    <div class="bootHeader">
+      <div class="bootLogo">
+        <span class="bootLogoMark"></span>
+        <div>
+          <div class="bootAgency">TFB // SPMG-04</div>
+          <div class="bootSub">SPECIAL PROJECTS MANAGEMENT GROUP</div>
         </div>
-
-        <!-- ФУТЕР -->
-        <footer class="footer">
-            <span>
-                <span class="blink">▌</span> SESSION ACTIVE
-            </span>
-            <span>
-                <span class="time" id="sessionTime">00:00:00</span>
-                <span style="color:var(--text-dim); margin-left:12px;">AUTH: LVL-3</span>
-            </span>
-        </footer>
+      </div>
+      <div class="bootTelemetry">
+        <span>NODE <b>SPMG-04</b></span>
+        <span>YEAR <b>2057</b></span>
+        <span id="bootClock">00:00:00</span>
+      </div>
     </div>
 
-    <!-- ============================================================
-        JS
-        ============================================================ -->
-    <script>
-        (() => {
-            "use strict";
+    <div class="bootCenter">
+      <div class="bootStatusLine"><span class="pulseDot"></span>ЗАЩИЩЁННЫЙ КОНТУР // ПОДКЛЮЧЕНИЕ</div>
+      <div class="bootTitle" id="bootTitle">ИНИЦИАЛИЗАЦИЯ</div>
+      <div class="bootSubtitle" id="bootSubtitle">Подготовка защищённого соединения</div>
 
-            // ============================================================
-            // 1. ЭЛЕМЕНТЫ
-            // ============================================================
-            const output = document.getElementById('output');
-            const terminalBody = document.getElementById('terminalBody');
-            const glitchOverlay = document.getElementById('glitchOverlay');
-            const sessionTimeEl = document.getElementById('sessionTime');
+      <div class="bootHex" id="bootHex">7F 04 A9 31 // 00 57 // SPMG</div>
 
-            let isMainPageShown = false;
+      <div class="bootProgressWrap">
+        <div class="bootProgressMeta"><span id="bootStage">ПОДГОТОВКА</span><span id="bootPct">00%</span></div>
+        <div class="bootProgress"><i id="bootProgress"></i><b id="bootProgressNoise"></b></div>
+      </div>
 
-            // ============================================================
-            // 2. ДАННЫЕ ЗАДАНИЙ (РП-СТИЛЬ)
-            // ============================================================
-            const TASKS = [{
-                id: 1,
-                code: 'OP-42/ALPHA',
-                clearance: 'TOP SECRET // LVL-5',
-                title: 'ПЕРЕХВАТ КОММУНИКАЦИЙ В СЕКТОРЕ 7',
-                date: '12.08.2057',
-                sender: 'КОМАНДОВАНИЕ AURUM',
-                body: `Подключение к системе...
-        Обработка данных...
-        Отправка сообщения...
+      <div class="bootConsole" id="bootConsole"></div>
 
-        Внимание! Засекречено уровнем допуска 5.
+      <div class="bootAuth hidden" id="codeGate">
+        <div class="authLabel">ТРЕБУЕТСЯ ПОДТВЕРЖДЕНИЕ ОПЕРАТОРА</div>
+        <div class="authRow">
+          <div class="authPrefix">SPMG-04 //</div>
+          <input id="accessCode" autocomplete="off" spellcheck="false" placeholder="ВВЕДИТЕ КОД ДОПУСКА"><div class="authHint">RP-КОДЫ: <b>SPMG-04-2057</b> // ОПЕРАТОР &nbsp; <b>SPMG-ADMIN-2057</b> // ADMINISTRATOR</div>
+          <button id="authorize">ПОДТВЕРДИТЬ</button>
+        </div>
+        <div class="authHint">Сеанс будет привязан к текущему идентификатору узла. Все действия записываются.</div>
+      </div>
+    </div>
 
-        Цель: перехватить и дешифровать коммуникации отряда «ТЕНЬ» в секторе 7.
-        Объект: мобильная станция связи, 4 человека охраны.
-        Метод: скрытное проникновение, установка перехватчика.
-        Время выполнения: 72 часа.
-        Кодовое слово: «ГОРИЗОНТ».
+    <div class="bootFooter">
+      <span>ВНУТРЕННЯЯ СЕТЬ // ДОСТУП ОГРАНИЧЕН</span>
+      <span id="bootFooterStatus">ПРОВЕРКА СИСТЕМЫ</span>
+      <span>TFB // SPMG-IV</span>
+    </div>
+  </div>
+</section>
 
-        Отсоединение...
-        Шифрование...`
-            }, {
-                id: 2,
-                code: 'OP-45/BETA',
-                clearance: 'TOP SECRET // LVL-4',
-                title: 'КОНТАКТ С АГЕНТОМ «СПУТНИК»',
-                date: '10.08.2057',
-                sender: 'ОТДЕЛ ПОЛЕВЫХ ОПЕРАЦИЙ',
-                body: `Подключение к системе...
-        Обработка данных...
-        Отправка сообщения...
+<div class="app hidden" id="app">
+<header class="topbar">
+  <div class="brand"><span class="mark"></span><span>TFB // SPMG</span><small>SPECIAL PROJECTS MANAGEMENT GROUP</small></div>
+  <div class="topmeta"><span>NODE <b>SPMG-04</b></span><span>SESSION <b id="sessionId">----</b></span><span class="signal">● LINK <b>СТАБИЛЬНО</b></span></div>
+</header>
 
-        Внимание! Засекречено уровнем допуска 4.
+<div class="layout">
+<aside class="sidebar">
+  <div class="navlabel">ВНУТРЕННЯЯ СЕТЬ</div>
+  <nav class="nav" id="nav">
+    <button class="active" data-page="overview">ОБЗОР <span class="count">01</span></button>
+    <button data-page="operations">ОПЕРАЦИИ <span class="count">07</span></button>
+    <button data-page="builder">КОНСТРУКТОР <span class="count">+</span></button>
+    <button data-page="admin" class="hidden">АДМИНИСТРИРОВАНИЕ <span class="count">SYS</span></button>
+    <button data-page="intelligence">РАЗВЕДДАННЫЕ <span class="count">12</span></button>
+    <button data-page="bulletins">ОБЪЯВЛЕНИЯ <span class="count">03</span></button>
+    <button data-page="documents">ДОКУМЕНТЫ <span class="count">18</span></button>
+    <button data-page="archive">АРХИВ <span class="count">—</span></button>
+    <button data-page="audit">ЖУРНАЛ ДЕЙСТВИЙ <span class="count">24</span></button>
+  </nav>
+  <div class="sidebar-note">
+    УРОВЕНЬ ДОПУСКА: SPMG-IV<br>
+    СЕКТОР ДОСТУПА: ПОЛЕВЫЕ ОПЕРАЦИИ<br>
+    SYSTEM: OPERATIONAL<br><br>
+    Несанкционированное распространение внутренних материалов запрещено.
+  </div>
+</aside>
 
-        Цель: установить контакт с агентом «СПУТНИК» в точке 7B.
-        Объект: передача пакета данных о перемещениях противника.
-        Метод: радиосвязь с использованием кодовых фраз.
-        Время выполнения: 48 часов.
-        Кодовое слово: «МАЯК».
+<main class="content" id="content"></main>
 
-        Отсоединение...
-        Шифрование...`
-            }, {
-                id: 3,
-                code: 'OP-48/GAMMA',
-                clearance: 'TOP SECRET // LVL-5',
-                title: 'ЭВАКУАЦИЯ ИЗ СЕКТОРА 12',
-                date: '08.08.2057',
-                sender: 'КОМАНДОВАНИЕ AURUM',
-                body: `Подключение к системе...
-        Обработка данных...
-        Отправка сообщения...
+<aside class="rightbar">
+  <div class="sectionlabel">МОНИТОР СЕТИ</div>
+  <div class="panel" style="margin-top:10px">
+    <div class="signalbox">
+      NODE-01 <span style="float:right">В СЕТИ</span><div class="bar"><i style="width:98%"></i></div>
+      NODE-02 <span style="float:right">В СЕТИ</span><div class="bar"><i style="width:94%"></i></div>
+      NODE-03 <span style="float:right;color:#a68a5a">НЕСТАБИЛЬНО</span><div class="bar amber"><i style="width:67%"></i></div>
+      NODE-04 <span style="float:right">В СЕТИ</span><div class="bar"><i style="width:91%"></i></div>
+      NODE-05 <span style="float:right;color:#8a5555">ОТКЛЮЧЕН</span><div class="bar red"><i style="width:12%"></i></div>
+    </div>
+  </div>
+  <div class="sectionlabel">ОПЕРАТИВНОЕ СОСТОЯНИЕ</div>
+  <div class="panel" style="margin-top:10px">
+    <div class="signalbox">
+      ОЦЕНКА УГРОЗЫ <span style="float:right;color:#a68a5a">ПОВЫШЕННЫЙ</span><br>
+      COMMUNICATIONS <span style="float:right">СТАБИЛЬНО</span><br>
+      СИНХРОНИЗАЦИЯ АРХИВА <span style="float:right">97.2%</span><br>
+      ВНЕШНИЙ КАНАЛ <span style="float:right">ОГРАНИЧЕН</span>
+    </div>
+  </div>
+  <div class="notice"><strong>УВЕДОМЛЕНИЕ БЕЗОПАСНОСТИ // SEC-57-0811</strong>Обнаруженная аномалия сеанса устранена автоматически. Действий со стороны оператора не требуется.</div>
+  <div class="sectionlabel">ЖУРНАЛ СОБЫТИЙ</div>
+  <div class="panel" style="margin-top:10px"><div class="feed" id="liveFeed"></div></div>
+</aside>
+</div>
 
-        Внимание! Засекречено уровнем допуска 5.
+<footer class="footer"><span>TFB // SPMG <b>INTERNAL OPERATIONS NETWORK</b></span><span id="clock">2057-08-11 // 00:00:00</span><span>AUTH <b>SPMG-IV</b> // SESSION ACTIVE</span></footer>
+</div>
 
-        Цель: эвакуировать группу исследователей из сектора 12.
-        Объект: гражданские лица, 7 человек, без оружия.
-        Метод: наземный транспорт, прикрытие с воздуха.
-        Время выполнения: 24 часа.
-        Кодовое слово: «КОВЧЕГ».
 
-        Отсоединение...
-        Шифрование...`
-            }];
+<div class="modal hidden" id="builderModal">
+  <div class="modalbox builderbox">
+    <div class="modalhead"><h2>КОНСТРУКТОР ОПЕРАЦИИ</h2><button class="close" id="closeBuilder">×</button></div>
+    <div class="modalbody">
+      <div class="buildergrid">
+        <label>НАЗВАНИЕ ОПЕРАЦИИ<input id="bTitle" placeholder="Например: ПЕРЕХВАТ // СЕКТОР 04"></label>
+        <label>УРОВЕНЬ ДОПУСКА<select id="bClass"><option>SPMG-II</option><option selected>SPMG-IV</option><option>SPMG-V</option></select></label>
+        <label>ПРИОРИТЕТ<select id="bPriority"><option>НИЗКИЙ</option><option selected>СРЕДНИЙ</option><option>ВЫСОКИЙ</option><option>КРИТИЧЕСКИЙ</option></select></label>
+        <label>СРОК<input id="bDeadline" placeholder="14.08.2057 // 23:59"></label>
+      </div>
+      <label class="builderfull">КРАТКОЕ ОПИСАНИЕ<textarea id="bDesc" rows="3" placeholder="Что известно до начала операции..."></textarea></label>
+      <label class="builderfull">ТЕКСТ ОПЕРАЦИИ<textarea id="bBody" rows="12" placeholder="Подключение к системе....
+Обработка данных....
+Отправка сообщения....
 
-            // ============================================================
-            // 3. ЗАГРУЗОЧНЫЕ ЛОГИ
-            // ============================================================
-            const BOOT_LOGS = [
-                { text: '▸ ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ БЕЗОПАСНОСТИ AURUM...', cls: 'dim', delay: 120 },
-                { text: '▸ ЗАГРУЗКА КРИПТОГРАФИЧЕСКИХ МОДУЛЕЙ...', cls: 'dim', delay: 160 },
-                { text: '▸ ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ СВЯЗИ...', cls: 'dim', delay: 140 },
-                { text: '▸ УСТАНОВЛЕНИЕ ЗАЩИЩЁННОГО СОЕДИНЕНИЯ...', cls: 'dim', delay: 180 },
-                { text: '▸ ВЕРИФИКАЦИЯ УЧЁТНЫХ ДАННЫХ...', cls: 'dim', delay: 150 },
-                { text: '▸ РАСШИФРОВКА ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ...', cls: 'dim', delay: 190 },
-                { text: '▸ ПРОФИЛЬ: СОТРУДНИК // ДОПУСК: УРОВЕНЬ 3', cls: 'green', delay: 170 },
-                { text: '▸ ЗАПРОС КОДА ДОСТУПА...', cls: 'amber', delay: 150 },
-                { text: '▸ КОД ПРИНЯТ: 7F-3A-92', cls: 'cyan', delay: 250 },
-                { text: '▸ РАСШИФРОВКА КЛЮЧА...', cls: 'dim', delay: 200 },
-                { text: '▸ КЛЮЧ ВЕРИФИЦИРОВАН.', cls: 'green', delay: 130 },
-                { text: '▸ СКАНИРОВАНИЕ ОКРУЖАЮЩЕЙ СРЕДЫ...', cls: 'dim', delay: 160 },
-                { text: '▸ УГРОЗ НЕ ОБНАРУЖЕНО.', cls: 'green', delay: 120 },
-                { text: '▸ СИНХРОНИЗАЦИЯ С ЦЕНТРАЛЬНЫМ УЗЛОМ...', cls: 'dim', delay: 180 },
-                { text: '▸ ЗАГРУЗКА АКТИВНЫХ ЗАДАНИЙ...', cls: 'dim', delay: 140 },
-                { text: '▸ ДАННЫЕ ЗАГРУЖЕНЫ.', cls: 'green', delay: 120 },
-                { text: '▸ СИСТЕМА ГОТОВА К РАБОТЕ.', cls: 'green', delay: 200 },
-                { text: '', cls: 'separator', delay: 150 },
-                { text: '▸ ДОБРО ПОЖАЛОВАТЬ, СОТРУДНИК.', cls: 'bright', delay: 250 },
-            ];
+Внимание! Засекречено уровнем допуска 5.
 
-            // ============================================================
-            // 4. ПЕЧАТЬ СТРОК
-            // ============================================================
-            let lineIndex = 0;
-            let isBootComplete = false;
+Текст задания...
 
-            function typeLine() {
-                if (lineIndex >= BOOT_LOGS.length) {
-                    if (!isBootComplete) {
-                        isBootComplete = true;
-                        setTimeout(showMainPage, 500);
-                    }
-                    return;
-                }
+Отсоединение...
+Шифрование..."></textarea></label>
+      <div class="builderpreview">
+        <div class="sectionlabel">ПРЕДПРОСМОТР ПЕРЕД ПУБЛИКАЦИЕЙ</div>
+        <div id="builderPreview" class="transmission"></div>
+      </div>
+    </div>
+    <div class="modalfoot builderfoot">
+      <span>НОВАЯ ЗАПИСЬ БУДЕТ СОХРАНЕНА ЛОКАЛЬНО В ЭТОМ БРАУЗЕРЕ</span>
+      <button class="btn" id="saveOperation">ОПУБЛИКОВАТЬ ОПЕРАЦИЮ</button>
+    </div>
+  </div>
+</div>
 
-                const entry = BOOT_LOGS[lineIndex];
-                const div = document.createElement('div');
-                div.className = `line ${entry.cls || ''}`.trim();
-                div.textContent = entry.text || '\u00A0';
-                output.appendChild(div);
-                scrollToBottom();
+<div class="modal hidden" id="modal"><div class="modalbox"><div class="modalhead"><h2 id="modalTitle"></h2><button class="close" id="closeModal">×</button></div><div class="modalbody" id="modalBody"></div><div class="modalfoot">ФАКТ ДОСТУПА БУДЕТ ЗАПИСАН В ЖУРНАЛ ДЕЙСТВИЙ</div></div></div>
+<div class="toast" id="toast"><div class="t" id="toastTitle"></div><div class="m" id="toastMsg"></div></div>
 
-                lineIndex++;
-                const nextDelay = entry.delay || 160;
-                setTimeout(typeLine, nextDelay);
-            }
+<script>
+(() => {
+"use strict";
 
-            function scrollToBottom() {
-                terminalBody.scrollTop = terminalBody.scrollHeight;
-            }
+let audit=[];
+const state={
+ page:"overview",accepted:new Set(),audit:[],booted:false,
+ user:{name:"Оператор",role:"operator",code:"",level:"SPMG-IV"},
+ audio:null
+};
+try{state.audit=JSON.parse(localStorage.getItem("spmg04_audit")||"[]")}catch(e){state.audit=[]}
+const operations=[
+ {id:"OP-57-041",status:"ACTIVE",class:"SPMG-IV",priority:"HIGH",title:"SIGNAL INTERCEPTION // SECTOR 07",date:"10.08.2057",deadline:"13.08.2057 // 23:59",desc:"A mobile communications node has appeared inside a restricted sector. Its origin has not been confirmed.",body:`SITUATION
 
-            // ============================================================
-            // 5. ГЛАВНАЯ СТРАНИЦА
-            // ============================================================
-            function showMainPage() {
-                if (isMainPageShown) return;
-                isMainPageShown = true;
+Field monitoring has identified an intermittent encrypted transmission originating from Sector 07. The signal does not correspond to any registered TFB infrastructure.
 
-                output.innerHTML = '';
+OBJECTIVE
 
-                const grid = document.createElement('div');
-                grid.className = 'main-grid';
-                grid.innerHTML = `
-                    <!-- Левое меню -->
-                    <div class="menu-panel">
-                        <div class="menu-item active" data-page="tasks">ЗАДАНИЯ</div>
-                        <div class="menu-item" data-page="archive">АРХИВ</div>
-                        <div class="menu-item logout" data-page="logout">ВЫХОД</div>
-                    </div>
+Locate the transmission source, establish the nature of the node and recover sufficient information for subsequent analysis.
 
-                    <!-- Центр -->
-                    <div class="content-panel" id="contentPanel">
-                        <div class="section-label">▸ АКТИВНЫЕ ЗАДАНИЯ</div>
-                        <div id="taskList"></div>
-                    </div>
+AVAILABLE РАЗВЕДДАННЫЕ
 
-                    <!-- Лог -->
-                    <div class="log-panel">
-                        <div class="section-label">▸ ЛОГ ДЕЙСТВИЙ</div>
-                        <div class="log-container" id="logContainer">
-                            <div class="log-entry"><span class="time">[СИСТЕМА]</span> <span class="action-green">СЕССИЯ ЗАПУЩЕНА</span></div>
-                        </div>
-                    </div>
-                `;
+• Transmission window: 03–11 minutes
+• Signal repeats at irregular intervals
+• No confirmed civilian infrastructure at the suspected location
+• Source identification remains inconclusive
 
-                output.appendChild(grid);
+OPERATIONAL CONSTRAINTS
 
-                renderTasks();
-                addLog('СИСТЕМА', 'ДАННЫЕ ЗАГРУЖЕНЫ', 'action-green');
+Maintain a low operational profile. Avoid unnecessary exposure of SPMG involvement.
 
-                // Обработчики меню
-                document.querySelectorAll('.menu-item').forEach(item => {
-                    item.addEventListener('click', function() {
-                        const page = this.dataset.page;
-                        if (page === 'logout') {
-                            addLog('СИСТЕМА', 'ЗАПРОС ВЫХОДА', 'action-red');
-                            setTimeout(() => location.reload(), 600);
-                            return;
-                        }
-                        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                        this.classList.add('active');
-                        if (page === 'tasks') {
-                            renderTasks();
-                            addLog('СИСТЕМА', 'ПЕРЕХОД К ЗАДАНИЯМ', 'action');
-                        } else if (page === 'archive') {
-                            renderArchive();
-                            addLog('СИСТЕМА', 'ОТКРЫТ АРХИВ', 'action');
-                        }
-                    });
-                });
+SUCCESS CONDITIONS
 
-                setInterval(triggerGlitch, 2500);
-            }
+Source identified and preliminary intelligence submitted.
 
-            // ============================================================
-            // 6. РЕНДЕРИНГ ЗАДАНИЙ
-            // ============================================================
-            function renderTasks() {
-                const container = document.getElementById('taskList');
-                if (!container) return;
-                container.innerHTML = '';
+FAILURE CONDITIONS
 
-                TASKS.forEach((task, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'task-card';
-                    card.innerHTML = `
-                        <div class="task-header">
-                            <span class="task-code">${task.code}</span>
-                            <span class="task-clearance">${task.clearance}</span>
-                        </div>
-                        <div class="task-title">${task.title}</div>
-                        <div class="task-preview">${task.body.split('\n').slice(0, 2).join(' ')}</div>
-                        <div class="task-meta">
-                            <span class="status">● АКТИВНО</span>
-                            <span>${task.date}</span>
-                            <span>${task.sender}</span>
-                        </div>
-                    `;
-                    card.addEventListener('click', () => {
-                        addLog('ЗАДАНИЕ', `ОТКРЫТО: ${task.code}`, 'action');
-                        showTaskDetail(index);
-                    });
-                    container.appendChild(card);
-                });
-            }
+Loss of the signal without a recoverable trace, or confirmed compromise of SPMG presence.`},
+ {id:"OP-57-038",status:"ACTIVE",class:"SPMG-III",priority:"MEDIUM",title:"CONTACT PROTOCOL // \"NORTHSTAR\"",date:"09.08.2057",deadline:"12.08.2057 // 18:00",desc:"An established contact has failed to respond through the normal channel.",body:`SITUATION
 
-            // ============================================================
-            // 7. ДЕТАЛЬНЫЙ ПРОСМОТР ЗАДАНИЯ
-            // ============================================================
-            function showTaskDetail(index) {
-                const task = TASKS[index];
-                if (!task) return;
+Contact identifier NORTHSTAR has missed two scheduled communications.
 
-                const panel = document.getElementById('contentPanel');
-                if (!panel) return;
+OBJECTIVE
 
-                panel.innerHTML = `
-                    <div class="detail-view">
-                        <button class="back-btn" id="backBtn">← НАЗАД К СПИСКУ</button>
-                        <div class="detail-header">
-                            <div class="line" style="font-size:10px; color:var(--text-dim);">${task.date} // ${task.sender}</div>
-                            <div class="line" style="font-size:11px; color:var(--red); letter-spacing:0.05em;">${task.clearance}</div>
-                            <div class="line" style="font-size:14px; color:var(--text-bright); font-weight:700; margin:4px 0;">${task.title}</div>
-                            <div class="line" style="font-size:10px; color:var(--green);">СТАТУС: АКТИВНО</div>
-                        </div>
-                        <div class="detail-body">${task.body}</div>
-                        <div class="detail-actions">
-                            <button class="btn btn-primary" id="acceptBtn">ПРИНЯТЬ</button>
-                            <button class="btn btn-danger" id="rejectBtn">ОТКАЗАТЬСЯ</button>
-                        </div>
-                        <div id="actionFeedback" style="margin-top:10px;"></div>
-                    </div>
-                `;
+Determine whether the contact remains operational and establish a secondary communication path if required.
 
-                document.getElementById('backBtn').addEventListener('click', () => {
-                    addLog('СИСТЕМА', 'ВОЗВРАТ К СПИСКУ', 'action');
-                    renderTasks();
-                    const p = document.getElementById('contentPanel');
-                    if (p) {
-                        p.innerHTML = `
-                            <div class="section-label">▸ АКТИВНЫЕ ЗАДАНИЯ</div>
-                            <div id="taskList"></div>
-                        `;
-                        renderTasks();
-                    }
-                });
+KNOWN INFORMATION
 
-                document.getElementById('acceptBtn').addEventListener('click', () => {
-                    const fb = document.getElementById('actionFeedback');
-                    fb.innerHTML = `<span style="color:var(--green); font-size:11px;">→ ЗАДАНИЕ ПРИНЯТО. ДАННЫЕ ЗАФИКСИРОВАНЫ.</span>`;
-                    addLog('ЗАДАНИЕ', `ПРИНЯТО: ${task.code}`, 'action-green');
-                    document.getElementById('acceptBtn').disabled = true;
-                    document.getElementById('rejectBtn').disabled = true;
-                });
+Last verified transmission: 09.08.2057 // 04:17.
+Expected next contact: 09.08.2057 // 12:00.
+No confirmation was received.
 
-                document.getElementById('rejectBtn').addEventListener('click', () => {
-                    const fb = document.getElementById('actionFeedback');
-                    fb.innerHTML = `<span style="color:var(--red); font-size:11px;">→ ОТКАЗ ЗАФИКСИРОВАН. ЗАДАНИЕ ПЕРЕДАНО ДРУГОМУ АГЕНТУ.</span>`;
-                    addLog('ЗАДАНИЕ', `ОТКАЗ ОТ ${task.code}`, 'action-red');
-                    document.getElementById('acceptBtn').disabled = true;
-                    document.getElementById('rejectBtn').disabled = true;
-                });
-            }
+RESTRICTION
 
-            // ============================================================
-            // 8. АРХИВ (ЗАГЛУШКА)
-            // ============================================================
-            function renderArchive() {
-                const panel = document.getElementById('contentPanel');
-                if (!panel) return;
-                panel.innerHTML = `
-                    <div class="section-label">▸ АРХИВ</div>
-                    <div class="archive-placeholder">
-                        <div class="empty">АРХИВ ПУСТ</div>
-                        <div style="font-size:9px; color:var(--text-dim); margin-top:4px;">НЕТ ВЫПОЛНЕННЫХ ЗАДАНИЙ</div>
-                    </div>
-                `;
-            }
+Do not disclose SPMG affiliation during initial contact.`},
+ {id:"OP-57-035",status:"ACTIVE",class:"SPMG-IV",priority:"HIGH",title:"RECOVERY // CASE FILE 12-DELTA",date:"08.08.2057",deadline:"14.08.2057 // 12:00",desc:"A physical case file associated with a closed investigation has resurfaced.",body:`SITUATION
 
-            // ============================================================
-            // 9. ЛОГ ДЕЙСТВИЙ
-            // ============================================================
-            function addLog(source, message, type = 'action') {
-                const container = document.getElementById('logContainer');
-                if (!container) return;
-                const entry = document.createElement('div');
-                entry.className = 'log-entry';
-                const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                entry.innerHTML = `
-                    <span class="time">[${time}]</span>
-                    <span class="${type}">${source} // ${message}</span>
-                `;
-                container.appendChild(entry);
-                // Ограничиваем количество записей
-                while (container.children.length > 50) {
-                    container.removeChild(container.firstChild);
-                }
-                container.scrollTop = container.scrollHeight;
-            }
+Case File 12-DELTA was formally archived in 2055. A partial copy has now appeared in an unsecured information channel.
 
-            // ============================================================
-            // 10. СЧЁТЧИК ВРЕМЕНИ
-            // ============================================================
-            let seconds = 0;
+OBJECTIVE
 
-            function updateTime() {
-                seconds++;
-                const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-                const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-                const s = String(seconds % 60).padStart(2, '0');
-                sessionTimeEl.textContent = `${h}:${m}:${s}`;
-            }
+Recover the originating copy and determine whether the archive was compromised.
 
-            // ============================================================
-            // 11. ГЛИТЧ-ЭФФЕКТ
-            // ============================================================
-            function triggerGlitch() {
-                if (Math.random() > 0.06) return;
-                glitchOverlay.classList.add('active');
-                setTimeout(() => {
-                    glitchOverlay.classList.remove('active');
-                }, 120);
-            }
+PRIORITY
 
-            // ============================================================
-            // 12. ЗАПУСК
-            // ============================================================
-            setTimeout(typeLine, 200);
-            setInterval(updateTime, 1000);
-            setInterval(triggerGlitch, 2000);
+HIGH.
 
-            // Случайные технические сообщения
-            setInterval(() => {
-                if (Math.random() > 0.4 || !isMainPageShown) return;
-                const msgs = [
-                    'СИНХРОНИЗАЦИЯ ДАННЫХ...',
-                    'ПРОВЕРКА ЦЕЛОСТНОСТИ КАНАЛОВ...',
-                    'ОБНОВЛЕНИЕ КЭША...',
-                    'ОПРОС УЗЛОВ СЕТИ...',
-                    'СКАНИРОВАНИЕ ОКРУЖЕНИЯ...'
-                ];
-                const div = document.createElement('div');
-                div.className = 'line dim';
-                div.textContent = '> ' + msgs[Math.floor(Math.random() * msgs.length)];
-                div.style.opacity = '0.12';
-                div.style.fontSize = '9px';
-                div.style.color = '#2a2a2a';
-                const outputEl = document.getElementById('output');
-                if (outputEl) {
-                    outputEl.appendChild(div);
-                    setTimeout(() => div.remove(), 1200);
-                }
-            }, 4000);
+NOTE
 
-            console.log('AURUM TERMINAL v7.0 // ЗАПУЩЕН');
-        })();
-    </script>
+The archive record currently lists no authorized duplication event.`},
+ {id:"OP-57-031",status:"ACTIVE",class:"SPMG-II",priority:"LOW",title:"ROUTINE VERIFICATION // NODE 03",date:"07.08.2057",deadline:"OPEN",desc:"Routine verification of a degraded communications node.",body:`SITUATION
+
+NODE-03 has reported intermittent integrity failures.
+
+OBJECTIVE
+
+Verify the node state and submit a technical observation.
+
+This operation is considered routine unless additional anomalies are discovered.`},
+ {id:"OP-57-026",status:"SUSPENDED",class:"SPMG-IV",priority:"CRITICAL",title:"PROJECT VEIL // PHASE 2",date:"03.08.2057",deadline:"SUSPENDED",desc:"Operation suspended pending central review.",body:`STATUS: SUSPENDED
+
+Further operational activity is prohibited until central review is completed.
+
+Previous field material remains classified under the original compartment.`}
+];
+
+const intelligence=[
+ {id:"IR-57-042",type:"FIELD REPORT",confidence:"78%",title:"UNREGISTERED MOVEMENT // SECTOR 04",date:"11.08.2057",desc:"Field observation indicates repeated movement near a previously inactive facility.",body:`SOURCE: FIELD OPERATIONS
+CONFIDENCE: 78%
+
+A previously inactive facility has shown signs of activity during three separate observation windows.
+
+No direct attribution has been established.
+
+ANALYST NOTE
+
+Further collection is recommended before any operational conclusion is made.`},
+ {id:"IR-57-041",type:"INTERCEPT",confidence:"31%",title:"UNIDENTIFIED TRANSMISSION",date:"11.08.2057",desc:"Short encrypted burst received by NODE-03.",body:`SOURCE: UNKNOWN
+CONFIDENCE: 31%
+
+TRANSMISSION LENGTH: 08.4 SEC
+ROUTE: UNKNOWN → NODE-03
+
+CONTENT: [ENCRYPTED]
+
+ANALYST NOTE
+
+Information cannot currently be independently verified.`},
+ {id:"IR-57-039",type:"INCIDENT",confidence:"92%",title:"COMMUNICATION INTERRUPTION // NODE 05",date:"10.08.2057",desc:"Node offline following an unexplained interruption.",body:`NODE: NODE-05
+STATUS: ОТКЛЮЧЕН
+CONFIDENCE: 92%
+
+The node ceased responding at 22:17:09.
+No authorized maintenance window was scheduled.
+
+Investigation status: OPEN.`}
+];
+
+const bulletins=[
+ {id:"BL-2057-0811",title:"TEMPORARY MOVEMENT RESTRICTIONS // SECTOR 04",date:"11.08.2057",level:"INTERNAL",body:`ALL FIELD PERSONNEL
+
+Due to increased activity within Sector 04, non-essential movement through the affected area is temporarily suspended.
+
+This notice remains active until further instruction.
+
+SPMG OPERATIONS CONTROL`},
+ {id:"BL-2057-0810",title:"COMMUNICATION PROTOCOL REVISION",date:"10.08.2057",level:"INTERNAL",body:`Effective immediately, field personnel are requested to verify secondary communication channels before commencing sensitive operations.
+
+Updated protocol reference: COM-7 / REV. 4.`},
+ {id:"BL-2057-0808",title:"ARCHIVE MAINTENANCE WINDOW",date:"08.08.2057",level:"ROUTINE",body:`Scheduled archive maintenance has been completed.
+
+Some historical documents may remain temporarily unavailable while integrity verification continues.`}
+];
+
+const documents=[
+ {id:"DOC-14-A",class:"SPMG-II",title:"COMMUNICATION PROTOCOL // REV. 4",date:"02.08.2057",body:`PURPOSE
+
+Defines the approved procedure for establishing and maintaining internal field communications.
+
+REVISION
+
+4.0 // 02.08.2057
+
+STATUS
+
+ТЕКУЩИЕ`},
+ {id:"DOC-12-D",class:"SPMG-IV",title:"FIELD REPORTING STANDARD",date:"17.07.2057",body:`All operational observations should be recorded using the approved reporting structure.
+
+Required elements:
+
+1. Time and location
+2. Observation
+3. Confidence assessment
+4. Immediate operational relevance
+5. Supporting material, where available`},
+ {id:"DOC-09-B",class:"SPMG-V",title:"PROJECT VEIL // EXECUTIVE SUMMARY",date:"11.03.2057",restricted:true,body:`ДОСТУП ОГРАНИЧЕН
+
+ТЕКУЩИЕ CLEARANCE IS INSUFFICIENT.
+
+REQUIRED CLEARANCE: SPMG-V
+
+No additional material is available at this access level.`},
+ {id:"DOC-07-C",class:"SPMG-III",title:"INCIDENT CLASSIFICATION MATRIX",date:"29.06.2057",body:`INCIDENT LEVELS
+
+I — ROUTINE
+II — OPERATIONAL
+III — SIGNIFICANT
+IV — CRITICAL
+
+Classification may be increased following additional intelligence.`}
+];
+
+const audit=[
+ ["14:18:42","SECURITY","SESSION ANOMALY RESOLVED"],
+ ["14:17:03","SYSTEM","ARCHIVE INDEX SYNCHRONIZED"],
+ ["14:11:27","INTEL","IR-57-042 PUBLISHED"],
+ ["13:58:16","SYSTEM","NODE-03 STATUS UPDATED"],
+ ["13:42:51","OPS","OP-57-041 REVIEWED"]
+];
+
+const $=s=>document.querySelector(s);
+const content=$("#content"), modal=$("#modal");
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function uid(){return Math.random().toString(36).slice(2,8).toUpperCase()}
+function now(){return new Date().toLocaleTimeString("ru-RU",{hour12:false})}
+function glitch(){const g=$("#glitch");g.classList.add("on");setTimeout(()=>g.classList.remove("on"),190)}
+function toast(title,msg){$("#toastTitle").textContent=title;$("#toastMsg").textContent=msg;$("#toast").classList.add("show");setTimeout(()=>$("#toast").classList.remove("show"),3500)}
+function log(type,msg){
+ const entry={time:now(),type,msg,user:state.user?.name||"Оператор",role:state.user?.role||"operator"};
+ state.audit.unshift(entry);
+ if(state.audit.length>200)state.audit.pop();
+ try{localStorage.setItem("spmg04_audit",JSON.stringify(state.audit))}catch(e){}
+ renderRightFeed();
+}
+
+function openModal(title,body,actions=""){
+ $("#modalTitle").textContent=title;$("#modalBody").innerHTML=body+actions;modal.classList.remove("hidden");glitch();
+}
+$("#closeModal").onclick=()=>modal.classList.add("hidden");
+modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.add("hidden")});
+
+function card(item,type){
+ let status=item.status||item.level||item.type;
+ let extra=item.deadline?`<span>DEADLINE ${esc(item.deadline)}</span>`:`<span>${esc(item.date)}</span>`;
+ return `<div class="row" data-open="${esc(item.id)}" data-type="${type}">
+   <div class="rowtop"><span class="code">${esc(item.id)}</span><span class="status ${String(status).toLowerCase().includes("active")?"active":String(status).toLowerCase().includes("critical")?"alert":"closed"}">${esc(status)}</span></div>
+   <div class="rowtitle">${esc(item.title)}</div><div class="rowdesc">${esc(item.desc||"")}</div>
+   <div class="tags"><span class="tag">${esc(item.class||item.type||item.level)}</span>${extra}</div>
+ </div>`
+}
+
+
+function localizeSeedContent(){
+ const op={
+ "OP-57-041":{
+  title:"ПЕРЕХВАТ СИГНАЛА // СЕКТОР 07",
+  desc:"В закрытом секторе обнаружен мобильный узел связи. Источник не установлен.",
+  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
+ОБРАБОТКА ДАННЫХ....
+ОБНАРУЖЕНА ПЕРЕДАЧА....
+ВНИМАНИЕ! ЗАСЕКРЕЧЕНО УРОВНЕМ ДОПУСКА SPMG-IV.
+ТЕКСТ ПЕРЕДАЧИ: источник сигнала не соответствует зарегистрированной инфраструктуре.
+ОПЕРАТИВНАЯ ЗАДАЧА:
+Установить местоположение узла, определить его назначение и получить данные для дальнейшего анализа.
+УСЛОВИЕ УСПЕХА:
+Источник подтверждён, первичный отчёт передан.
+УСЛОВИЕ ПРОВАЛА:
+Потеря сигнала без возможности восстановления следа либо раскрытие присутствия SPMG.
+ОТСОЕДИНЕНИЕ....
+ШИФРОВАНИЕ....`
+ },
+ "OP-57-038":{
+  title:"ПРОТОКОЛ КОНТАКТА // «СЕВЕРНАЯ ЗВЕЗДА»",
+  desc:"Проверенный контакт не вышел на связь по установленному каналу.",
+  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
+ПРОВЕРКА АРХИВА....
+КОНТАКТ: «СЕВЕРНАЯ ЗВЕЗДА»
+ВНИМАНИЕ! УРОВЕНЬ ДОПУСКА SPMG-III.
+Последняя подтверждённая передача: 09.08.2057 // 04:17.
+Ожидаемая связь не состоялась.
+ЗАДАЧА:
+Определить текущее состояние контакта и при необходимости установить резервный канал.
+ОГРАНИЧЕНИЕ:
+Не раскрывать принадлежность к SPMG.
+ОТСОЕДИНЕНИЕ....
+ШИФРОВАНИЕ....`
+ },
+ "OP-57-035":{
+  title:"ВОЗВРАТ // ДЕЛО 12-ДЕЛЬТА",
+  desc:"Копия закрытого дела вновь появилась в незащищённом информационном канале.",
+  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
+СВЕРКА АРХИВА....
+ОБЪЕКТ: ДЕЛО 12-ДЕЛЬТА
+ВНИМАНИЕ! МАТЕРИАЛ ЗАСЕКРЕЧЕН.
+Дело было закрыто и помещено в архив в 2055 году.
+Частичная копия обнаружена во внешнем канале.
+ЗАДАЧА:
+Установить источник копии и определить, был ли нарушен архивный контур.
+ПРИОРИТЕТ: ВЫСОКИЙ.
+ОТСОЕДИНЕНИЕ....
+ШИФРОВАНИЕ....`
+ },
+ "OP-57-031":{
+  title:"ПРОВЕРКА // УЗЕЛ 03",
+  desc:"Плановая проверка узла связи с нестабильной целостностью.",
+  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
+ДИАГНОСТИКА УЗЛА 03....
+ОБНАРУЖЕНЫ ПОВТОРНЫЕ ОШИБКИ ЦЕЛОСТНОСТИ.
+ЗАДАЧА:
+Проверить состояние узла и передать техническое наблюдение.
+СТАТУС:
+Плановая операция. При обнаружении дополнительных аномалий действовать по обстановке.
+ОТСОЕДИНЕНИЕ....
+ШИФРОВАНИЕ....`
+ },
+ "OP-57-026":{
+  title:"ПРОЕКТ «ВУАЛЬ» // ФАЗА 2",
+  desc:"Операция приостановлена до завершения центральной проверки.",
+  body:`ПОДКЛЮЧЕНИЕ К СИСТЕМЕ....
+СТАТУС: ПРИОСТАНОВЛЕНО.
+Дальнейшие действия запрещены до завершения центральной проверки.
+Ранее полученные материалы сохраняют исходный уровень секретности.
+ОТСОЕДИНЕНИЕ....
+ШИФРОВАНИЕ....`
+ }};
+ operations.forEach(x=>{if(op[x.id])Object.assign(x,op[x.id])});
+ const intel={
+ "IR-57-042":["НЕЗАРЕГИСТРИРОВАННОЕ ДВИЖЕНИЕ // СЕКТОР 04","Полевое наблюдение фиксирует повторную активность возле объекта, ранее считавшегося неактивным."],
+ "IR-57-041":["НЕИДЕНТИФИЦИРОВАННАЯ ПЕРЕДАЧА","Короткий зашифрованный импульс получен узлом 03."],
+ "IR-57-039":["ПРЕРЫВАНИЕ СВЯЗИ // УЗЕЛ 05","Узел 05 отключён после необъяснимого прерывания связи."]
+ };
+ intelligence.forEach(x=>{if(intel[x.id]){x.title=intel[x.id][0];x.desc=intel[x.id][1];x.body=`ИСТОЧНИК: ${x.type==="INTERCEPT"?"НЕ УСТАНОВЛЕН":"ПОЛЕВЫЕ ОПЕРАЦИИ"}\nДОВЕРИЕ: ${x.confidence}\n\n${x.desc}\n\nДополнительная проверка продолжается.`}});
+ const bl={
+ "BL-2057-0811":["ВРЕМЕННЫЕ ОГРАНИЧЕНИЯ ПЕРЕДВИЖЕНИЯ","С 22:00 доступ к отдельным участкам сектора 04 ограничивается. Перед выходом проверить резервный маршрут."],
+ "BL-2057-0810":["ИЗМЕНЕНИЕ ПРОТОКОЛА СВЯЗИ","Перед началом чувствительных операций необходимо проверить резервный канал связи."],
+ "BL-2057-0808":["ОКНО ТЕХНИЧЕСКОГО ОБСЛУЖИВАНИЯ АРХИВА","Плановое обслуживание архива завершено. Доступ к материалам восстановлен."]
+ };
+ bulletins.forEach(x=>{if(bl[x.id]){x.title=bl[x.id][0];x.body=bl[x.id][1]}});
+ const docs={
+ "DOC-14-A":["ПРОТОКОЛ СВЯЗИ // РЕДАКЦИЯ 4","Назначение\n\nУстановить единый порядок проверки каналов связи перед операциями.\n\nПРАВИЛО\n\nПри нестабильности основного канала использовать резервный и зарегистрировать событие."],
+ "DOC-12-D":["СТАНДАРТ ПОЛЕВОЙ ОТЧЁТНОСТИ","Каждое оперативное наблюдение фиксируется в утверждённой структуре отчёта.\n\nМинимальный набор: время, место, источник, наблюдение, оценка и рекомендуемое действие."],
+ "DOC-09-B":["ПРОЕКТ «ВУАЛЬ» // СВОДКА РУКОВОДСТВА","ДОСТУП ОГРАНИЧЕН\n\nМатериал доступен только сотрудникам с соответствующим уровнем допуска."],
+ "DOC-07-C":["МАТРИЦА КЛАССИФИКАЦИИ ИНЦИДЕНТОВ","УРОВНИ ИНЦИДЕНТА\n\nI — локальное отклонение.\nII — подтверждённая нестабильность.\nIII — оперативная угроза.\nIV — критическое нарушение.\nV — компрометация контура."]
+ };
+ documents.forEach(x=>{if(docs[x.id]){x.title=docs[x.id][0];x.body=docs[x.id][1]}});
+}
+localizeSeedContent();
+
+function head(kicker,title,actions=""){
+ return `<div class="pagehead"><div><div class="kicker">${kicker}</div><h1>${title}</h1></div><div class="pageactions">${actions}</div></div>`
+}
+function panel(title,html,minor=""){
+ return `<section class="panel"><div class="panelhead"><span>${title}</span><span class="minor">${minor}</span></div>${html}</section>`
+}
+
+function renderOverview(){
+ const active=operations.filter(x=>x.status==="ACTIVE").length;
+ content.innerHTML=head("SPMG // ВНУТРЕННЯЯ ОПЕРАТИВНАЯ СЕТЬ","OVERVIEW",`<button class="btn" onclick="window.refreshPortal()">ОБНОВИТЬ СЕТЬ</button>`)+
+ `<div class="metrics">
+   <div class="metric"><div class="label">АКТИВНЫЕ РАСПОРЯЖЕНИЯ</div><strong>${String(active).padStart(2,"0")}</strong><div class="sub">ТЕКУЩИЕ ОПЕРАЦИИ</div></div>
+   <div class="metric"><div class="label">РАЗВЕДДАННЫЕ</div><strong>12</strong><div class="sub">03 НЕ ПРОВЕРЕНО</div></div>
+   <div class="metric alert"><div class="label">ОЦЕНКА УГРОЗЫ</div><strong>ПОВЫШЕННЫЙ</strong><div class="sub">ТРЕБУЕТСЯ ПРОВЕРКА</div></div>
+   <div class="metric"><div class="label">ЦЕЛОСТНОСТЬ УЗЛОВ</div><strong>98.7%</strong><div class="sub">SPMG-04</div></div>
+ </div>
+ <div class="grid2">
+  <div>
+   ${panel("АКТИВНЫЕ ОПЕРАЦИИ",operations.slice(0,3).map(x=>card(x,"operation")).join(""),"5 ЗАПИСЕЙ")}
+   ${panel("РАЗВЕДДАННЫЕ FEED",intelligence.slice(0,3).map(x=>card(x,"intelligence")).join(""),"ПОСЛЕДНИЕ")}
+  </div>
+  <div>
+   ${panel("ТЕКУЩЕЕ УВЕДОМЛЕНИЕ",`<div style="padding:14px"><div class="notice"><strong>SEC-57-0811 // SESSION ANOMALY</strong>A low-severity session inconsistency was detected and automatically resolved. No further action is required.</div><div style="font:9px/1.7 var(--mono);color:#596166">ПОСЛЕДНЯЯ ПРОВЕРКА СИСТЕМЫ<br><span style="color:#9aa1a5">11.08.2057 // ${now()}</span><br><br>НЕПРЕРЫВНОСТЬ СЕАНСА<br><span style="color:#9aa1a5">ПОДТВЕРЖДЕНО</span></div></div>`,"SECURITY")}
+   ${panel("ПОСЛЕДНИЕ ОБЪЯВЛЕНИЯ",bulletins.map(x=>`<div class="row" data-open="${x.id}" data-type="bulletin"><div class="rowtop"><span class="code">${x.id}</span><span>${x.date}</span></div><div class="rowtitle">${x.title}</div></div>`).join(""),"3")}
+  </div>
+ </div>`;
+ bindRows();
+}
+
+function renderList(title,kicker,arr,type,minor){
+ content.innerHTML=head(kicker,title)+panel(title.toUpperCase(),arr.length?arr.map(x=>card(x,type)).join(""):`<div class="empty">NO MATERIAL AVAILABLE AT ТЕКУЩИЕ ACCESS LEVEL</div>`,minor);
+ bindRows();
+}
+function renderArchive(){
+ const archived=[...operations].map((x,i)=>({...x,status:i%2?"COMPLETED":"ARCHIVED"}));
+ renderList("Archive","SPMG // RECORDS",archived,"operation","ИСТОРИЧЕСКИЕ");
+}
+function renderAudit(){
+ content.innerHTML=head("SPMG-04 // КОНТРОЛЬ ДЕЙСТВИЙ","ЖУРНАЛ ДЕЙСТВИЙ",`<button class="btn" onclick="window.clearLocalAudit()">ОЧИСТИТЬ ЛОКАЛЬНЫЕ СОБЫТИЯ</button>`)+
+ panel("ЖУРНАЛ СОБЫТИЙ СЕАНСА",audit.map(x=>`<div class="row" style="cursor:default"><div class="rowtop"><span class="code">[${x[0]}]</span><span>${x[1]}</span></div><div class="rowtitle" style="font-family:var(--mono);font-size:10px">${esc(x[2])}</div></div>`).join(""),`${audit.length} EVENTS`);
+}
+function renderRightFeed(){ audit=state.audit;
+ const feed=$("#liveFeed");if(!feed)return;
+ feed.innerHTML=audit.slice(0,8).map(x=>`<div class="feedline"><b>${x[0]}</b><span class="type">${x[1]}</span><strong>${esc(x[2])}</strong></div>`).join("");
+}
+
+function loadCustomOperations(){
+ try{
+   const saved=JSON.parse(localStorage.getItem("spmg04_operations")||"[]");
+   if(Array.isArray(saved)) saved.forEach(x=>{if(x&&x.id&&!operations.some(o=>o.id===x.id))operations.unshift(x)});
+ }catch(e){}
+}
+function saveCustomOperations(){
+ localStorage.setItem("spmg04_operations",JSON.stringify(operations.filter(x=>x.custom)));
+}
+function openBuilder(){
+ $("#builderModal").classList.remove("hidden");
+ ["bTitle","bDesc","bBody","bDeadline"].forEach(id=>{$("#"+id).value=""});
+ $("#bClass").value="SPMG-IV";$("#bPriority").value="ВЫСОКИЙ";
+ updateBuilderPreview();
+ setTimeout(()=>$("#bTitle").focus(),30);
+}
+function closeBuilder(){ $("#builderModal").classList.add("hidden"); }
+function updateBuilderPreview(){
+ const body=$("#bBody").value.trim()||"Подключение к системе....\nОбработка данных....\nОтправка сообщения....\n\nВнимание! Засекречено уровнем допуска 5.\n\nТекст задания...\n\nОтсоединение....\nШифрование....";
+ const lines=body.split("\n").map(line=>{
+   const t=line.trim().toUpperCase();
+   let cls="";
+   if(/ПОДКЛЮЧ|ОБРАБОТ|ОТПРАВ|ОТСОЕД|ШИФР/.test(t))cls="system";
+   if(/ВНИМАНИЕ|ЗАСЕКРЕЧ|ДОПУСК|КЛАСС/.test(t))cls="secret";
+   return `<span class="transmissionline ${cls}">${esc(line)}</span>`;
+ }).join("\n");
+ $("#builderPreview").innerHTML=lines;
+}
+function createOperation(){
+ const title=$("#bTitle").value.trim(), body=$("#bBody").value.trim();
+ if(!title||!body){toast("ОШИБКА","Заполните название и текст операции.");return}
+ const op={
+   id:"OP-57-"+String(Math.floor(100+Math.random()*899)),
+   status:"ACTIVE",class:$("#bClass").value,priority:$("#bPriority").value,
+   title,date:"11.08.2057",deadline:$("#bDeadline").value.trim()||"OPEN",
+   desc:$("#bDesc").value.trim()||"Оперативное распоряжение SPMG-04.",
+   body,custom:true
+ };
+ operations.unshift(op);saveCustomOperations();closeBuilder();
+ log("OPS","ОПЕРАЦИЯ ОПУБЛИКОВАНА // "+op.id);
+ toast("ОПЕРАЦИЯ СОЗДАНА",`${op.id} // ${op.title}`);
+ state.page="operations";
+ document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.page==="operations"));
+ render();glitch();
+}
+
+
+function applyRoleUI(){
+ const admin=state.user.role==="admin";
+ document.querySelectorAll('#nav [data-page="builder"],#nav [data-page="admin"]').forEach(el=>{
+   el.classList.toggle("hidden",!admin);
+ });
+ const role=document.getElementById("userRole");
+ if(role)role.textContent=admin?"ADMINISTRATOR // FULL ACCESS":"ОПЕРАТОР // SPMG-IV";
+ const user=document.getElementById("userName");
+ if(user)user.textContent=state.user.name;
+}
+
+function render(){
+ applyRoleUI();
+ if(state.page==="overview")renderOverview();
+
+if(state.page==="admin" && state.user.role==="admin"){
+ const rows=state.audit.map((x,i)=>`<div class="auditRow"><span>${esc(x.time)}</span><b>${esc(x.user)}</b><span>${esc(x.role)}</span><em>${esc(x.type)}</em><strong>${esc(x.msg)}</strong></div>`).join("");
+ content.innerHTML=head("SPMG-04 // ADMINISTRATIVE CONTROL","АДМИНИСТРИРОВАНИЕ",`<button class="btn" id="clearAudit">ОЧИСТИТЬ ЛОКАЛЬНЫЙ ЖУРНАЛ</button>`)
+ +panel("ЖУРНАЛ АУДИТА",rows||`<div class="empty">ЖУРНАЛ ПУСТ</div>`,"LOCAL // 200 MAX")
+ +panel("СЕССИЯ",`<div class="adminSession"><span>УЧЁТНАЯ ЗАПИСЬ</span><b>${esc(state.user.name)}</b><span>УРОВЕНЬ</span><b>FULL ACCESS</b><span>ХРАНИЛИЩЕ</span><b>LOCAL STORAGE</b></div>`,"ADMINISTRATOR");
+ $("#clearAudit").onclick=()=>{state.audit=[];localStorage.removeItem("spmg04_audit");log("ADMIN","ЖУРНАЛ ОЧИЩЕН");render()};
+}
+
+ if(state.page==="operations"){
+  content.innerHTML=head("SPMG // ОПЕРАТИВНЫЕ РАСПОРЯЖЕНИЯ","ОПЕРАЦИИ",`<button class="btn" id="openBuilder">+ НОВАЯ ОПЕРАЦИЯ</button>`)
+    +panel("АКТИВНЫЕ ОПЕРАЦИИ",operations.length?operations.map(x=>card(x,"operation")).join(""):`<div class="empty">НЕТ ДОСТУПНЫХ ОПЕРАЦИЙ</div>`,"АКТИВНЫЕ / ВСЕ");
+  bindRows(); $("#openBuilder").onclick=openBuilder;
+}
+if(state.page==="builder"){
+  content.innerHTML=head("SPMG-04 // СОЗДАНИЕ МАТЕРИАЛА","КОНСТРУКТОР ОПЕРАЦИЙ",`<button class="btn" id="openBuilder2">СОЗДАТЬ ОПЕРАЦИЮ</button>`)
+    +panel("ЛОКАЛЬНЫЕ ОПЕРАЦИИ",operations.filter(x=>x.custom).length?operations.filter(x=>x.custom).map(x=>card(x,"operation")).join(""):`<div class="empty">ПОЛЬЗОВАТЕЛЬСКИХ ОПЕРАЦИЙ ПОКА НЕТ</div>`,"СОХРАНЕНО В БРАУЗЕРЕ");
+  bindRows(); $("#openBuilder2").onclick=openBuilder;
+}
+ if(state.page==="intelligence")renderList("Intelligence","SPMG // COLLECTION",intelligence,"intelligence","ПОСЛЕДНИЕ REPORTS");
+ if(state.page==="bulletins")renderList("Bulletins","SPMG // INTERNAL COMMUNICATIONS",bulletins,"bulletin","ТЕКУЩИЕ");
+ if(state.page==="documents")renderList("Documents","SPMG // CONTROLLED MATERIAL",documents,"document","ДОСТУП ОГРАНИЧЕН");
+ if(state.page==="archive")renderArchive();
+ if(state.page==="audit")renderAudit();
+ renderRightFeed();
+}
+function bindRows(){
+ document.querySelectorAll("[data-open]").forEach(el=>el.onclick=()=>openItem(el.dataset.type,el.dataset.open));
+}
+function find(type,id){
+ const map={operation:operations,intelligence,intelligence_report:intelligence,bulletin:bulletins,document:documents};
+ return (map[type]||[]).find(x=>x.id===id);
+}
+function openItem(type,id){
+ const item=find(type,id);if(!item)return;
+ if(item.restricted){
+   openModal("ДОСТУП ОГРАНИЧЕН",`<div class="notice"><strong>НЕДОСТАТОЧНЫЙ УРОВЕНЬ ДОПУСКА</strong>Текущий допуск: SPMG-IV<br>Требуемый допуск: SPMG-V</div><div class="prose">${esc(item.body)}</div>`);
+   log("SECURITY",`ACCESS DENIED // ${id}`);return;
+ }
+ const fields=type==="operation"
+ ? `<div class="field"><label>CLASSIFICATION</label><span>${esc(item.class)}</span></div><div class="field"><label>PRIORITY</label><span>${esc(item.priority)}</span></div><div class="field"><label>ISSUED</label><span>${esc(item.date)}</span></div><div class="field"><label>DEADLINE</label><span>${esc(item.deadline)}</span></div>`
+ : `<div class="field"><label>CLASSIFICATION</label><span>${esc(item.class||item.level||item.type)}</span></div><div class="field"><label>RECORD DATE</label><span>${esc(item.date)}</span></div>`;
+ let actions="";
+ if(type==="operation" && item.status==="ACTIVE"){
+   actions=`<div class="actions"><button class="btn" id="ack">ПОДТВЕРДИТЬ РАСПОРЯЖЕНИЕ</button><button class="btn" id="clarify">ЗАПРОСИТЬ УТОЧНЕНИЕ</button></div>`;
+ }
+ openModal(`${item.id} // ${item.title}`,`<div class="docgrid">${fields}</div><div class="prose">${esc(item.body)}</div>`,actions);
+ log(type==="operation"?"OPS":"INTEL",`OPENED // ${id}`);
+ if($("#ack"))$("#ack").onclick=()=>{
+   state.accepted.add(id);log("OPS",`РАСПОРЯЖЕНИЕ ПРИНЯТО // ${id}`);glitch();
+   $("#modalBody").insertAdjacentHTML("beforeend",`<div class="notice" style="margin-top:16px"><strong>РАСПОРЯЖЕНИЕ ПРИНЯТО</strong>Reference: ACK-${uid()}<br>Time: ${now()}<br>Operator: SPMG-IV<br><br>Event entered into operational audit.</div>`);
+   $("#ack").disabled=true;$("#ack").textContent="ACKNOWLEDGED";
+ };
+ if($("#clarify"))$("#clarify").onclick=()=>{log("OPS",`CLARIFICATION REQUESTED // ${id}`);toast("ЗАПРОС ЗАРЕГИСТРИРОВАН","Запрос уточнения внесён в журнал действий.");};
+}
+
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");state.page=b.dataset.page;render();glitch()});
+
+window.refreshPortal=()=>{log("SYSTEM","NETWORK REFRESH REQUESTED");toast("NETWORK","Operational index synchronized.");glitch();render()};
+window.clearLocalAudit=()=>{audit.splice(5);log("SYSTEM","LOCAL SESSION EVENTS PURGED");render()};
+
+function boot(){
+ const consoleEl=$("#bootConsole"), title=$("#bootTitle"), subtitle=$("#bootSubtitle");
+ const stage=$("#bootStage"), pct=$("#bootPct"), progress=$("#bootProgress"), hex=$("#bootHex");
+ const footerStatus=$("#bootFooterStatus");
+ const lines=[
+   ["ПОДГОТОВКА ЗАЩИЩЁННОГО КОНТУРА","good"],
+   ["ПРОВЕРКА ЦЕЛОСТНОСТИ СЕАНСА","good"],
+   ["СВЕРКА ИДЕНТИФИКАТОРА // SPMG-04","good"],
+   ["ПРОВЕРКА ЛОКАЛЬНОГО ХРАНИЛИЩА","good"],
+   ["СИНХРОНИЗАЦИЯ ОПЕРАТИВНОГО АРХИВА","good"],
+   ["ПРОВЕРКА КАНАЛОВ СВЯЗИ","good"],
+   ["NODE-03 ................. СОСТОЯНИЕ: НЕСТАБИЛЬНО","warn"],
+   ["NODE-05 ................. ОТКЛЮЧЕН","fault"],
+   ["ПОВТОРНАЯ ПРОВЕРКА МАРШРУТОВ","good"],
+   ["ПРОВЕРКА КЛЮЧЕЙ СЕАНСА","good"],
+   ["АНАЛИЗ СОБЫТИЙ БЕЗОПАСНОСТИ","warn"],
+   ["СОСТОЯНИЕ СИСТЕМЫ ........ РАБОТАЕТ","good"]
+ ];
+ const titles=["ИНИЦИАЛИЗАЦИЯ","ПРОВЕРКА СИСТЕМЫ","СИНХРОНИЗАЦИЯ","ВЕРИФИКАЦИЯ","ПОДКЛЮЧЕНИЕ","ДОПУСК"];
+ const subtitles=[
+   "Подготовка защищённого соединения",
+   "Проверка локальной среды выполнения",
+   "Синхронизация внутренних данных",
+   "Проверка контрольных сумм",
+   "Установка защищённого канала",
+   "Ожидание подтверждения оператора"
+ ];
+ const glyphs="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&@!?№;%*+=-_";
+ let i=0, progressValue=0, titleBase="";
+ const corrupt=s=>s.split("").map(ch=>{
+   if(ch===" "||Math.random()>.08)return ch;
+   return glyphs[Math.floor(Math.random()*glyphs.length)];
+ }).join("");
+ const titleGlitch=()=>{
+   if(!title || !titleBase)return;
+   title.dataset.text=titleBase;
+   title.classList.add("glitching");
+   title.textContent=corrupt(titleBase);
+   setTimeout(()=>{title.textContent=titleBase;title.classList.remove("glitching")},45+Math.random()*85);
+ };
+ const hexGlitch=()=>{
+   hex.textContent=Array.from({length:8},()=>glyphs[Math.floor(Math.random()*glyphs.length)]).join("")+
+     " // "+Math.floor(Math.random()*9999).toString().padStart(4,"0")+" // SPMG-04";
+ };
+ const addLine=(text,kind)=>{
+   const el=document.createElement("span");el.className="bootLine";
+   const prefix=Math.random()<.25?"// ":"▸ ";
+   el.innerHTML=prefix+text+(Math.random()<.22?` <span class="noise">${corrupt("["+kind.toUpperCase()+"]")}</span>`:"");
+   consoleEl.prepend(el);
+   while(consoleEl.children.length>8)consoleEl.lastElementChild.remove();
+ };
+ const animateTitle=()=>{
+   titleBase=titles[Math.min(Math.floor(i/2),titles.length-1)];
+   title.textContent=titleBase;
+   subtitle.textContent=subtitles[Math.min(Math.floor(i/2),subtitles.length-1)];
+   if(Math.random()<.7)titleGlitch();
+ };
+ const tick=()=>{
+   if(i>=lines.length){
+     progressValue=100;progress.style.width="100%";pct.textContent="100%";stage.textContent="СИСТЕМА ГОТОВА";
+     footerStatus.textContent="ОЖИДАЕТСЯ АВТОРИЗАЦИЯ";
+     titleBase="СИСТЕМА ГОТОВА";title.textContent=titleBase;subtitle.textContent="Введите код допуска оператора";
+     for(let k=0;k<3;k++)setTimeout(()=>{titleGlitch();hexGlitch()},k*120);
+     setTimeout(()=>$("#codeGate").classList.remove("hidden"),450);
+     return;
+   }
+   animateTitle();
+   const [text,kind]=lines[i]; addLine(text,kind);
+   progressValue=Math.round(((i+1)/lines.length)*94);
+   progress.style.width=progressValue+"%";pct.textContent=String(progressValue).padStart(2,"0")+"%";
+   stage.textContent=text.slice(0,31);
+   hexGlitch();
+   if(kind==="fault") $("#glitch").classList.add("on"),setTimeout(()=>$("#glitch").classList.remove("on"),130);
+   i++;
+   setTimeout(tick,130+Math.random()*240);
+ };
+ tick();
+ setInterval(()=>{if(!state.booted){hexGlitch();if(Math.random()<.28)titleGlitch()}},260);
+}
+
+loadCustomOperations();
+$("#closeBuilder").onclick=closeBuilder;
+$("#builderModal").addEventListener("click",e=>{if(e.target.id==="builderModal")closeBuilder()});
+["bTitle","bDesc","bBody","bDeadline","bClass","bPriority"].forEach(id=>{
+ const el=$("#"+id); el.addEventListener("input",updateBuilderPreview); el.addEventListener("change",updateBuilderPreview);
+});
+$("#saveOperation").onclick=createOperation;
+
+
+document.querySelectorAll("#nav button").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+   const page=btn.dataset.page;
+   if((page==="builder"||page==="admin")&&state.user.role!=="admin"){
+     toast("ДОСТУП ЗАПРЕЩЁН","Раздел доступен только Administrator.");
+     return;
+   }
+   log("NAV",`ОТКРЫТ РАЗДЕЛ // ${page}`);
+ });
+});
+
+
+$("#accessCode").addEventListener("keydown",e=>{if(e.key==="Enter")authorize()});
+
+
+function initAudio(){
+ if(state.audio) return;
+ try{
+   const C=window.AudioContext||window.webkitAudioContext;
+   if(!C)return;
+   const ctx=new C(), master=ctx.createGain(), ambient=ctx.createGain();
+   master.gain.value=.12; ambient.gain.value=.035;
+   master.connect(ctx.destination); ambient.connect(master);
+
+   const osc=ctx.createOscillator(), osc2=ctx.createOscillator(), lfo=ctx.createOscillator(), lfoGain=ctx.createGain();
+   osc.type="sine";osc.frequency.value=58;
+   osc2.type="triangle";osc2.frequency.value=116;
+   lfo.type="sine";lfo.frequency.value=.08;lfoGain.gain.value=.018;
+   lfo.connect(ambient.gain);osc.connect(ambient);osc2.connect(ambient);
+   osc.start();osc2.start();lfo.start();
+
+   state.audio={ctx,master,ambient,osc,osc2,lfo};
+   if(ctx.state==="suspended")ctx.resume();
+ }catch(e){console.warn("Audio unavailable",e)}
+}
+function clickSound(kind="click"){
+ try{
+   initAudio(); if(!state.audio)return;
+   const {ctx,master}=state.audio, nowT=ctx.currentTime;
+   const o=ctx.createOscillator(), g=ctx.createGain();
+   o.type=kind==="alert"?"sawtooth":"square";
+   o.frequency.setValueAtTime(kind==="alert"?170:620,nowT);
+   o.frequency.exponentialRampToValueAtTime(kind==="alert"?70:260,nowT+.07);
+   g.gain.setValueAtTime(.0001,nowT);
+   g.gain.exponentialRampToValueAtTime(kind==="alert"?.045:.028,nowT+.008);
+   g.gain.exponentialRampToValueAtTime(.0001,nowT+.085);
+   o.connect(g);g.connect(master);o.start(nowT);o.stop(nowT+.1);
+ }catch(e){}
+}
+function successSound(){
+ try{
+   initAudio();if(!state.audio)return;
+   const {ctx,master}=state.audio, t=ctx.currentTime;
+   [520,780,1040].forEach((f,i)=>{
+     const o=ctx.createOscillator(),g=ctx.createGain();
+     o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,t+i*.055);
+     g.gain.exponentialRampToValueAtTime(.035,t+i*.055+.01);
+     g.gain.exponentialRampToValueAtTime(.0001,t+i*.055+.13);
+     o.connect(g);g.connect(master);o.start(t+i*.055);o.stop(t+i*.055+.14);
+   });
+ }catch(e){}
+}
+document.addEventListener("click",e=>{
+ const b=e.target.closest("button,.row,.tab,.nav button");
+ if(b) clickSound(b.classList.contains("alert")?"alert":"click");
+});
+
+
+
+function authorize(){
+  const input=document.getElementById("accessCode");
+  const btn=document.getElementById("authorize");
+  const boot=document.getElementById("boot");
+  const app=document.getElementById("app");
+  const status=document.getElementById("bootFooterStatus");
+  const titleEl=document.getElementById("bootTitle");
+  const sub=document.getElementById("bootSubtitle");
+
+  if(!input || !btn || !boot || !app){
+    console.error("SPMG AUTH: authorization elements missing");
+    return false;
+  }
+
+  const code=input.value.trim();
+  if(!code){
+    if(typeof toast==="function") toast("АВТОРИЗАЦИЯ","Введите код допуска.");
+    input.focus();
+    return false;
+  }
+
+  // RP/demo credentials. These are NOT real server-side security.
+  const normalized=code.toUpperCase();
+  let account=null;
+
+  if(normalized==="SPMG-ADMIN-2057"){
+    account={name:"Administrator",role:"admin",level:"FULL ACCESS"};
+  }else if(normalized==="SPMG-04-2057"){
+    account={name:"Оператор SPMG-04",role:"operator",level:"SPMG-IV"};
+  }else if(normalized==="SPMG-OP-2057"){
+    account={name:"Полевой оператор",role:"operator",level:"SPMG-IV"};
+  }
+
+  if(!account){
+    input.disabled=false;
+    btn.disabled=false;
+    if(status)status.textContent="ДОСТУП ОТКЛОНЁН";
+    if(titleEl)titleEl.textContent="ОШИБКА ВЕРИФИКАЦИИ";
+    if(sub)sub.textContent="УЧЁТНАЯ ЗАПИСЬ НЕ РАСПОЗНАНА";
+    clickSound("alert");
+    if(typeof toast==="function") toast("ДОСТУП ОТКЛОНЁН","Код допуска не распознан.");
+    setTimeout(()=>{
+      if(status)status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
+      if(titleEl)titleEl.textContent="ВЕРИФИКАЦИЯ ОПЕРАТОРА";
+      if(sub)sub.textContent="Введите код допуска для продолжения";
+      input.focus(); input.select();
+    },900);
+    return false;
+  }
+
+  initAudio();
+  clickSound("click");
+  input.disabled=true; btn.disabled=true;
+  if(status)status.textContent="ПРОВЕРКА УЧЁТНЫХ ДАННЫХ...";
+  if(titleEl)titleEl.textContent="ВЕРИФИКАЦИЯ ОПЕРАТОРА";
+  if(sub)sub.textContent="Проверка уровня допуска и идентификатора...";
+
+  state.user={name:account.name,role:account.role,code:code,level:account.level};
+
+  setTimeout(()=>{
+    if(status)status.textContent="УЧЁТНАЯ ЗАПИСЬ ПОДТВЕРЖДЕНА";
+    if(titleEl)titleEl.textContent=account.role==="admin"?"ДОПУСК ADMINISTRATOR":"ДОПУСК ПОДТВЕРЖДЁН";
+    if(sub)sub.textContent=account.role==="admin"
+      ?"Полный уровень управления // SPMG-IV"
+      :"Стандартный оперативный уровень // SPMG-IV";
+
+    boot.classList.add("hidden");
+    app.classList.remove("hidden");
+    state.booted=true;
+
+    const sid=document.getElementById("sessionId");
+    if(sid && typeof uid==="function")sid.textContent=uid();
+
+    log("AUTH",`ВХОД // ${account.name} // ${account.role==="admin"?"ПОЛНЫЙ ДОСТУП":"ОПЕРАТИВНЫЙ ДОСТУП"}`);
+    applyRoleUI();
+    render();
+    successSound();
+    if(typeof toast==="function")toast(
+      account.role==="admin"?"ADMINISTRATOR":"СЕАНС УСТАНОВЛЕН",
+      account.role==="admin"?"Полный доступ к внутренней сети разрешён.":"Оперативный доступ к внутренней сети разрешён."
+    );
+    if(typeof glitch==="function")glitch();
+  },800);
+
+  return true;
+}
+function clock(){
+ const d=new Date();const t=d.toLocaleTimeString("ru-RU",{hour12:false});$("#clock").textContent=`2057-08-11 // ${t}`;
+}
+setInterval(clock,1000);
+setInterval(()=>{if(state.booted && Math.random()<.18){const msgs=["NODE SYNC COMPLETED","ARCHIVE INDEX CHECKED","ROUTE TABLE ПОДТВЕРЖДЕНО","INCOMING TRANSMISSION RECEIVED","BACKGROUND INTEGRITY CHECK"];const m=msgs[Math.floor(Math.random()*msgs.length)];log("SYSTEM",m);if(Math.random()<.25)glitch()}},4200);
+setInterval(()=>{if(state.booted&&Math.random()<.05)glitch()},1800);
+boot();
+})();
+</script>
+
+<script>
+(() => {
+ const c=document.getElementById("bootMatrix"); if(!c)return;
+ const x=c.getContext("2d"); let w,h,cols,drops;
+ const chars="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@!?№;:%*";
+ function resize(){w=c.width=innerWidth*devicePixelRatio;h=c.height=innerHeight*devicePixelRatio;x.font=10*devicePixelRatio+"px monospace";cols=Math.floor(w/(12*devicePixelRatio));drops=Array.from({length:cols},()=>Math.random()*-50)}
+ function draw(){
+   x.fillStyle="rgba(2,3,4,.14)";x.fillRect(0,0,w,h);
+   x.fillStyle="rgba(180,190,195,.12)";
+   for(let i=0;i<drops.length;i++){
+     const ch=chars[(Math.random()*chars.length)|0];
+     const px=i*12*devicePixelRatio, py=drops[i]*12*devicePixelRatio;
+     x.fillText(ch,px,py);
+     if(py>h && Math.random()>.975)drops[i]=0;
+     drops[i]+=.35+Math.random()*.55;
+   }
+   requestAnimationFrame(draw);
+ }
+ addEventListener("resize",resize);resize();draw();
+})();
+</script>
+
+<script>
+(() => {
+ const glitchLayer=document.getElementById("glitch");
+ setInterval(()=>{
+   if(Math.random()<.12 && document.getElementById("app") && !document.getElementById("app").classList.contains("hidden")){
+     glitchLayer.classList.add("on");
+     document.body.style.filter=Math.random()<.35?"contrast(1.08)":"none";
+     setTimeout(()=>{glitchLayer.classList.remove("on");document.body.style.filter="none"},80+Math.random()*120);
+   }
+ },2400);
+})();
+</script>
+
+(function(){
+  const input = document.getElementById("accessCode");
+  if(input){
+    input.addEventListener("keydown", function(e){
+      if(e.key === "Enter"){
+        e.preventDefault();
+        const btn = document.getElementById("authorize");
+        if(btn && !btn.disabled) authorize();
+      }
+    });
+  }
+})();
+
+<script>
+window.addEventListener("error", function(e){
+  const b=document.getElementById("authorize");
+  if(b) b.title="Ошибка интерфейса: "+(e.message||"неизвестная ошибка");
+  console.error("SPMG UI ERROR:", e.message, e.filename, e.lineno);
+});
+</script>
+
+<script id="spmg-auth-bindings">
+(function(){
+  function bindAuth(){
+    const input=document.getElementById("accessCode");
+    const btn=document.getElementById("authorize");
+    if(!input || !btn) return;
+    btn.type="button";
+    btn.onclick=function(e){e.preventDefault();authorize();};
+    input.onkeydown=function(e){
+      if(e.key==="Enter" || e.keyCode===13){
+        e.preventDefault();
+        authorize();
+      }
+    };
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindAuth);
+  else bindAuth();
+})();
+</script>
+
+<script>
+window.addEventListener("error",function(e){
+  console.error("[SPMG-04] UI ERROR:",e.message,e.filename,e.lineno,e.colno);
+});
+window.addEventListener("unhandledrejection",function(e){
+  console.error("[SPMG-04] PROMISE ERROR:",e.reason);
+});
+</script>
 </body>
 </html>
