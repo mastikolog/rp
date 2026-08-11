@@ -200,10 +200,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 .securityNote{font:8px var(--mono);color:#454d52;line-height:1.6}
 </style>
 
-<style id="auth-hint-css">
-.authHint{margin-top:10px;font:8px var(--mono);color:#4d555a;letter-spacing:.08em;line-height:1.6}
-.authHint b{color:#717a80;font-weight:500}
-</style>
+
 
 <style id="final-tools-css">
 .adminTools{display:flex;gap:8px;flex-wrap:wrap}.fileBtn{position:relative;overflow:hidden;display:inline-flex;align-items:center;cursor:pointer}.fileBtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
@@ -212,6 +209,11 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 <style id="final-auth-visibility">
 #accessCode{display:block!important;visibility:visible!important;opacity:1!important}
 #authorize{display:inline-flex!important;visibility:visible!important;opacity:1!important}
+</style>
+
+<style id="spmg-auth-final-css">
+#codeGate{position:relative;z-index:20}
+#accessCode,#authorize{visibility:visible!important}
 </style>
 </head>
 <body>
@@ -259,7 +261,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
         <div class="authLabel">ТРЕБУЕТСЯ ПОДТВЕРЖДЕНИЕ ОПЕРАТОРА</div>
         <div class="authRow">
           <div class="authPrefix">SPMG-04 //</div>
-          <input id="accessCode" autocomplete="off" spellcheck="false" placeholder="ВВЕДИТЕ КОД ДОПУСКА"><div class="authHint">RP-КОДЫ: <b>SPMG-04-2057</b> // ОПЕРАТОР &nbsp; <b>SPMG-ADMIN-2057</b> // ADMINISTRATOR</div>
+          <input id="accessCode" autocomplete="off" spellcheck="false" placeholder="ВВЕДИТЕ КОД ДОПУСКА">
           <button id="authorize">ПОДТВЕРДИТЬ</button>
         </div>
         <div class="authHint">Сеанс будет привязан к текущему идентификатору узла. Все действия записываются.</div>
@@ -342,7 +344,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
         <label>НАЗВАНИЕ ОПЕРАЦИИ<input id="bTitle" placeholder="Например: ПЕРЕХВАТ // СЕКТОР 04"></label>
         <label>УРОВЕНЬ ДОПУСКА<select id="bClass"><option>SPMG-II</option><option selected>SPMG-IV</option><option>SPMG-V</option></select></label>
         <label>ПРИОРИТЕТ<select id="bPriority"><option>НИЗКИЙ</option><option selected>СРЕДНИЙ</option><option>ВЫСОКИЙ</option><option>КРИТИЧЕСКИЙ</option></select></label>
-        <label>СРОК<input id="bDeadline" placeholder="14.08.2057 // 23:59"></label>
+        <label>СРОК</label>
       </div>
       <label class="builderfull">КРАТКОЕ ОПИСАНИЕ<textarea id="bDesc" rows="3" placeholder="Что известно до начала операции..."></textarea></label>
       <label class="builderfull">ТЕКСТ ОПЕРАЦИИ<textarea id="bBody" rows="12" placeholder="Подключение к системе....
@@ -382,78 +384,35 @@ const state={
 };
 try{state.audit=JSON.parse(localStorage.getItem("spmg04_audit")||"[]")}catch(e){state.audit=[]}
 const operations=[
- {id:"OP-57-041",status:"ACTIVE",class:"SPMG-IV",priority:"HIGH",title:"SIGNAL INTERCEPTION // SECTOR 07",date:"10.08.2057",deadline:"13.08.2057 // 23:59",desc:"A mobile communications node has appeared inside a restricted sector. Its origin has not been confirmed.",body:`SITUATION
+  {
+    id:"OP-57-001",
+    status:"ACTIVE",
+    class:"SPMG-IV",
+    priority:"СРЕДНИЙ",
+    title:"ПРОВЕРКА КАНАЛА СВЯЗИ",
+    date:"11.08.2057",
+    desc:"Тестовая оперативная задача для демонстрации формата документа.",
+    body:`Подключение к системе....
 
-Field monitoring has identified an intermittent encrypted transmission originating from Sector 07. The signal does not correspond to any registered TFB infrastructure.
+Обработка данных....
 
-OBJECTIVE
+Передача сообщения....
 
-Locate the transmission source, establish the nature of the node and recover sufficient information for subsequent analysis.
+ВНИМАНИЕ // ДОКУМЕНТ ОГРАНИЧЕН УРОВНЕМ ДОПУСКА SPMG-IV.
 
-AVAILABLE РАЗВЕДДАННЫЕ
+Провести проверку указанного канала связи и подтвердить его доступность.
 
-• Transmission window: 03–11 minutes
-• Signal repeats at irregular intervals
-• No confirmed civilian infrastructure at the suspected location
-• Source identification remains inconclusive
+Не раскрывать принадлежность к SPMG.
 
-OPERATIONAL CONSTRAINTS
+После завершения передать краткий оперативный отчёт.
 
-Maintain a low operational profile. Avoid unnecessary exposure of SPMG involvement.
+Отсоединение....
 
-SUCCESS CONDITIONS
+Шифрование....
 
-Source identified and preliminary intelligence submitted.
-
-FAILURE CONDITIONS
-
-Loss of the signal without a recoverable trace, or confirmed compromise of SPMG presence.`},
- {id:"OP-57-038",status:"ACTIVE",class:"SPMG-III",priority:"MEDIUM",title:"CONTACT PROTOCOL // \"NORTHSTAR\"",date:"09.08.2057",deadline:"12.08.2057 // 18:00",desc:"An established contact has failed to respond through the normal channel.",body:`SITUATION
-
-Contact identifier NORTHSTAR has missed two scheduled communications.
-
-OBJECTIVE
-
-Determine whether the contact remains operational and establish a secondary communication path if required.
-
-KNOWN INFORMATION
-
-Last verified transmission: 09.08.2057 // 04:17.
-Expected next contact: 09.08.2057 // 12:00.
-No confirmation was received.
-
-RESTRICTION
-
-Do not disclose SPMG affiliation during initial contact.`},
- {id:"OP-57-035",status:"ACTIVE",class:"SPMG-IV",priority:"HIGH",title:"RECOVERY // CASE FILE 12-DELTA",date:"08.08.2057",deadline:"14.08.2057 // 12:00",desc:"A physical case file associated with a closed investigation has resurfaced.",body:`SITUATION
-
-Case File 12-DELTA was formally archived in 2055. A partial copy has now appeared in an unsecured information channel.
-
-OBJECTIVE
-
-Recover the originating copy and determine whether the archive was compromised.
-
-PRIORITY
-
-HIGH.
-
-NOTE
-
-The archive record currently lists no authorized duplication event.`},
- {id:"OP-57-031",status:"ACTIVE",class:"SPMG-II",priority:"LOW",title:"ROUTINE VERIFICATION // NODE 03",date:"07.08.2057",deadline:"OPEN",desc:"Routine verification of a degraded communications node.",body:`SITUATION
-
-NODE-03 has reported intermittent integrity failures.
-
-OBJECTIVE
-
-Verify the node state and submit a technical observation.
-
-This operation is considered routine unless additional anomalies are discovered.`},
- {id:"OP-57-026",status:"SUSPENDED",class:"SPMG-IV",priority:"CRITICAL",title:"PROJECT VEIL // PHASE 2",date:"03.08.2057",deadline:"SUSPENDED",desc:"Operation suspended pending central review.",body:`STATUS: SUSPENDED
-
-Further operational activity is prohibited until central review is completed.
-
-Previous field material remains classified under the original compartment.`}
+ПЕРЕДАЧА ЗАВЕРШЕНА.`,
+    custom:false
+  }
 ];
 
 const intelligence=[
@@ -574,7 +533,7 @@ modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.add("hidd
 
 function card(item,type){
  let status=item.status||item.level||item.type;
- let extra=item.deadline?`<span>DEADLINE ${esc(item.deadline)}</span>`:`<span>${esc(item.date)}</span>`;
+ let extra=item.?`<span> ${esc(item.)}</span>`:`<span>${esc(item.date)}</span>`;
  return `<div class="row" data-open="${esc(item.id)}" data-type="${type}">
    <div class="rowtop"><span class="code">${esc(item.id)}</span><span class="status ${String(status).toLowerCase().includes("active")?"active":String(status).toLowerCase().includes("critical")?"alert":"closed"}">${esc(status)}</span></div>
    <div class="rowtitle">${esc(item.title)}</div><div class="rowdesc">${esc(item.desc||"")}</div>
@@ -765,7 +724,7 @@ function createOperation(){
     class:document.getElementById("bClass")?.value||"SPMG-IV",
     priority:document.getElementById("bPriority")?.value||"СРЕДНИЙ",
     title,date:"11.08.2057",
-    deadline:(document.getElementById("bDeadline")?.value||"OPEN").trim(),
+    :(document.getElementById("bDeadline")?.value||"OPEN").trim(),
     desc:(document.getElementById("bDesc")?.value||"").trim()||"Оперативное распоряжение SPMG-04.",
     body,custom:true,createdBy:state.user.name
   };
@@ -895,7 +854,7 @@ function openItem(type,id){
    log("SECURITY",`ACCESS DENIED // ${id}`);return;
  }
  const fields=type==="operation"
- ? `<div class="field"><label>CLASSIFICATION</label><span>${esc(item.class)}</span></div><div class="field"><label>PRIORITY</label><span>${esc(item.priority)}</span></div><div class="field"><label>ISSUED</label><span>${esc(item.date)}</span></div><div class="field"><label>DEADLINE</label><span>${esc(item.deadline)}</span></div>`
+ ? `<div class="field"><label>CLASSIFICATION</label><span>${esc(item.class)}</span></div><div class="field"><label>PRIORITY</label><span>${esc(item.priority)}</span></div><div class="field"><label>ISSUED</label><span>${esc(item.date)}</span></div><div class="field"><span>${esc(item.)}</span></div>`
  : `<div class="field"><label>CLASSIFICATION</label><span>${esc(item.class||item.level||item.type)}</span></div><div class="field"><label>RECORD DATE</label><span>${esc(item.date)}</span></div>`;
  let actions="";
  if(type==="operation" && item.status==="ACTIVE"){
@@ -1231,6 +1190,93 @@ window.addEventListener("unhandledrejection",function(e){
       console.warn("[SPMG-04] Boot watchdog released authentication gate.");
     }
   },5000);
+})();
+</script>
+
+<script id="spmg-auth-final-binding">
+(function(){
+  function bindFinalAuth(){
+    const input=document.getElementById("accessCode");
+    const btn=document.getElementById("authorize");
+    const gate=document.getElementById("codeGate");
+    if(!input||!btn){
+      console.error("[SPMG-04] Auth DOM not found");
+      return;
+    }
+
+    btn.type="button";
+    btn.onclick=function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(typeof authorize==="function") authorize();
+    };
+
+    input.onkeydown=function(e){
+      if(e.key==="Enter" || e.keyCode===13){
+        e.preventDefault();
+        e.stopPropagation();
+        if(typeof authorize==="function") authorize();
+      }
+    };
+
+    // If boot() completed, never leave the credential gate disabled.
+    if(gate && !gate.classList.contains("hidden")){
+      input.disabled=false;
+      btn.disabled=false;
+    }
+  }
+
+  function releaseGate(){
+    const gate=document.getElementById("codeGate");
+    const input=document.getElementById("accessCode");
+    const btn=document.getElementById("authorize");
+    if(gate) gate.classList.remove("hidden");
+    if(input){input.disabled=false;input.hidden=false;}
+    if(btn){btn.disabled=false;btn.hidden=false;}
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",function(){
+      bindFinalAuth();
+      setTimeout(releaseGate, 2200);
+    });
+  }else{
+    bindFinalAuth();
+    setTimeout(releaseGate, 2200);
+  }
+})();
+</script>
+
+<script id="spmg-startup-fallback">
+setTimeout(function(){
+  const gate=document.getElementById("codeGate");
+  const input=document.getElementById("accessCode");
+  const btn=document.getElementById("authorize");
+  const status=document.getElementById("bootFooterStatus");
+  if(gate && input && btn && !document.getElementById("app")?.classList.contains("hidden")){
+    return;
+  }
+  if(gate){
+    gate.classList.remove("hidden");
+    input.disabled=false;
+    btn.disabled=false;
+  }
+  if(status) status.textContent="ОЖИДАНИЕ АВТОРИЗАЦИИ";
+},3000);
+</script>
+
+<script id="spmg-seed-cleanup">
+(function(){
+  const KEY="spmg04_operations";
+  const FLAG="spmg04_seed_cleanup_v1";
+  try{
+    if(!localStorage.getItem(FLAG)){
+      const saved=JSON.parse(localStorage.getItem(KEY)||"[]");
+      const custom=saved.filter(x=>x && x.custom===true);
+      localStorage.setItem(KEY,JSON.stringify(custom));
+      localStorage.setItem(FLAG,"1");
+    }
+  }catch(e){console.warn("[SPMG-04] seed cleanup:",e);}
 })();
 </script>
 </body>
