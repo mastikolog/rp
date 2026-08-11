@@ -33,43 +33,75 @@ button{color:inherit}
 .hidden{display:none!important}
 
 .boot{position:fixed;inset:0;z-index:100;background:#040506;display:flex;align-items:center;justify-content:center;padding:28px}
-.bootbox{width:min(760px,100%);font:12px/1.8 var(--mono);color:#aeb4b7}
-.bootmark{font:600 19px var(--mono);letter-spacing:.18em;color:var(--white);margin-bottom:28px}
-.bootline{min-height:22px}.bootline .ok{color:#bfc5c8}.bootline .warn{color:var(--amber)}
-.bootbar{height:2px;background:#1c2023;margin-top:18px;overflow:hidden}.bootbar i{display:block;width:0;height:100%;background:#b8bec1;transition:width .4s}
-.bootcode{margin-top:26px;border:1px solid var(--line);padding:18px;display:flex;gap:10px;align-items:center}
-.bootcode input{flex:1;background:#080a0c;border:1px solid #2b3034;color:var(--white);padding:10px 12px;outline:0;font-family:var(--mono);letter-spacing:.12em}
-.bootcode button{border:1px solid #363c41;background:#101316;padding:10px 16px;cursor:pointer;font:600 10px var(--mono);letter-spacing:.12em}
-.bootcode button:hover{border-color:#70777c;background:#171b1e}
-.boothint{color:#4e5559;font-size:10px;margin-top:8px}
+.bootFrame{position:relative;width:min(1120px,92vw);height:min(720px,88vh);border:1px solid #24292d;background:rgba(3,5,6,.72);box-shadow:0 0 0 1px rgba(255,255,255,.015),0 40px 140px rgba(0,0,0,.7);display:flex;flex-direction:column;overflow:hidden}
+.bootHeader{height:66px;flex:none;border-bottom:1px solid #1d2226;padding:0 28px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,10,12,.65)}
+.bootLogo{display:flex;align-items:center;gap:13px}
+.bootLogoMark{width:11px;height:11px;border:1px solid #aeb4b8;box-shadow:0 0 12px rgba(200,210,215,.18);animation:logoPulse 2.2s ease-in-out infinite}
+.bootAgency{font:600 12px var(--mono);letter-spacing:.16em;color:#e2e5e6}
+.bootSub{font:8px var(--mono);letter-spacing:.12em;color:#555d62;margin-top:4px}
+.bootTelemetry{display:flex;gap:18px;color:#4e565b;font:8px var(--mono)}.bootTelemetry b{color:#899197;font-weight:500}
+.bootCenter{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px clamp(22px,6vw,80px);max-width:100%;z-index:1}
+.bootStatusLine{font:9px var(--mono);letter-spacing:.16em;color:#6e777d}
+.pulseDot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#9aa2a6;margin-right:8px;box-shadow:0 0 10px rgba(200,210,215,.3);animation:dotPulse 1s infinite}
+.bootTitle{font:600 clamp(30px,5vw,58px)/1 var(--mono);letter-spacing:.04em;color:#e5e7e8;margin-top:20px;position:relative;display:inline-block;text-shadow:0 0 24px rgba(210,220,225,.05)}
+.bootSubtitle{font:11px var(--mono);color:#5f686e;margin-top:11px}
+.bootHex{font:9px var(--mono);color:#3e464b;letter-spacing:.12em;margin-top:18px;min-height:13px}
+.bootProgressWrap{margin-top:30px;width:min(700px,100%)}
+.bootProgressMeta{display:flex;justify-content:space-between;font:8px var(--mono);color:#586167;margin-bottom:7px}
+.bootProgress{height:3px;background:#15191c;position:relative;overflow:hidden}
+.bootProgress i{display:block;width:0;height:100%;background:#aeb5b8;box-shadow:0 0 12px rgba(210,220,225,.2);transition:width .18s linear}
+.bootProgress b{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12px,rgba(255,255,255,.18) 12px 13px);animation:progressNoise .45s linear infinite}
+.bootConsole{width:min(780px,100%);height:170px;margin-top:24px;border-top:1px solid #171c20;padding-top:10px;overflow:hidden;font:9px/1.8 var(--mono);color:#50595f;mask-image:linear-gradient(to bottom,black 70%,transparent)}
+.bootLine{white-space:pre;display:block}.bootLine .good{color:#788288}.bootLine .warn{color:#9d8256}.bootLine .fault{color:#8e5757}
+.bootAuth{margin-top:20px;width:min(700px,100%);border:1px solid #2b3135;background:rgba(10,13,15,.84);padding:13px}
+.authLabel{font:8px var(--mono);letter-spacing:.12em;color:#858d92;margin-bottom:10px}
+.authRow{display:flex;align-items:center}
+.authPrefix{font:10px var(--mono);color:#555d62;padding:10px 0;margin-right:8px}
+.authRow input{min-width:0;flex:1;background:#07090a;border:1px solid #2a3034;color:#e3e6e7;padding:10px 11px;outline:none;font:10px var(--mono);letter-spacing:.1em}
+.authRow input:focus{border-color:#6c7479;box-shadow:0 0 0 1px rgba(160,170,175,.06)}
+.authRow button{border:1px solid #3b4247;background:#111518;color:#c4c9cb;padding:10px 14px;margin-left:7px;cursor:pointer;font:600 9px var(--mono);letter-spacing:.08em}
+.authRow button:hover{background:#181d20;border-color:#7b8388}
+.authHint{font:8px var(--mono);color:#444c51;margin-top:8px}
+.bootFooter{height:32px;flex:none;border-top:1px solid #1d2226;padding:0 22px;display:flex;align-items:center;justify-content:space-between;color:#454d52;font:8px var(--mono);letter-spacing:.08em;background:rgba(5,7,8,.75)}
+.bootFooter span:nth-child(2){color:#6c7479}
+.bootFooter span:nth-child(2):before{content:"● ";color:#8c9499;animation:dotPulse 1.1s infinite}
+@keyframes bootSweep{from{top:-1px}to{top:100%}}
+@keyframes bootNoise{50%{transform:translate(1.5%,-1%)}}
+@keyframes logoPulse{50%{box-shadow:0 0 18px rgba(200,210,215,.4)}}
+@keyframes dotPulse{50%{opacity:.25;transform:scale(.65)}}
+@keyframes progressNoise{to{transform:translateX(13px)}}
+@media(max-width:700px){.bootFrame{width:96vw;height:92vh}.bootHeader{padding:0 15px}.bootTelemetry span:not(:last-child){display:none}.bootCenter{padding:25px 18px}.bootConsole{height:130px}.bootFooter{padding:0 12px;font-size:7px}.bootFooter span:nth-child(2){display:none}.authRow{flex-wrap:wrap}.authPrefix{width:100%;padding-bottom:4px}.authRow input{width:100%;flex:auto}.authRow button{margin-left:0;margin-top:7px;width:100%}}
 
-.app{position:relative;z-index:10;width:100vw;height:100vh;display:grid;grid-template-rows:54px 42px 1fr 30px;background:linear-gradient(135deg,#060708,#090b0d 55%,#070809)}
-.topbar{border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:rgba(5,6,7,.9);backdrop-filter:blur(8px)}
-.brand{display:flex;align-items:center;gap:13px;font:600 11px var(--mono);letter-spacing:.14em}
-.brand .mark{width:8px;height:8px;border:1px solid #9da4a8;box-shadow:0 0 9px rgba(200,210,215,.25)}
-.brand small{color:var(--muted);font-weight:400}
-.topmeta{display:flex;gap:18px;color:var(--muted);font:10px var(--mono)}
-.topmeta b{color:var(--text);font-weight:500}
-.topmeta .signal{color:#aeb4b7}
+/* ===== ОСНОВНОЙ ИНТЕРФЕЙС ===== */
+.charter-app{position:relative;z-index:10;width:100vw;height:100vh;display:grid;grid-template-rows:54px 1fr 30px;background:linear-gradient(135deg,#060708,#090b0d 55%,#070809)}
+.charter-topbar{border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:rgba(5,6,7,.9);backdrop-filter:blur(8px)}
+.charter-brand{display:flex;align-items:center;gap:10px;color:#e6e8e9;font:700 13px var(--mono);letter-spacing:.06em}
+.charter-brand small{display:block;color:#656b70;font-size:8px;margin-left:10px;letter-spacing:.12em}
+.charter-mark{width:11px;height:11px;border:1px solid #aeb5b8;box-shadow:0 0 10px rgba(220,225,230,.22)}
+.charter-topmeta{display:flex;gap:18px;color:#555b60;font:9px var(--mono)}
+.charter-topmeta b{color:#aeb5b8;font-weight:500}
+.signal{color:#858b8f}.signal b{color:#aeb5b8}
 
-.charter-layout{min-height:0;display:grid;grid-template-columns:230px minmax(0,1fr) 285px}
-.charter-sidebar,.charter-right{min-height:0;background:rgba(6,8,9,.72)}
-.charter-sidebar{border-right:1px solid var(--line);padding:18px 12px;overflow:auto}.charter-right{border-left:1px solid var(--line);padding:18px 14px;overflow:auto}
-.charter-content{min-width:0;min-height:0;overflow:auto;padding:24px 28px 34px}
-.charter-content::-webkit-scrollbar,.charter-sidebar::-webkit-scrollbar,.charter-right::-webkit-scrollbar{width:4px}
-.charter-content::-webkit-scrollbar-thumb,.charter-sidebar::-webkit-scrollbar-thumb,.charter-right::-webkit-scrollbar-thumb{background:#252a2e}
-
-.site-tabs{display:flex;gap:0;overflow-x:auto;padding:0 14px;border-bottom:1px solid #252b30;background:linear-gradient(180deg,rgba(7,9,11,.98),rgba(7,9,11,.94));box-shadow:0 10px 30px rgba(0,0,0,.32);scrollbar-width:thin;flex-shrink:0}
-.site-tabs:before{content:"PORTAL // MODULES";flex:0 0 auto;display:flex;align-items:center;padding:0 16px 0 4px;color:#596167;font:700 8px var(--mono);letter-spacing:.16em}
-.site-tab{position:relative;flex:0 0 auto;border:0;border-right:1px solid #1c2125;background:transparent;color:#737b81;padding:13px 14px 12px;font:700 9px var(--mono);letter-spacing:.08em;cursor:pointer;transition:.2s}
-.site-tab:hover{color:#d7d9da;background:#0d1114}.site-tab.active{color:#eef0f0;background:#0e1215}
-.site-tab.active:before{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:#a84a4a;box-shadow:0 0 12px rgba(168,74,74,.55)}
-.site-tab.active:after{content:"ACTIVE";position:absolute;right:5px;top:3px;font-size:5px;color:#b66a6a;letter-spacing:.1em}
-.site-page{display:none;animation:pageIn .24s var(--ease)}
+/* ===== НАВИГАЦИЯ — ВПРАВО ===== */
+.site-tabs{display:flex;gap:4px;align-items:center;padding:4px 18px 4px 12px;border-bottom:1px solid var(--line);background:rgba(5,6,7,.96);overflow-x:auto;scrollbar-width:thin;flex-shrink:0;justify-content:flex-end;min-height:42px}
+.site-tabs:before{content:"PORTAL // MODULES";flex:0 0 auto;display:flex;align-items:center;margin-right:auto;color:#596167;font:700 8px var(--mono);letter-spacing:.16em}
+.site-tab{flex:0 0 auto;border:1px solid transparent;background:transparent;color:#686f74;padding:6px 12px;cursor:pointer;font:600 9px var(--mono);letter-spacing:.09em;text-transform:uppercase;transition:.2s;border-radius:2px}
+.site-tab:hover{color:#dfe2e3;border-color:#30363a;background:#0c0f11}
+.site-tab.active{color:#f1f2f2;border-color:#4b5257;background:#101417;box-shadow:inset 0 -2px #aeb4b7}
+.site-page{display:none;animation:pageIn .25s ease}
 .site-page.active{display:block}
-@keyframes pageIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes pageIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-.charter-label{font:9px var(--mono);letter-spacing:.16em;color:#51585d;margin-bottom:10px}
+/* ===== ЛЕЙАУТ ===== */
+.charter-layout{min-height:0;display:grid;grid-template-columns:230px minmax(0,1fr);gap:0;position:relative}
+.charter-sidebar{min-height:0;background:rgba(6,8,9,.72);border-right:1px solid var(--line);padding:18px 12px;overflow:auto;display:block}
+.charter-sidebar.hidden{display:none}
+.charter-content{min-width:0;min-height:0;overflow:auto;padding:24px 28px 34px}
+.charter-content::-webkit-scrollbar,.charter-sidebar::-webkit-scrollbar{width:4px}
+.charter-content::-webkit-scrollbar-thumb,.charter-sidebar::-webkit-scrollbar-thumb{background:#252a2e}
+
+/* ===== БОКОВАЯ ПАНЕЛЬ ===== */
+.charter-label{font:9px var(--mono);letter-spacing:.16em;color:#51585d;margin-bottom:10px;text-transform:uppercase}
 .charter-nav{display:grid;gap:3px}
 .charter-nav button{width:100%;padding:9px 10px;text-align:left;border:1px solid transparent;border-left:2px solid transparent;background:transparent;color:#70777c;cursor:pointer;font:10px var(--mono);transition:.15s}
 .charter-nav button:hover{color:#bfc4c7;background:rgba(255,255,255,.02)}
@@ -77,8 +109,9 @@ button{color:inherit}
 .charter-nav .num{float:right;color:#3f4549}
 .charter-side-note{margin-top:22px;border-top:1px solid var(--line);padding-top:12px;color:#41474b;font:9px/1.7 var(--mono)}
 
+/* ===== ЗАГОЛОВКИ ===== */
 .charter-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:14px}
-.charter-kicker{font:9px var(--mono);letter-spacing:.18em;color:#5b6267}
+.charter-kicker{font:9px var(--mono);letter-spacing:.18em;color:#5b6267;text-transform:uppercase}
 .charter-title{margin:4px 0 0;color:#e3e6e8;font:700 28px/1 var(--sans);letter-spacing:.04em}
 .charter-sub{margin-top:7px;color:#686f74;font:10px var(--mono)}
 .charter-tools{display:flex;gap:7px;align-items:center}
@@ -89,6 +122,45 @@ button{color:inherit}
 .charter-banner{border:1px solid #343a3f;background:rgba(255,255,255,.018);padding:9px 11px;color:#8e9599;font:9px var(--mono);margin-bottom:14px}
 .charter-banner b{color:#c3c7ca;font-weight:500}
 
+/* ===== СЕКРЕТНЫЕ РАЗДЕЛЫ ===== */
+.secret-zone-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 13px;border:1px solid #2b2426;border-bottom:0;background:#0b0d0f;color:#686f74;font:8px var(--mono);letter-spacing:.12em}
+.secret-zone-head b{display:block;color:#bd7779;font-size:10px;margin-bottom:3px}
+.secret-zone-head span{color:#59474a}
+.secret-zone-head>div:last-child{font-size:7px}
+
+.secret-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0 18px}
+.secret-card{min-height:160px;padding:18px 20px;border:1px solid #352326;background:linear-gradient(135deg,#0e0b0c,#0a0c0e);overflow:hidden;cursor:pointer;transition:.25s;display:flex;flex-direction:column;justify-content:center}
+.secret-card:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,rgba(168,74,74,.04) 0 7px,transparent 7px 14px);pointer-events:none}
+.secret-card:hover{transform:translateY(-3px);border-color:#8c4548;box-shadow:0 12px 35px rgba(0,0,0,.35),0 0 28px rgba(168,74,74,.08)}
+.secret-card .secret-no{color:#b06a6a;font:600 20px var(--mono);letter-spacing:.08em}
+.secret-card .secret-title{margin:7px 0 2px;color:#d9a0a0;font:600 15px var(--mono);letter-spacing:.06em}
+.secret-card .secret-meta{color:#69494b;font:8px var(--mono);letter-spacing:.1em}
+.secret-card .stamp{display:inline-block;margin-top:10px;color:#6e393c;border:1px solid #5a3030;padding:4px 8px;font:700 9px var(--mono);transform:rotate(-2deg);align-self:flex-start}
+.secret-card .cipher{margin-top:12px;padding:8px;border:1px dashed #33272a;color:#59474a;font:8px var(--mono);letter-spacing:.14em}
+.secret-card.unlocked{border-color:#5d4b2b;background:linear-gradient(135deg,#10100d,#0b0e10)}
+.secret-card.unlocked .secret-no,.secret-card.unlocked .secret-title{color:#c5a96f}
+.secret-card.unlocked .stamp{color:#b69a61;border-color:#5d4b2b}
+
+/* ===== КОНТЕНТ СТРАНИЦ ===== */
+.page-content{display:grid;gap:12px;margin-top:10px}
+.page-content .section-block{border:1px solid var(--line);background:rgba(10,13,15,.76);overflow:hidden}
+.page-content .section-block:hover{border-color:#394146;box-shadow:0 0 15px rgba(255,255,255,.025)}
+.page-content .block-header{display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:center;padding:12px 15px;border-bottom:1px solid var(--line);background:#0c1012}
+.page-content .block-number{color:#aeb4b7;font:600 18px var(--mono)}
+.page-content .block-title{color:#d9dcdd;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.page-content .block-body{padding:15px 17px}
+.page-content .record{display:grid;grid-template-columns:85px minmax(0,1fr);gap:14px;padding:11px 0;border-bottom:1px solid #171c20}
+.page-content .record:last-child{border-bottom:0}
+.page-content .record__label{margin:0;color:#9ca4a9;font:600 10px var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.page-content .record__value{margin:0;color:#8b9398;font:13px/1.7 var(--sans)}
+.page-content .record__value strong,.page-content .highlight{color:#dfe2e3}
+.page-content .warn{color:#c6a875}
+.page-content .danger{color:#b06a6a}
+.page-content .note-box{padding:12px 14px;border-left:2px solid #8e7b58;background:#11110f;color:#8d9396;font:12px/1.6 var(--sans)}
+.page-content .note-box strong{color:#c5a96f}
+.page-content img{width:100%;height:auto;display:block;border:1px solid #343a3e!important;border-radius:2px!important;background:#080a0c}
+
+/* ===== УСТАВ (СЕКЦИИ) ===== */
 .charter-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
 .charter-section{border:1px solid #252b2f;background:linear-gradient(180deg,rgba(13,15,17,.92),rgba(8,10,11,.96));box-shadow:inset 0 0 35px rgba(255,255,255,.008);scroll-margin-top:15px}
 .charter-section.restricted{border-color:rgba(150,70,70,.42)}
@@ -106,62 +178,11 @@ button{color:inherit}
 .charter-record-label{color:#737b80;font:10px var(--mono)}
 .charter-record-value{color:#aeb4b8;font:11px/1.75 var(--mono)}
 .charter-record-value strong{color:#d7dbdd;font-weight:600}
-.charter-note,.charter-redaction{border:1px solid #333a3f;background:#0a0c0e;padding:12px;color:#777f84;font:10px/1.7 var(--mono)}
-.charter-redaction{border-color:rgba(150,70,70,.42);color:#9b6c6c;text-align:center}
+.charter-redaction{border:1px solid rgba(150,70,70,.42);background:#0a0c0e;padding:12px;color:#9b6c6c;text-align:center;font:10px/1.7 var(--mono)}
 .charter-redaction .stamp{display:block;color:#b07070;font-size:12px;letter-spacing:.16em;margin:5px 0}
 .charter-redaction .code{color:#654848;font-size:8px}
 
-.charter-right .panelx{border:1px solid #242a2e;background:rgba(10,12,14,.75);padding:12px;margin-bottom:14px}
-.charter-right .rowx{font:9px var(--mono);color:#6c7378;margin:9px 0}
-.charter-right .rowx span{float:right;color:#b2b7ba}
-.charter-right .barx{height:2px;background:#1b2023;margin-top:5px}
-.charter-right .barx i{display:block;height:100%;background:#8b9195}
-.charter-right .barx.warn i{background:#8d744d}
-.charter-right .barx.red i{background:#774b4b}
-.charter-right .noticex{border:1px solid #3a3030;background:rgba(95,45,45,.08);padding:11px;color:#77777a;font:9px/1.7 var(--mono);margin-bottom:14px}
-.charter-right .noticex strong{display:block;color:#aa7676;font-weight:500;margin-bottom:5px}
-.charter-right .feedx{font:8px/1.8 var(--mono);color:#51585d}
-.charter-right .feedx b{color:#767d82;font-weight:400}
-
-.charter-footer{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:#3f4549;font:8px var(--mono)}
-.charter-footer b{color:#6c7277;font-weight:500}
-
-.page-content{display:grid;gap:12px;margin-top:10px}
-.page-content .section-block{border:1px solid var(--line);background:rgba(10,13,15,.76);overflow:hidden}
-.page-content .section-block:hover{border-color:#394146;box-shadow:0 0 15px rgba(255,255,255,.025)}
-.page-content .block-header{display:grid;grid-template-columns:48px 1fr;gap:12px;align-items:center;padding:12px 15px;border-bottom:1px solid var(--line);background:#0c1012}
-.page-content .block-number{color:#aeb4b7;font:600 18px var(--mono)}
-.page-content .block-title{color:#d9dcdd;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase}
-.page-content .block-body{padding:15px 17px}
-.page-content .record{display:grid;grid-template-columns:85px minmax(0,1fr);gap:14px;padding:11px 0;border-bottom:1px solid #171c20}
-.page-content .record:last-child{border-bottom:0}
-.page-content .record__label{margin:0;color:#9ca4a9;font:600 10px var(--mono);letter-spacing:.04em;text-transform:uppercase}
-.page-content .record__value{margin:0;color:#8b9398;font:13px/1.7 var(--sans)}
-.page-content .record__value strong,.page-content .highlight{color:#dfe2e3}
-.page-content .warn{color:#c6a875}
-.page-content .danger{color:#b06a6a}
-.page-content .note-box{padding:12px 14px;border-left:2px solid #8e7b58;background:#11110f;color:#8d9396;font:12px/1.6 var(--sans)}
-.page-content .note-box strong{color:#c5a96f}
-.page-content .record__value img{margin:0!important}
-
-.secret-zone-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 13px;border:1px solid #2b2426;border-bottom:0;background:#0b0d0f;color:#686f74;font:8px var(--mono);letter-spacing:.12em}
-.secret-zone-head b{display:block;color:#bd7779;font-size:10px;margin-bottom:3px}
-.secret-zone-head span{color:#59474a}
-.secret-zone-head>div:last-child{font-size:7px}
-
-.secret-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:15px 0 18px}
-.secret-card{min-height:70px;padding:0;border:1px solid #352326;background:#090b0d;text-align:left;overflow:hidden;transition:.25s;box-shadow:inset 0 0 0 1px rgba(255,255,255,.01);cursor:pointer;display:grid;grid-template-columns:70px 1fr auto;align-items:center;padding:12px 16px}
-.secret-card:hover{transform:translateY(-2px);border-color:#8c4548;box-shadow:0 12px 35px rgba(0,0,0,.35),0 0 28px rgba(168,74,74,.08)}
-.secret-card .secret-no{color:#c17474;font-size:11px;letter-spacing:.12em;font-weight:600}
-.secret-card .secret-title{color:#d5d9da;font-size:13px;letter-spacing:.04em}
-.secret-card .secret-meta{color:#6b5558;font-size:8px;margin-top:2px}
-.secret-card .stamp{color:#6e393c;border:1px solid #5a3030;padding:4px 8px;font:700 9px var(--mono);transform:rotate(-2deg);white-space:nowrap}
-.secret-card .cipher{display:none}
-.secret-card.unlocked{border-color:#75613a}
-.secret-card.unlocked .secret-no{color:#d1b574}
-.secret-card.unlocked .secret-title{color:#e0d0a6}
-.secret-card.unlocked .stamp{color:#cbb06f;border-color:#75613a}
-
+/* ===== СЕКРЕТНАЯ МОДАЛКА ===== */
 .secret-modal-backdrop{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.78);backdrop-filter:blur(6px)}
 .secret-modal-backdrop.open{display:flex;animation:fadeModal .18s ease}
 @keyframes fadeModal{from{opacity:0}to{opacity:1}}
@@ -179,89 +200,29 @@ button{color:inherit}
 .secret-form button:hover{background:#1a1012}
 .secret-message{min-height:22px;margin-top:12px;color:#b06a6a;font:9px var(--mono);letter-spacing:.08em}
 .secret-message.good{color:#c5a96f}
-.secret-content{display:none;margin-top:15px;padding:18px;border:1px solid #57472c;background:linear-gradient(135deg,#11100c,#0b0d0e);color:#e3d6b6;font:600 16px var(--mono);line-height:1.55;letter-spacing:.05em;position:relative;overflow:hidden}
+.secret-content{display:none;margin-top:15px;padding:18px;border:1px solid #57472c;background:linear-gradient(135deg,#11100c,#0b0d0e);color:#e3d6b6;font:600 16px var(--mono);line-height:1.55;letter-spacing:.05em}
 .secret-content.show{display:block;animation:decrypt .7s var(--ease)}
 .secret-content.show:before{content:"DECRYPTED // SPMG-IV // ARCHIVE OPEN";display:block;margin-bottom:10px;color:#aa935c;font-size:8px;letter-spacing:.14em}
 @keyframes decrypt{0%{opacity:0;filter:blur(9px);transform:translateY(8px);clip-path:inset(0 0 90% 0)}35%{opacity:1;filter:blur(2px);clip-path:inset(0 0 45% 0)}70%{filter:blur(0);clip-path:inset(0)}100%{transform:none}}
 
-@media(max-width:1000px){.charter-layout{grid-template-columns:190px minmax(0,1fr)}.charter-right{display:none}}
-@media(max-width:700px){.charter-layout{grid-template-columns:1fr}.charter-sidebar{border-right:0;border-bottom:1px solid var(--line);padding:8px}.charter-nav{display:flex;overflow:auto}.charter-nav button{min-width:max-content;border-left:0;border-bottom:2px solid transparent}.charter-nav button.active{border-left:0;border-bottom-color:#b8bec2}.charter-side-note{display:none}.charter-content{padding:18px 12px 25px}.topmeta{display:none}.charter-head{align-items:flex-start;flex-direction:column}.charter-tools{width:100%;flex-wrap:wrap}.charter-search{flex:1;min-width:180px}.charter-title{font-size:23px}.secret-grid{grid-template-columns:1fr}.site-tabs:before{display:none}.site-tab{padding-inline:11px}.secret-form{grid-template-columns:1fr}.secret-form button{height:40px}.secret-card{grid-template-columns:1fr;gap:6px;padding:12px}}
-@media(max-width:1100px){.secret-grid{grid-template-columns:1fr}}
-</style>
+/* ===== ПОДВАЛ ===== */
+.charter-footer{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 16px;color:#3f4549;font:8px var(--mono)}
+.charter-footer b{color:#6c7277;font-weight:500}
 
-<style id="boot-overhaul">
-.boot{overflow:hidden;background:#020304;color:#d9dddf;isolation:isolate}
-.boot canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.16}
-.bootScan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.018) 3px 4px);mix-blend-mode:screen;opacity:.55}
-.bootScan:before{content:"";position:absolute;left:0;right:0;height:1px;background:rgba(220,230,235,.18);box-shadow:0 0 16px rgba(220,230,235,.08);animation:bootSweep 4.8s linear infinite}
-.bootNoise{position:absolute;inset:-20%;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:bootNoise .18s steps(2) infinite}
-.bootVignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,transparent 25%,rgba(0,0,0,.5) 75%,#000 100%)}
-.bootFrame{position:relative;width:min(1120px,92vw);height:min(720px,88vh);border:1px solid #24292d;background:rgba(3,5,6,.72);box-shadow:0 0 0 1px rgba(255,255,255,.015),0 40px 140px rgba(0,0,0,.7);display:flex;flex-direction:column;overflow:hidden}
-.bootFrame:before,.bootFrame:after{content:"";position:absolute;pointer-events:none}
-.bootFrame:before{inset:9px;border:1px solid rgba(255,255,255,.025)}
-.bootFrame:after{left:0;right:0;top:0;height:100%;background:linear-gradient(90deg,transparent 0 49.9%,rgba(255,255,255,.012) 50%,transparent 50.1%);opacity:.3}
-.bootCorner{position:absolute;width:18px;height:18px;border-color:#697176;z-index:2}
-.bootCorner.tl{left:9px;top:9px;border-left:1px solid;border-top:1px solid}.bootCorner.tr{right:9px;top:9px;border-right:1px solid;border-top:1px solid}
-.bootCorner.bl{left:9px;bottom:9px;border-left:1px solid;border-bottom:1px solid}.bootCorner.br{right:9px;bottom:9px;border-right:1px solid;border-bottom:1px solid}
-.bootHeader{height:66px;flex:none;border-bottom:1px solid #1d2226;padding:0 28px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,10,12,.65)}
-.bootLogo{display:flex;align-items:center;gap:13px}.bootLogoMark{width:11px;height:11px;border:1px solid #aeb4b8;box-shadow:0 0 12px rgba(200,210,215,.18);animation:logoPulse 2.2s ease-in-out infinite}
-.bootAgency{font:600 12px var(--mono);letter-spacing:.16em;color:#e2e5e6}.bootSub{font:8px var(--mono);letter-spacing:.12em;color:#555d62;margin-top:4px}
-.bootTelemetry{display:flex;gap:18px;color:#4e565b;font:8px var(--mono)}.bootTelemetry b{color:#899197;font-weight:500}
-.bootCenter{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;padding:40px clamp(22px,6vw,80px);max-width:100%;z-index:1}
-.bootStatusLine{font:9px var(--mono);letter-spacing:.16em;color:#6e777d}.pulseDot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#9aa2a6;margin-right:8px;box-shadow:0 0 10px rgba(200,210,215,.3);animation:dotPulse 1s infinite}
-.bootTitle{font:600 clamp(30px,5vw,58px)/1 var(--mono);letter-spacing:.04em;color:#e5e7e8;margin-top:20px;position:relative;display:inline-block;text-shadow:0 0 24px rgba(210,220,225,.05)}
-.bootTitle.glitching{animation:titleJitter .12s steps(2)}
-.bootTitle.glitching:before,.bootTitle.glitching:after{content:attr(data-text);position:absolute;left:0;top:0;overflow:hidden;clip-path:inset(0 0 45% 0);opacity:.7}
-.bootTitle.glitching:before{transform:translateX(-3px);color:#aeb9bf}.bootTitle.glitching:after{transform:translateX(3px);color:#757e84;clip-path:inset(55% 0 0 0)}
-.bootSubtitle{font:11px var(--mono);color:#5f686e;margin-top:11px}
-.bootHex{font:9px var(--mono);color:#3e464b;letter-spacing:.12em;margin-top:18px;min-height:13px}
-.bootProgressWrap{margin-top:30px;width:min(700px,100%)}.bootProgressMeta{display:flex;justify-content:space-between;font:8px var(--mono);color:#586167;margin-bottom:7px}
-.bootProgress{height:3px;background:#15191c;position:relative;overflow:hidden}.bootProgress i{display:block;width:0;height:100%;background:#aeb5b8;box-shadow:0 0 12px rgba(210,220,225,.2);transition:width .18s linear}.bootProgress b{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 12px,rgba(255,255,255,.18) 12px 13px);animation:progressNoise .45s linear infinite}
-.bootConsole{width:min(780px,100%);height:170px;margin-top:24px;border-top:1px solid #171c20;padding-top:10px;overflow:hidden;font:9px/1.8 var(--mono);color:#50595f;mask-image:linear-gradient(to bottom,black 70%,transparent)}
-.bootLine{white-space:pre;display:block}.bootLine .good{color:#788288}.bootLine .warn{color:#9d8256}.bootLine .fault{color:#8e5757}.bootLine .noise{color:#4a5257}
-.bootAuth{margin-top:20px;width:min(700px,100%);border:1px solid #2b3135;background:rgba(10,13,15,.84);padding:13px}.authLabel{font:8px var(--mono);letter-spacing:.12em;color:#858d92;margin-bottom:10px}.authRow{display:flex;align-items:center}.authPrefix{font:10px var(--mono);color:#555d62;padding:10px 0;margin-right:8px}.authRow input{min-width:0;flex:1;background:#07090a;border:1px solid #2a3034;color:#e3e6e7;padding:10px 11px;outline:none;font:10px var(--mono);letter-spacing:.1em}.authRow input:focus{border-color:#6c7479;box-shadow:0 0 0 1px rgba(160,170,175,.06)}.authRow button{border:1px solid #3b4247;background:#111518;color:#c4c9cb;padding:10px 14px;margin-left:7px;cursor:pointer;font:600 9px var(--mono);letter-spacing:.08em}.authRow button:hover{background:#181d20;border-color:#7b8388}.authHint{font:8px var(--mono);color:#444c51;margin-top:8px}
-.bootFooter{height:32px;flex:none;border-top:1px solid #1d2226;padding:0 22px;display:flex;align-items:center;justify-content:space-between;color:#454d52;font:8px var(--mono);letter-spacing:.08em;background:rgba(5,7,8,.75)}
-.bootFooter span:nth-child(2){color:#6c7479}
-.bootFooter span:nth-child(2):before{content:"● ";color:#8c9499;animation:dotPulse 1.1s infinite}
-@keyframes bootSweep{from{top:-1px}to{top:100%}}@keyframes bootNoise{50%{transform:translate(1.5%,-1%)}}@keyframes logoPulse{50%{box-shadow:0 0 18px rgba(200,210,215,.4)}}@keyframes dotPulse{50%{opacity:.25;transform:scale(.65)}}@keyframes titleJitter{0%{transform:translate(0)}25%{transform:translate(-3px,1px)}50%{transform:translate(3px,-1px)}75%{transform:translate(-1px,0)}100%{transform:translate(0)}}@keyframes progressNoise{to{transform:translateX(13px)}}
-@media(max-width:700px){.bootFrame{width:96vw;height:92vh}.bootHeader{padding:0 15px}.bootTelemetry span:not(:last-child){display:none}.bootCenter{padding:25px 18px}.bootConsole{height:130px}.bootFooter{padding:0 12px;font-size:7px}.bootFooter span:nth-child(2){display:none}.authRow{flex-wrap:wrap}.authPrefix{width:100%;padding-bottom:4px}.authRow input{width:100%;flex:auto}.authRow button{margin-left:0;margin-top:7px;width:100%}}
+/* ===== АДАПТИВ ===== */
+@media(max-width:1000px){.charter-layout{grid-template-columns:190px minmax(0,1fr)}}
+@media(max-width:700px){.charter-app{height:auto;min-height:100vh;grid-template-rows:54px auto 30px}.charter-layout{grid-template-columns:1fr}.charter-sidebar{border-right:0;border-bottom:1px solid var(--line);padding:8px}.charter-nav{display:flex;overflow:auto}.charter-nav button{min-width:max-content;border-left:0;border-bottom:2px solid transparent}.charter-nav button.active{border-left:0;border-bottom-color:#b8bec2}.charter-side-note{display:none}.charter-content{padding:18px 12px 25px}.charter-topmeta{display:none}.charter-head{align-items:flex-start;flex-direction:column}.charter-tools{width:100%;flex-wrap:wrap}.charter-search{flex:1;min-width:180px}.charter-title{font-size:23px}.secret-grid{grid-template-columns:1fr}.site-tabs{justify-content:flex-start;padding:4px 8px}.site-tabs:before{display:none}.site-tab{padding:5px 8px;font-size:8px}}
+@media print{#boot,.charter-topbar,.charter-sidebar,.charter-footer,.charter-tools,.charter-banner{display:none!important}.charter-app{display:block;height:auto;background:#fff;color:#111}.charter-content{overflow:visible;padding:0}.charter-section{break-inside:avoid;color:#111;border:1px solid #999}.charter-body.collapsed{display:block!important}.charter-record-value,.charter-section-title{color:#111}}
 </style>
-<style id="charter-ui">
-.charter-app{position:relative;z-index:10;width:100vw;height:100vh;display:grid;grid-template-rows:54px 42px 1fr 30px;background:linear-gradient(135deg,#060708,#090b0d 55%,#070809)}
-.charter-topbar{border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:rgba(5,6,7,.9);backdrop-filter:blur(8px)}
-.charter-brand{display:flex;align-items:center;gap:10px;color:#e6e8e9;font:700 13px var(--mono);letter-spacing:.06em}.charter-brand small{display:block;color:#656b70;font-size:8px;margin-left:10px;letter-spacing:.12em}.charter-mark{width:11px;height:11px;border:1px solid #aeb5b8;box-shadow:0 0 10px rgba(220,225,230,.22)}
-.charter-topmeta{display:flex;gap:18px;color:#555b60;font:9px var(--mono)}.charter-topmeta b{color:#aeb5b8;font-weight:500}.signal{color:#858b8f}.signal b{color:#aeb5b8}
-</style>
+</head><body>
+<div id="noise"></div><div id="scan"></div><div id="vignette"></div><div id="glitch"></div>
 
-<style id="ru-type-fix">
-body,.app,.modal,.row,.panel,.side,.content{font-family:var(--sans)}
-button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.metric,.footer,.topbar,.boot{font-family:var(--mono)}
-.rowtitle,.paneltitle,h1,h2,h3{font-family:var(--sans);font-weight:600;letter-spacing:-.01em}
-</style>
-</head>
-<body>
-<div id="noise"></div><div class="system-watermark">SPMG-04</div><div id="scan"></div><div id="vignette"></div><div id="glitch"></div>
+<!-- ===== ЗАГРУЗОЧНЫЙ ЭКРАН ===== -->
 <section class="boot" id="boot">
-<canvas id="bootMatrix"></canvas>
-<div class="bootScan"></div>
-<div class="bootNoise"></div>
-<div class="bootVignette"></div>
 <div class="bootFrame">
-<div class="bootCorner tl"></div><div class="bootCorner tr"></div>
-<div class="bootCorner bl"></div><div class="bootCorner br"></div>
 <div class="bootHeader">
-<div class="bootLogo">
-<span class="bootLogoMark"></span>
-<div>
-<div class="bootAgency">TFB // SPMG-04</div>
-<div class="bootSub">SPECIAL PROJECTS MANAGEMENT GROUP</div>
-</div>
-</div>
-<div class="bootTelemetry">
-<span>NODE <b>SPMG-04</b></span>
-<span>YEAR <b>2057</b></span>
-<span id="bootClock">00:00:00</span>
-</div>
+<div class="bootLogo"><span class="bootLogoMark"></span><div><div class="bootAgency">TFB // SPMG-04</div><div class="bootSub">SPECIAL PROJECTS MANAGEMENT GROUP</div></div></div>
+<div class="bootTelemetry"><span>NODE <b>SPMG-04</b></span><span>YEAR <b>2057</b></span><span id="bootClock">00:00:00</span></div>
 </div>
 <div class="bootCenter">
 <div class="bootStatusLine"><span class="pulseDot"></span>ЗАЩИЩЁННЫЙ КОНТУР // ПОДКЛЮЧЕНИЕ</div>
@@ -270,7 +231,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 <div class="bootHex" id="bootHex">7F 04 A9 31 // 00 57 // SPMG</div>
 <div class="bootProgressWrap">
 <div class="bootProgressMeta"><span id="bootStage">ПОДГОТОВКА</span><span id="bootPct">00%</span></div>
-<div class="bootProgress"><i id="bootProgress"></i><b id="bootProgressNoise"></b></div>
+<div class="bootProgress"><i id="bootProgress"></i><b></b></div>
 </div>
 <div class="bootConsole" id="bootConsole"></div>
 <div class="bootAuth hidden" id="codeGate">
@@ -283,21 +244,19 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 <div class="authHint">Сеанс будет привязан к текущему идентификатору узла. Все действия записываются.</div>
 </div>
 </div>
-<div class="bootFooter">
-<span>ВНУТРЕННЯЯ СЕТЬ // ДОСТУП ОГРАНИЧЕН</span>
-<span id="bootFooterStatus">ПРОВЕРКА СИСТЕМЫ</span>
-<span>TFB // SPMG-IV</span>
-</div>
+<div class="bootFooter"><span>ВНУТРЕННЯЯ СЕТЬ // ДОСТУП ОГРАНИЧЕН</span><span id="bootFooterStatus">ПРОВЕРКА СИСТЕМЫ</span><span>TFB // SPMG-IV</span></div>
 </div>
 </section>
 
+<!-- ===== ОСНОВНОЙ ИНТЕРФЕЙС ===== -->
 <div class="charter-app hidden" id="app">
 <header class="charter-topbar">
 <div class="charter-brand"><span class="charter-mark"></span><span>TFB // SPMG-04</span><small>DEPARTMENT CHARTER // INTERNAL ARCHIVE</small></div>
 <div class="charter-topmeta"><span>NODE <b>SPMG-04</b></span><span>SESSION <b id="sessionId">----</b></span><span class="signal">● LINK <b>СТАБИЛЬНО</b></span></div>
 </header>
 
-<nav class="site-tabs" id="siteTabs" aria-label="Разделы портала">
+<!-- ===== НАВИГАЦИЯ (ВПРАВО) ===== -->
+<nav class="site-tabs" id="siteTabs">
 <button class="site-tab active" data-page="page-main">УСТАВ</button>
 <button class="site-tab" data-page="page-patrol">ПАТРУЛИ</button>
 <button class="site-tab" data-page="page-training">ТРЕНИРОВКИ</button>
@@ -312,7 +271,8 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </nav>
 
 <div class="charter-layout">
-<aside class="charter-sidebar">
+<!-- ===== ЛЕВАЯ ПАНЕЛЬ (ТОЛЬКО ДЛЯ УСТАВА) ===== -->
+<aside class="charter-sidebar" id="charterSidebar">
 <div class="charter-label">РЕЕСТР ДОКУМЕНТА</div>
 <nav class="charter-nav" id="charterNav">
 <button data-target="section-1" class="active"><span>01</span> Общие положения<span class="num">OPEN</span></button>
@@ -332,7 +292,10 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 <div class="charter-side-note">УРОВЕНЬ ДОПУСКА: SPMG-IV<br>ДОКУМЕНТ: CHR-SPMG-04<br>СТАТУС: ДЕЙСТВУЕТ<br><br>Несанкционированное распространение внутренних материалов запрещено.</div>
 </aside>
 
+<!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
 <main class="charter-content" id="charterContent">
+
+<!-- ===== СТРАНИЦА: ГЛАВНАЯ (УСТАВ) ===== -->
 <section class="site-page active" id="page-main">
 <div class="charter-head">
 <div>
@@ -346,128 +309,76 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 <button class="charter-tool" id="printCharter">ПЕЧАТЬ</button>
 </div>
 </div>
-
 <div class="charter-banner"><b>[AUTH // SPMG-IV]</b> УЧЁТНЫЕ ДАННЫЕ ПОДТВЕРЖДЕНЫ — ДОСТУП К НОРМАТИВНОМУ АРХИВУ АКТИВЕН <span style="float:right">SESSION: <span id="sessionShort">----</span></span></div>
 
-<div class="secret-zone-head">
-<div><b>RESTRICTED ARCHIVE</b><span>6 СЕКТОРОВ // LEVEL-5</span></div>
-<div>НАЖМИТЕ НА СЕКТОР — ВВЕДИТЕ КЛЮЧ</div>
-</div>
-
+<!-- ===== СЕКРЕТНЫЕ РАЗДЕЛЫ (РАСТЯНУТЫЕ БЛОКИ) ===== -->
+<div class="secret-zone-head"><div><b>RESTRICTED ARCHIVE</b><span>6 СЕКТОРОВ // LEVEL-5</span></div><div>НАЖМИТЕ НА СЕКТОР ДЛЯ ЗАПРОСА КЛЮЧА</div></div>
 <div class="secret-grid" id="secretGrid">
-<button class="secret-card" type="button" data-secret="5"><span class="secret-no">СЕКТОР 05</span><div><div class="secret-title">Секретный раздел 5</div><div class="secret-meta">LEVEL 5 // ЗАШИФРОВАН</div></div><span class="stamp">LOCKED</span></button>
-<button class="secret-card" type="button" data-secret="6"><span class="secret-no">СЕКТОР 06</span><div><div class="secret-title">Секретный раздел 6</div><div class="secret-meta">LEVEL 5 // ЗАШИФРОВАН</div></div><span class="stamp">LOCKED</span></button>
-<button class="secret-card" type="button" data-secret="7"><span class="secret-no">СЕКТОР 07</span><div><div class="secret-title">Секретный раздел 7</div><div class="secret-meta">LEVEL 5 // ЗАШИФРОВАН</div></div><span class="stamp">LOCKED</span></button>
-<button class="secret-card" type="button" data-secret="11"><span class="secret-no">СЕКТОР 11</span><div><div class="secret-title">Секретный раздел 11</div><div class="secret-meta">LEVEL 5 // ЗАШИФРОВАН</div></div><span class="stamp">LOCKED</span></button>
-<button class="secret-card" type="button" data-secret="12"><span class="secret-no">СЕКТОР 12</span><div><div class="secret-title">Секретный раздел 12</div><div class="secret-meta">LEVEL 5 // ЗАШИФРОВАН</div></div><span class="stamp">LOCKED</span></button>
-<button class="secret-card" type="button" data-secret="13"><span class="secret-no">СЕКТОР 13</span><div><div class="secret-title">Секретный раздел 13</div><div class="secret-meta">LEVEL 5 // ЗАШИФРОВАН</div></div><span class="stamp">LOCKED</span></button>
+<button class="secret-card" type="button" data-secret="5"><span class="secret-no">SECTOR 05 // CLASSIFIED</span><div class="secret-title">СЕКТОР-05 // RESTRICTED</div><div class="secret-meta">LEVEL 5 // ENCRYPTED PAYLOAD</div><div class="cipher"><i>▓▒░ X7-5 ░▒▓ 8F-CC 19-ΔA ░▒▓</i></div><span class="stamp">LOCKED</span></button>
+<button class="secret-card" type="button" data-secret="6"><span class="secret-no">SECTOR 06 // CLASSIFIED</span><div class="secret-title">СЕКТОР-06 // RESTRICTED</div><div class="secret-meta">LEVEL 5 // ENCRYPTED PAYLOAD</div><div class="cipher"><i>▓▒░ X7-6 ░▒▓ 8F-CC 19-ΔA ░▒▓</i></div><span class="stamp">LOCKED</span></button>
+<button class="secret-card" type="button" data-secret="7"><span class="secret-no">SECTOR 07 // CLASSIFIED</span><div class="secret-title">СЕКТОР-07 // RESTRICTED</div><div class="secret-meta">LEVEL 5 // ENCRYPTED PAYLOAD</div><div class="cipher"><i>▓▒░ X7-7 ░▒▓ 8F-CC 19-ΔA ░▒▓</i></div><span class="stamp">LOCKED</span></button>
+<button class="secret-card" type="button" data-secret="11"><span class="secret-no">SECTOR 11 // CLASSIFIED</span><div class="secret-title">СЕКТОР-11 // RESTRICTED</div><div class="secret-meta">LEVEL 5 // ENCRYPTED PAYLOAD</div><div class="cipher"><i>▓▒░ X7-11 ░▒▓ 8F-CC 19-ΔA ░▒▓</i></div><span class="stamp">LOCKED</span></button>
+<button class="secret-card" type="button" data-secret="12"><span class="secret-no">SECTOR 12 // CLASSIFIED</span><div class="secret-title">СЕКТОР-12 // RESTRICTED</div><div class="secret-meta">LEVEL 5 // ENCRYPTED PAYLOAD</div><div class="cipher"><i>▓▒░ X7-12 ░▒▓ 8F-CC 19-ΔA ░▒▓</i></div><span class="stamp">LOCKED</span></button>
+<button class="secret-card" type="button" data-secret="13"><span class="secret-no">SECTOR 13 // CLASSIFIED</span><div class="secret-title">СЕКТОР-13 // RESTRICTED</div><div class="secret-meta">LEVEL 5 // ENCRYPTED PAYLOAD</div><div class="cipher"><i>▓▒░ X7-13 ░▒▓ 8F-CC 19-ΔA ░▒▓</i></div><span class="stamp">LOCKED</span></button>
 </div>
 
+<!-- ===== РАЗДЕЛЫ УСТАВА ===== -->
 <div class="charter-grid" id="sections">
-<!-- SECTION 1 -->
 <article id="section-1" class="charter-section">
 <button class="charter-section-head" type="button"><span class="charter-num">01</span><span><span class="charter-section-title">Общие положения</span><span class="charter-section-class">РАЗДЕЛ 01 // INTERNAL</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body">
-<div class="charter-record"><div class="charter-record-label">1.1.</div><div class="charter-record-value">Настоящий устав определяет порядок организации и несения службы сотрудниками отдела SPMG — структурного подразделения в составе TFB корпорации Aurum. Документ является обязательным к исполнению всеми сотрудниками, зачисленными в состав отдела.</div></div>
-<div class="charter-record"><div class="charter-record-label">1.2.</div><div class="charter-record-value">Отдел SPMG является штатным подразделением TFB и подчиняется непосредственно командованию TFB, а также офицерскому составу отдела в рамках их полномочий.</div></div>
-<div class="charter-record"><div class="charter-record-label">1.3.</div><div class="charter-record-value">Настоящий устав разработан в соответствии с Кодексом Внутреннего Распорядка и общим уставом TFB. В случае противоречия настоящего устава Кодексу или общему уставу TFB, приоритет имеют документы высшей юридической силы.</div></div>
-<div class="charter-record"><div class="charter-record-label">1.4.</div><div class="charter-record-value">Изменения и дополнения в настоящий устав вносятся по решению командования TFB или руководства отдела SPMG. Сотрудники оповещаются о внесённых изменениях в установленном порядке.</div></div>
-<div class="charter-record"><div class="charter-record-label">1.5.</div><div class="charter-record-value">Незнание устава не освобождает сотрудника от ответственности за его нарушение.</div></div>
-</div>
-</article>
+<div class="charter-body"><div class="charter-record"><div class="charter-record-label">1.1.</div><div class="charter-record-value">Настоящий устав определяет порядок организации и несения службы сотрудниками отдела SPMG — структурного подразделения в составе TFB корпорации Aurum. Документ является обязательным к исполнению всеми сотрудниками, зачисленными в состав отдела.</div></div><div class="charter-record"><div class="charter-record-label">1.2.</div><div class="charter-record-value">Отдел SPMG является штатным подразделением TFB и подчиняется непосредственно командованию TFB, а также офицерскому составу отдела в рамках их полномочий.</div></div><div class="charter-record"><div class="charter-record-label">1.3.</div><div class="charter-record-value">Настоящий устав разработан в соответствии с Кодексом Внутреннего Распорядка и общим уставом TFB. В случае противоречия настоящего устава Кодексу или общему уставу TFB, приоритет имеют документы высшей юридической силы.</div></div><div class="charter-record"><div class="charter-record-label">1.4.</div><div class="charter-record-value">Изменения и дополнения в настоящий устав вносятся по решению командования TFB или руководства отдела SPMG. Сотрудники оповещаются о внесённых изменениях в установленном порядке.</div></div><div class="charter-record"><div class="charter-record-label">1.5.</div><div class="charter-record-value">Незнание устава не освобождает сотрудника от ответственности за его нарушение.</div></div></div></article>
 
-<!-- SECTION 2 -->
 <article id="section-2" class="charter-section">
 <button class="charter-section-head" type="button"><span class="charter-num">02</span><span><span class="charter-section-title">Права и обязанности</span><span class="charter-section-class">РАЗДЕЛ 02 // INTERNAL</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body">
-<div class="charter-record"><div class="charter-record-label">2.1.</div><div class="charter-record-value"><strong>Сотрудники отдела SPMG имеют право:</strong><br>— на получение полной информации о задачах и целях, поставленных руководством;<br>— на использование служебного снаряжения и вооружения в рамках установленных норм;<br>— на защиту своих прав и законных интересов в порядке, установленном К.В.Р. и уставами Aurum;<br>— на подачу рапортов и обращений к командованию отдела.</div></div>
-<div class="charter-record"><div class="charter-record-label">2.2.</div><div class="charter-record-value"><strong>Сотрудники отдела SPMG обязаны:</strong><br>— соблюдать Кодекс Внутреннего Распорядка, настоящий устав и иные нормативные акты Aurum;<br>— выполнять приказы вышестоящих сотрудников в пределах их компетенции;<br>— поддерживать установленную форму одежды и дисциплину;<br>— не разглашать сведения, составляющие служебную тайну;<br>— посещать мероприятия и выполнять установленную норму времени.</div></div>
-</div>
-</article>
+<div class="charter-body"><div class="charter-record"><div class="charter-record-label">2.1.</div><div class="charter-record-value"><strong>Сотрудники отдела SPMG имеют право:</strong><br/>— на получение полной информации о задачах и целях, поставленных руководством;<br/>— на использование служебного снаряжения и вооружения в рамках установленных норм;<br/>— на защиту своих прав и законных интересов в порядке, установленном К.В.Р. и уставами Aurum;<br/>— на подачу рапортов и обращений к командованию отдела.</div></div><div class="charter-record"><div class="charter-record-label">2.2.</div><div class="charter-record-value"><strong>Сотрудники отдела SPMG обязаны:</strong><br/>— соблюдать Кодекс Внутреннего Распорядка, настоящий устав и иные нормативные акты Aurum;<br/>— выполнять приказы вышестоящих сотрудников в пределах их компетенции;<br/>— поддерживать установленную форму одежды и дисциплину;<br/>— не разглашать сведения, составляющие служебную тайну;<br/>— посещать мероприятия и выполнять установленную норму времени.</div></div></div></article>
 
-<!-- SECTION 3 -->
 <article id="section-3" class="charter-section">
 <button class="charter-section-head" type="button"><span class="charter-num">03</span><span><span class="charter-section-title">Структура отдела</span><span class="charter-section-class">РАЗДЕЛ 03 // INTERNAL</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body">
-<div class="charter-record"><div class="charter-record-label">3.1.</div><div class="charter-record-value">Отдел SPMG является одним из четырёх основных отделов в составе TFB, наряду с отделами «Сыр-Колбасеры», «USEC» и «Упыри».</div></div>
-<div class="charter-record"><div class="charter-record-label">3.2.</div><div class="charter-record-value"><strong>В состав отдела входят:</strong><br>— командование отдела (куратор, 2 заместителя);<br>— основные боевые группы;<br>— элитное подразделение Apple Special Squad (A.S.S.);</div></div>
-<div class="charter-record"><div class="charter-record-label">3.3.</div><div class="charter-record-value">Назначение и освобождение от должностей производится по решению командования отдела и руководства TFB.</div></div>
-<div class="charter-record"><div class="charter-record-label">3.4.</div><div class="charter-record-value">Перевод в другой отдел осуществляется в порядке, установленном общим уставом TFB.</div></div>
-</div>
-</article>
+<div class="charter-body"><div class="charter-record"><div class="charter-record-label">3.1.</div><div class="charter-record-value">Отдел SPMG является одним из четырёх основных отделов в составе TFB, наряду с отделами «Сыр-Колбасеры», «USEC» и «Упыри».</div></div><div class="charter-record"><div class="charter-record-label">3.2.</div><div class="charter-record-value"><strong>В состав отдела входят:</strong><br/>— командование отдела (куратор, 2 заместителя);<br/>— основные боевые группы;<br/>— элитное подразделение Apple Special Squad (A.S.S.);</div></div><div class="charter-record"><div class="charter-record-label">3.3.</div><div class="charter-record-value">Назначение и освобождение от должностей производится по решению командования отдела и руководства TFB.</div></div><div class="charter-record"><div class="charter-record-label">3.4.</div><div class="charter-record-value">Перевод в другой отдел осуществляется в порядке, установленном общим уставом TFB.</div></div></div></article>
 
-<!-- SECTION 4 -->
 <article id="section-4" class="charter-section">
 <button class="charter-section-head" type="button"><span class="charter-num">04</span><span><span class="charter-section-title">Порядок действий</span><span class="charter-section-class">РАЗДЕЛ 04 // INTERNAL</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body">
-<div class="charter-record"><div class="charter-record-label">4.1.</div><div class="charter-record-value"><strong>При выполнении служебных задач сотрудник SPMG обязан руководствоваться:</strong><br>— настоящим уставом;<br>— прямыми приказами командования;<br>— Кодексом Внутреннего Распорядка;<br>— иными нормативными актами Aurum.</div></div>
-<div class="charter-record"><div class="charter-record-label">4.2.</div><div class="charter-record-value">В случае возникновения ситуации, не урегулированной настоящим уставом, сотрудник действует в рамках Кодекса Внутреннего Распорядка и общих приказов командования.</div></div>
-</div>
-</article>
+<div class="charter-body"><div class="charter-record"><div class="charter-record-label">4.1.</div><div class="charter-record-value"><strong>При выполнении служебных задач сотрудник SPMG обязан руководствоваться:</strong><br/>— настоящим уставом;<br/>— прямыми приказами командования;<br/>— Кодексом Внутреннего Распорядка;<br/>— иными нормативными актами Aurum.</div></div><div class="charter-record"><div class="charter-record-label">4.2.</div><div class="charter-record-value">В случае возникновения ситуации, не урегулированной настоящим уставом, сотрудник действует в рамках Кодекса Внутреннего Распорядка и общих приказов командования.</div></div></div></article>
 
-<!-- SECTION 5 — СЕКРЕТНЫЙ (БУДЕТ ОТКРЫВАТЬСЯ ПО ПАРОЛЮ) -->
 <article id="section-5" class="charter-section restricted">
 <button class="charter-section-head" type="button"><span class="charter-num">05</span><span><span class="charter-section-title">Секретный раздел 5</span><span class="charter-section-class">РАЗДЕЛ 05 // RESTRICTED</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-05</span></div></div>
-</article>
+<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-05</span></div></div></article>
 
-<!-- SECTION 6 — СЕКРЕТНЫЙ -->
 <article id="section-6" class="charter-section restricted">
 <button class="charter-section-head" type="button"><span class="charter-num">06</span><span><span class="charter-section-title">Секретный раздел 6</span><span class="charter-section-class">РАЗДЕЛ 06 // RESTRICTED</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-06</span></div></div>
-</article>
+<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-06</span></div></div></article>
 
-<!-- SECTION 7 — СЕКРЕТНЫЙ -->
 <article id="section-7" class="charter-section restricted">
 <button class="charter-section-head" type="button"><span class="charter-num">07</span><span><span class="charter-section-title">Секретный раздел 7</span><span class="charter-section-class">РАЗДЕЛ 07 // RESTRICTED</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-07</span></div></div>
-</article>
+<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-07</span></div></div></article>
 
-<!-- SECTION 8 -->
 <article id="section-8" class="charter-section">
 <button class="charter-section-head" type="button"><span class="charter-num">08</span><span><span class="charter-section-title">Дополнительные сведения</span><span class="charter-section-class">РАЗДЕЛ 08 // INTERNAL</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body">
-<div class="charter-record"><div class="charter-record-label">8.1.</div><div class="charter-record-value"><strong>Сотрудникам SPMG рекомендуется:</strong><br>— поддерживать высокий уровень дисциплины и профессионализма;<br>— следить за новыми версиями устава и обновлениями.</div></div>
-</div>
-</article>
+<div class="charter-body"><div class="charter-record"><div class="charter-record-label">8.1.</div><div class="charter-record-value"><strong>Сотрудникам SPMG рекомендуется:</strong><br/>— поддерживать высокий уровень дисциплины и профессионализма;<br/>— следить за новыми версиями устава и обновлениями.</div></div></div></article>
 
-<!-- SECTION 9 -->
 <article id="section-9" class="charter-section">
 <button class="charter-section-head" type="button"><span class="charter-num">09</span><span><span class="charter-section-title">Примечания</span><span class="charter-section-class">РАЗДЕЛ 09 // INTERNAL</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body">
-<div class="charter-record"><div class="charter-record-label">9.1.</div><div class="charter-record-value">Данный устав является официальным документом отдела SPMG и обязателен к исполнению всеми сотрудниками, зачисленными в состав отдела.</div></div>
-</div>
-</article>
+<div class="charter-body"><div class="charter-record"><div class="charter-record-label">9.1.</div><div class="charter-record-value">Данный устав является официальным документом отдела SPMG и обязателен к исполнению всеми сотрудниками, зачисленными в состав отдела.</div></div></div></article>
 
-<!-- SECTION 10 -->
 <article id="section-10" class="charter-section">
 <button class="charter-section-head" type="button"><span class="charter-num">10</span><span><span class="charter-section-title">Архивация и обновление</span><span class="charter-section-class">РАЗДЕЛ 10 // INTERNAL</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body">
-<div class="charter-record"><div class="charter-record-label">10.1.</div><div class="charter-record-value">Архивные версии устава хранятся у руководства отдела. Актуальной является версия, опубликованная в установленном порядке.</div></div>
-</div>
-</article>
+<div class="charter-body"><div class="charter-record"><div class="charter-record-label">10.1.</div><div class="charter-record-value">Архивные версии устава хранятся у руководства отдела. Актуальной является версия, опубликованная в установленном порядке.</div></div></div></article>
 
-<!-- SECTION 11 — СЕКРЕТНЫЙ -->
 <article id="section-11" class="charter-section restricted">
 <button class="charter-section-head" type="button"><span class="charter-num">11</span><span><span class="charter-section-title">Секретный раздел 11</span><span class="charter-section-class">РАЗДЕЛ 11 // RESTRICTED</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-11</span></div></div>
-</article>
+<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-11</span></div></div></article>
 
-<!-- SECTION 12 — СЕКРЕТНЫЙ -->
 <article id="section-12" class="charter-section restricted">
 <button class="charter-section-head" type="button"><span class="charter-num">12</span><span><span class="charter-section-title">Секретный раздел 12</span><span class="charter-section-class">РАЗДЕЛ 12 // RESTRICTED</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-12</span></div></div>
-</article>
+<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-12</span></div></div></article>
 
-<!-- SECTION 13 — СЕКРЕТНЫЙ -->
 <article id="section-13" class="charter-section restricted">
 <button class="charter-section-head" type="button"><span class="charter-num">13</span><span><span class="charter-section-title">Секретный раздел 13</span><span class="charter-section-class">РАЗДЕЛ 13 // RESTRICTED</span></span><span class="charter-arrow">⌄</span></button>
-<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-13</span></div></div>
-</article>
+<div class="charter-body"><div class="charter-redaction"><div>ДОСТУП ОГРАНИЧЕН</div><div>ТРЕБУЕТСЯ УРОВЕНЬ 5</div><span class="stamp">██████ ████████</span><span class="code">ШИФР: SPMG-13</span></div></div></article>
 </div>
 </section>
 
-<!-- ОСТАЛЬНЫЕ СТРАНИЦЫ -->
+<!-- ===== СТРАНИЦА: ПАТРУЛИ ===== -->
 <section class="site-page" id="page-patrol">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">ПАТРУЛИ</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
 <div class="page-content">
@@ -486,6 +397,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </div>
 </section>
 
+<!-- ===== СТРАНИЦА: ТРЕНИРОВКИ ===== -->
 <section class="site-page" id="page-training">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">ТРЕНИРОВКИ</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
 <div class="page-content">
@@ -503,6 +415,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </div>
 </section>
 
+<!-- ===== СТРАНИЦА: ИВЕНТЫ ===== -->
 <section class="site-page" id="page-events">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">ИВЕНТЫ</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
 <div class="page-content">
@@ -514,6 +427,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </div>
 </section>
 
+<!-- ===== СТРАНИЦА: ОЦЕПЛЕНИЕ ===== -->
 <section class="site-page" id="page-cordon">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">ОЦЕПЛЕНИЕ</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
 <div class="page-content">
@@ -522,7 +436,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </div></div>
 <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Порядок проведения</span></div><div class="block-body">
 <div class="record"><h2 class="record__label">2.1.</h2><p class="record__value">Перед проведением оцепления необходимо <span class="highlight">объявить в Рацию</span> о проведении оцепления сектора или участка.</p></div>
-<div class="record"><h2 class="record__label">2.2.</h2><p class="record__value">На оцеплении <span class="highlight">2 сотрудника Aurum</span> проверяют карточки:</p></div>
+<div class="record"><h2 class="record__label">2.2.</h2><p class="record__value">На оцеплении <span class="highlight">2 сотрудника Aurum</span> проверяют карточки: 1 — входящих в сектор, 2 — выходящих из сектора.</p></div>
 <div class="record"><h2 class="record__label">2.3.</h2><p class="record__value">Задаются вопросы по категории: <span class="highlight">«Причина входа в [место]»</span> (кроме сектора А).</p></div>
 <div class="record"><h2 class="record__label">2.4.</h2><p class="record__value">Без очереди могут пройти <span class="highlight">Сотрудники Aurum</span>.</p></div>
 </div></div>
@@ -530,6 +444,7 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </div>
 </section>
 
+<!-- ===== СТРАНИЦА: ПРАВИЛА DISCORD ===== -->
 <section class="site-page" id="page-rules">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">ПРАВИЛА DISCORD</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
 <div class="page-content">
@@ -543,118 +458,117 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 <div class="record"><h2 class="record__label">2.2.</h2><p class="record__value">Относитесь к друг другу с <span class="highlight">уважением</span>. Как никак, вы товарищи.</p></div>
 <div class="record"><h2 class="record__label">2.3.</h2><p class="record__value">Не стесняйтесь общаться с людьми как своего, так и других отделов. Заводите друзей, знакомых, связи.</p></div>
 <div class="record"><h2 class="record__label">2.4.</h2><p class="record__value">Не орите в ГЧ (можно, если вы никому не мешаете и для рофла), не перебивайте, не разводите конфликт в ГЧ.</p></div>
-<div class="record"><h2 class="record__label">2.5.</h2><p class="record__value"><span class="highlight">Самое важное</span> — не стесняйтесь разговаривать в ГЧ, даже если у вас писклявый/ребячий голос. Вас никто не осуждает. А если кто-то осуждает — его съедят заживо. (Лично <span class="highlight">Сендернас</span>)</p></div>
+<div class="record"><h2 class="record__label">2.5.</h2><p class="record__value"><span class="highlight">Самое важное</span> — не стесняйтесь разговаривать в ГЧ, даже если у вас писклявый/ребячий голос. Вас никто не осуждает. А если кто-то осуждает — его съедят заживо.</p></div>
 </div></div>
 </div>
 </section>
 
+<!-- ===== СТРАНИЦА: НОРМА ===== -->
 <section class="site-page" id="page-norm">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">НОРМА</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
+<div class="record" style="display:block;padding:0;border:none;margin:0;"><div class="record__value" style="display:block;padding:0;margin:0;text-align:center;"><img alt="Норма" src="https://i.imgur.com/SZr2155.jpeg" style="width:100%;max-width:100%;border:1px solid var(--green);border-radius:4px;display:block;height:auto;box-sizing:border-box;margin:0;"/></div></div>
 <div class="page-content">
 <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Норма для Альфы Б</span></div><div class="block-body">
 <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><span class="highlight">Боец:</span> −33% от времени, −25% от МП</p></div>
 <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value"><span class="highlight">Офицер:</span> −33% от времени, −50% от МП</p></div>
-<div class="record"><h2 class="record__label">1.3.</h2><p class="record__value">Округление идёт <span class="highlight">в пользу бойца</span>.</p></div>
-<div class="record"><h2 class="record__label">1.4.</h2><p class="record__value">Таблица интерактивна — её можно просматривать и взаимодействовать с листами. Благодарим <span class="highlight">Витали</span> за предоставленную таблицу.</p></div>
-</div></div>
-<div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Как работает "Обратное АБ"</span></div><div class="block-body">
-<div class="record"><h2 class="record__label">2.1.</h2><p class="record__value">Вы зарабатываете баллы за актив и посещение/проведение МП. Каждую неделю баллы <span class="warn">сбрасываются</span>, поэтому тратить их нужно при первой возможности.</p></div>
-</div></div>
-<div class="section-block"><div class="block-header"><span class="block-number">03</span><span class="block-title">Начисление баллов</span></div><div class="block-body">
-<div class="record"><h2 class="record__label">3.1.</h2><p class="record__value">1 посещение МП — <span class="highlight">1.5 балла</span></p></div>
-<div class="record"><h2 class="record__label">3.2.</h2><p class="record__value">1 проведение МП (любое) в отделе — <span class="highlight">2 балла</span></p></div>
-<div class="record"><h2 class="record__label">3.3.</h2><p class="record__value">1 час игры — <span class="highlight">1 балл</span> (суммируется с МП). Считается время за <span class="warn">день</span>, а не за неделю.</p></div>
-<div class="record"><h2 class="record__label">3.4.</h2><p class="record__value">1 посещение общего МП в Ауруме — <span class="highlight">3 балла</span></p></div>
-<div class="record"><h2 class="record__label">3.5.</h2><p class="record__value">Премия Куратора — выдаётся только Куратором, <span class="highlight">1–15 баллов</span> за раз.</p></div>
-</div></div>
-<div class="section-block"><div class="block-header"><span class="block-number">04</span><span class="block-title">Товары</span></div><div class="block-body">
-<div class="record"><h2 class="record__label">4.1.</h2><p class="record__value"><span class="highlight">Снятие наказания</span> — снимает 1 выговор или 1 страйк. Стоит <span class="highlight">15 баллов</span>.<br><span class="warn">Нельзя снять сразу и страйк, и выговор.</span></p></div>
-<div class="record"><h2 class="record__label">4.2.</h2><p class="record__value"><span class="highlight">Уменьшение нормы</span> — <span class="highlight">20 баллов</span>.<br>Для начального состава: −1 час, −1 МП.<br>Для мл. офицерского состава: −1 час, −1 МП, −1 проведение МП.<br><span class="warn">Действует 1 раз в 2 недели.</span></p></div>
-<div class="record"><h2 class="record__label">4.3.</h2><p class="record__value"><span class="highlight">Досрочное повышение</span> — повышение на 1 звание. Стоит <span class="highlight">25 баллов</span>.<br><span class="warn">Действует только до звания «Капрал»</span>.</p></div>
+<div class="record" style="border-bottom:none;"><h2 class="record__label">1.3.</h2><p class="record__value">Округление идёт <span class="highlight">в пользу бойца</span>.</p></div>
 </div></div>
 </div>
 </section>
 
+<!-- ===== СТРАНИЦА: НАКАЗАНИЯ ===== -->
 <section class="site-page" id="page-punishments">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">НАКАЗАНИЯ</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
 <div class="page-content">
 <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Нарушения</span></div><div class="block-body">
-<div class="record"><h2 class="record__label">1.</h2><p class="record__value">Незнание или несоблюдение ПОВР и правил Virus RP<br><span class="warn">Наказание:</span> 1-2 страйка.</p></div>
-<div class="record"><h2 class="record__label">2.</h2><p class="record__value">Выход из базы без формы (АКА — Морф)<br><span class="warn">Наказание:</span> 1 выговор.</p></div>
-<div class="record"><h2 class="record__label">3.</h2><p class="record__value">Неподчинение, неуважение к Офицерам<br><span class="warn">Наказание:</span> 1 выговор — 1 страйк.</p></div>
-<div class="record"><h2 class="record__label">4.</h2><p class="record__value">Оскорбление своих товарищей<br><span class="warn">Наказание:</span> 1 страйк.</p></div>
-<div class="record"><h2 class="record__label">5.</h2><p class="record__value">Разжигание, поддержка конфликта<br><span class="warn">Наказание:</span> 1 выговор — 2 страйка.</p></div>
-<div class="record"><h2 class="record__label">6.</h2><p class="record__value">Непослушание приказам проводящего<br><span class="warn">Наказание:</span> 1 страйк.</p></div>
-<div class="record"><h2 class="record__label">7.</h2><p class="record__value">Крики, перебивание в ГЧ<br><span class="warn">Наказание:</span> 1 выговор — 1 страйк.</p></div>
+<div class="record"><h2 class="record__label">1.</h2><p class="record__value">Незнание или несоблюдение ПОВР и правил Virus RP<br/><span class="warn">Наказание:</span> 1-2 страйка.</p></div>
+<div class="record"><h2 class="record__label">2.</h2><p class="record__value">Выход из базы без формы (АКА — Морф)<br/><span class="warn">Наказание:</span> 1 выговор.</p></div>
+<div class="record"><h2 class="record__label">3.</h2><p class="record__value">Неподчинение, неуважение к Офицерам<br/><span class="warn">Наказание:</span> 1 выговор — 1 страйк.</p></div>
+<div class="record"><h2 class="record__label">4.</h2><p class="record__value">Оскорбление своих товарищей<br/><span class="warn">Наказание:</span> 1 страйк.</p></div>
+<div class="record"><h2 class="record__label">5.</h2><p class="record__value">Разжигание, поддержка конфликта<br/><span class="warn">Наказание:</span> 1 выговор — 2 страйка.</p></div>
+<div class="record"><h2 class="record__label">6.</h2><p class="record__value">Непослушание приказам проводящего (если приказ не нарушает правил)<br/><span class="warn">Наказание:</span> 1 страйк.</p></div>
+<div class="record"><h2 class="record__label">7.</h2><p class="record__value">Крики, перебивание в ГЧ<br/><span class="warn">Наказание:</span> 1 выговор — 1 страйк.</p></div>
 </div></div>
 <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Отработка</span></div><div class="block-body">
-<div class="record"><h2 class="record__label">1.</h2><p class="record__value"><span class="highlight">Ожидание.</span> Ждать 30 дней без нарушений. Для выговора — <span class="highlight">2 недели</span>.</p></div>
-<div class="record"><h2 class="record__label">2.</h2><p class="record__value"><span class="highlight">Проявление.</span> Показать себя перед вышестоящими.</p></div>
+<div class="record"><h2 class="record__label">1.</h2><p class="record__value"><span class="highlight">Ожидание.</span> Ждать 30 дней (месяц) без нарушений. Если получите ещё одно нарушение — таймер сбросится. Для выговора — <span class="highlight">2 недели</span>.</p></div>
+<div class="record"><h2 class="record__label">2.</h2><p class="record__value"><span class="highlight">Проявление.</span> Показать себя перед вышестоящими отдела — помочь или произвести хорошее впечатление. Нужно постараться.</p></div>
 <div class="record"><h2 class="record__label">3.</h2><p class="record__value"><span class="highlight">Покупка.</span> Накопить валюту отдела и снять страйк.</p></div>
-<div class="record"><h2 class="record__label">4.</h2><p class="record__value"><span class="highlight">Отработка от офицера.</span> Даётся лично офицером.</p></div>
+<div class="record"><h2 class="record__label">4.</h2><p class="record__value"><span class="highlight">Отработка от офицера.</span> Даётся лично офицером в зависимости от вас. Будет сложно отработать.</p></div>
 </div></div>
 </div>
 </section>
 
+<!-- ===== СТРАНИЦА: ОТПУСКА ===== -->
 <section class="site-page" id="page-vacations">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">ОТПУСКА</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
 <div class="page-content">
 <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Правила отпуска</span></div><div class="block-body">
-<div class="record"><h2 class="record__label">1.</h2><p class="record__value">Если вы вступили во фракцию меньше <span class="highlight">2 недель</span> — отпуск <span class="danger">недоступен</span>.</p></div>
-<div class="record"><h2 class="record__label">2.</h2><p class="record__value">Отпуск можно брать только <span class="warn">раз в 2 недели</span>.</p></div>
-<div class="record"><h2 class="record__label">3.</h2><p class="record__value">Отпуск можно брать максимум на <span class="highlight">месяц</span>.</p></div>
-<div class="record"><h2 class="record__label">4.</h2><p class="record__value">Уважительная причина должна быть подтверждена документами.</p></div>
-<div class="record"><h2 class="record__label">5.</h2><p class="record__value">При отпуске более <span class="highlight">25 дней</span> роль снимается.</p></div>
+<div class="record"><h2 class="record__label">1.</h2><p class="record__value">Если вы вступили во фракцию меньше <span class="highlight">2 недель</span> назад — отпуск <span class="danger">недоступен</span>. Исключение — уважительная причина (рассматривается офицерами).</p></div>
+<div class="record"><h2 class="record__label">2.</h2><p class="record__value">Отпуск можно брать только <span class="warn">раз в 2 недели</span>. Исключение — уважительная причина.</p></div>
+<div class="record"><h2 class="record__label">3.</h2><p class="record__value">Отпуск можно брать максимум на <span class="highlight">месяц</span>. Исключение — уважительная причина.</p></div>
+<div class="record"><h2 class="record__label">4.</h2><p class="record__value">Уважительная причина должна быть подтверждена доказательствами: справка из больницы, фото повреждений и т.д.</p></div>
+<div class="record"><h2 class="record__label">5.</h2><p class="record__value">При отпуске более <span class="highlight">25 дней</span>, роль отдела снимается до окончания отпуска (человек числится в таблице активности).</p></div>
 </div></div>
 <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Причины отпуска</span></div><div class="block-body">
-<div class="record"><h2 class="record__label">1.</h2><p class="record__value"><span class="highlight">Выгорание</span> — усталость от игры.</p></div>
+<div class="record"><h2 class="record__label">1.</h2><p class="record__value"><span class="highlight">Выгорание</span> — усталость от игры или эмоциональное выгорание.</p></div>
 <div class="record"><h2 class="record__label">2.</h2><p class="record__value"><span class="highlight">Травмы.</span></p></div>
-<div class="record"><h2 class="record__label">3.</h2><p class="record__value"><span class="highlight">Личная жизнь</span> — семья, случаи в жизни.</p></div>
-<div class="record"><h2 class="record__label">4.</h2><p class="record__value">Иные причины, не входящие в список.</p></div>
+<div class="record"><h2 class="record__label">3.</h2><p class="record__value"><span class="highlight">Личная жизнь</span> — семья, случаи в вашей жизни или семьи.</p></div>
+<div class="record"><h2 class="record__label">4.</h2><p class="record__value">Иные причины, не входящие в список. Главное, чтобы офицеры могли понять и принять вашу причину.</p></div>
 </div></div>
-<div class="section-block"><div class="block-body"><div class="note-box"><strong>📌 Примечание:</strong> Если вы часто брали отпуск, офицеры могут отклонить ваш отпуск.</div></div></div>
+<div class="section-block"><div class="block-body"><div class="note-box"><strong>📌 Примечание:</strong> Если вы часто брали отпуск, офицеры могут отклонить ваш отпуск. Исключение — уважительная причина. Если причина неуважительная — отмена.</div></div></div>
 </div>
 </section>
 
+<!-- ===== СТРАНИЦА: ИСТОРИЯ КУРАТОРОВ ===== -->
 <section class="site-page" id="page-history">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">ИСТОРИЯ КУРАТОРОВ</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
 <div class="page-content">
-<div class="section-block"><div class="block-body">
-<div class="record"><h2 class="record__label">Информация</h2><p class="record__value">[СЮДА БУДЕТ ДОБАВЛЕН ТЕКСТ ОБ ИСТОРИИ КУРАТОРОВ]</p></div>
+<div class="section-block"><div class="block-header"><span class="block-number">◆</span><span class="block-title">Хронология кураторов SPMG</span></div><div class="block-body">
+<div class="record" style="border-bottom:none;"><h2 class="record__label">Архив</h2><p class="record__value">Полная хронология смены кураторов отдела SPMG с момента основания. Данные собраны из архивов TFB и личных записей командования.</p></div>
+</div></div>
+<div class="section-block"><div class="block-header" style="border-left:3px solid var(--amber);"><span class="block-number">01</span><span class="block-title">Старое поколение SPMG (M.P.F.)</span></div><div class="block-body">
+<div class="record"><h2 class="record__label">Слух</h2><p class="record__value"><span class="highlight">08.09.2022</span> — Встал на Куратора и создал SPMG при M.P.F. Основатель отдела.</p></div>
+<div class="record"><h2 class="record__label">Омни</h2><p class="record__value"><span class="highlight">21.12.2022</span> — Встал на Куратора при M.P.F. Продолжил развитие отдела.</p></div>
+<div class="record"><h2 class="record__label">Кенако</h2><p class="record__value"><span class="highlight">05.08.2023</span> — Встал на Куратора при T.F.B., после чего на Капитана и Ординала Альфы.</p></div>
+<div class="record"><h2 class="record__label">Ашка</h2><p class="record__value"><span class="highlight">11.11.2023</span> — Встал на Куратора при T.F.B., после чего и на Капитана.</p></div>
+<div class="record" style="border-bottom:none;"><h2 class="record__label">Лунар</h2><p class="record__value"><span class="highlight">15.11.2024</span> — Встал на Куратора при T.F.B. Р.С., после чего на Капитана, а затем на Канцлера комитета.</p></div>
+</div></div>
+<div class="section-block"><div class="block-header" style="border-left:3px solid var(--cyan);"><span class="block-number">02</span><span class="block-title">Новое поколение SPMG (T.F.B. — Комитет)</span></div><div class="block-body">
+<div class="record"><h2 class="record__label">Андор</h2><p class="record__value"><span class="highlight">21.02.2025</span> — Встал на Куратора при T.F.B. Р.С.</p></div>
+<div class="record"><h2 class="record__label">Сендернас</h2><p class="record__value"><span class="highlight">17.05.2025</span> — Встал на Куратора при T.F.B. Р.С. Харизматичный лидер, заложивший основы нового поколения SPMG.</p></div>
+<div class="record"><h2 class="record__label">Виталий</h2><p class="record__value"><span class="highlight">24.06.2025</span> — Встал на Куратора при T.F.B. Р.С., после чего на Бригадира, а позже на Капитана и Канцлера комитета.</p></div>
+<div class="record" style="border-bottom:none;"><h2 class="record__label">Эндерлок</h2><p class="record__value"><span class="highlight">28.08.2025</span> — Встал на Куратора при T.F.B. Р.С.</p></div>
+</div></div>
+<div class="section-block"><div class="block-header" style="border-left:3px solid var(--green-hot);"><span class="block-number">03</span><span class="block-title">Новейшая история SPMG</span></div><div class="block-body">
+<div class="record"><h2 class="record__label">Сендернас</h2><p class="record__value"><span class="highlight">31.05.2026 — 28.06.2026</span> — Встал на Куратора при новом TFB Aurum. Был хорошим и харизматичным куратором с безумно крутыми идеями, но после выгорания написал ПСЖ. Вернулся с новыми силами и встал на Капитана TFB.</p></div>
+<div class="record"><h2 class="record__label">Весёлый</h2><p class="record__value"><span class="highlight">31.05.2026 — н.в.</span> — Встал на Куратора после Сендернаса, переняв его отдел и дав клятву сделать SPMG лучше.</p></div>
+</div></div>
+<div class="section-block" style="border-color:var(--line-strong);"><div class="block-header" style="border-left:3px solid var(--red);"><span class="block-number">◆</span><span class="block-title">Нынешняя вышка отдела</span></div><div class="block-body">
+<div class="record" style="border-bottom:none;"><h2 class="record__label">Куратор</h2><p class="record__value"><span class="highlight">CCGAKKAUNT</span> — бывший и нынешний Куратор SPMG, вернувшийся спустя три года на пост. При нём благодаря реформам и повышению репутации отдела SPMG зажило новой жизнью и получило хороший актив и бонусы при службе. В отдел стремились попасть перспективные люди, которым желалось попасть в Альфу.</p></div>
 </div></div>
 </div>
 </section>
 
+<!-- ===== СТРАНИЦА: ДОПОЛНИТЕЛЬНО ===== -->
 <section class="site-page" id="page-additional">
 <div class="charter-head"><div><div class="charter-kicker">TFB // SPMG-04 // INTERNAL ARCHIVE</div><h1 class="charter-title">ДОПОЛНИТЕЛЬНО</h1><div class="charter-sub">СЛУЖЕБНЫЙ РАЗДЕЛ // ДОСТУП ПОДТВЕРЖДЁН</div></div></div>
-<div class="page-content">
-<div class="section-block"><div class="block-body">
-<div class="record"><h2 class="record__label">Информация</h2><p class="record__value">[СЮДА БУДЕТ ДОБАВЛЕНА ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ]</p></div>
-</div></div>
-</div>
+<div class="record" style="display:block;padding:0;border:none;margin:0;"><div class="record__value" style="display:block;padding:0;margin:0;text-align:center;"><img alt="Построения" src="https://i.imgur.com/ONPzzK9.png" style="width:100%;max-width:100%;border:1px solid var(--green);border-radius:4px;display:block;height:auto;box-sizing:border-box;margin:0;"/></div></div>
 </section>
 
 </main>
 </div>
 
-<footer class="charter-footer">
-<span>TFB // SPMG INTERNAL OPERATIONS NETWORK</span>
-<span id="footerTime">2057-08-12 // 14:34:47</span>
-<span>AUTH SPMG-IV // SESSION ACTIVE</span>
-</footer>
+<footer class="charter-footer"><span>TFB // SPMG <b>DEPARTMENT CHARTER ARCHIVE</b></span><span id="clock">2057-08-11 // 00:00:00</span><span>AUTH <b>SPMG-IV</b> // SESSION ACTIVE</span></footer>
 </div>
 
-<!-- СЕКРЕТНАЯ МОДАЛКА -->
-<div class="secret-modal-backdrop" id="secretModalBackdrop">
-<div class="secret-modal" id="secretModal">
-<div class="secret-modal-head"><span>ДОСТУП К СЕКТОРУ // ТРЕБУЕТСЯ АВТОРИЗАЦИЯ</span><button class="secret-close" id="secretClose">✕</button></div>
+<!-- ===== СЕКРЕТНАЯ МОДАЛКА ===== -->
+<div class="secret-modal-backdrop" id="secretModal" aria-hidden="true">
+<div class="secret-modal" role="dialog" aria-modal="true" aria-labelledby="secretModalTitle">
+<div class="secret-modal-head"><span>SPMG // RESTRICTED SECTOR // CRYPTOGATE</span><button class="secret-close" id="secretClose" type="button">×</button></div>
 <div class="secret-modal-body">
-<h2 class="secret-modal-title">ВВЕДИТЕ КЛЮЧ ДОСТУПА</h2>
-<p class="secret-modal-copy">Для доступа к зашифрованному сектору введите действующий код доступа.</p>
-<form class="secret-form" id="secretForm">
-<input id="secretInput" type="password" placeholder="ВВЕДИТЕ КОД" autocomplete="off">
-<button type="submit">РАСШИФРОВАТЬ</button>
-</form>
+<h3 class="secret-modal-title" id="secretModalTitle">СЕКРЕТНЫЙ РАЗДЕЛ</h3>
+<p class="secret-modal-copy" id="secretModalCopy">Массив зашифрован. Для запуска дешифратора требуется ключ повышенного допуска.</p>
+<form class="secret-form" id="secretForm"><input id="secretPassword" type="password" autocomplete="off" placeholder="ВВЕДИТЕ КОД ДОПУСКА..."/><button type="submit">ЗАПУСТИТЬ ДЕШИФРАЦИЮ</button></form>
 <div class="secret-message" id="secretMessage"></div>
 <div class="secret-content" id="secretContent"></div>
 </div>
@@ -662,293 +576,228 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 </div>
 
 <script>
-(function() {
-  "use strict";
+(() => {
+'use strict';
 
-  // ============================================================
-  // ЗАГРУЗОЧНЫЙ ЭКРАН
-  // ============================================================
-  const boot = document.getElementById('boot');
-  const app = document.getElementById('app');
-  const bootConsole = document.getElementById('bootConsole');
-  const bootProgress = document.getElementById('bootProgress');
-  const bootPct = document.getElementById('bootPct');
-  const bootStage = document.getElementById('bootStage');
-  const bootTitle = document.getElementById('bootTitle');
-  const bootSubtitle = document.getElementById('bootSubtitle');
-  const bootHex = document.getElementById('bootHex');
-  const bootFooterStatus = document.getElementById('bootFooterStatus');
-  const codeGate = document.getElementById('codeGate');
-  const accessCode = document.getElementById('accessCode');
-  const authorizeBtn = document.getElementById('authorize');
+// ===== ЗАГРУЗЧИК =====
+const boot = document.getElementById('boot');
+const app = document.getElementById('app');
+const input = document.getElementById('accessCode');
+const btn = document.getElementById('authorize');
+const consoleEl = document.getElementById('bootConsole');
+const progress = document.getElementById('bootProgress');
+const pct = document.getElementById('bootPct');
+const stage = document.getElementById('bootStage');
+const title = document.getElementById('bootTitle');
+const subtitle = document.getElementById('bootSubtitle');
+const hex = document.getElementById('bootHex');
+const footerStatus = document.getElementById('bootFooterStatus');
+const codeGate = document.getElementById('codeGate');
 
-  let bootComplete = false;
-  let progress = 0;
+let bootDone = false;
 
-  // ===== КОНСОЛЬНЫЕ СООБЩЕНИЯ =====
-  const bootMessages = [
-    { text: '> ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ...', delay: 300 },
-    { text: '> ПРОВЕРКА АППАРАТНОГО ОБЕСПЕЧЕНИЯ...', delay: 400 },
-    { text: '> ЗАГРУЗКА КРИПТОГРАФИЧЕСКИХ МОДУЛЕЙ...', delay: 350 },
-    { text: '> ПРОВЕРКА ЦЕЛОСТНОСТИ ДАННЫХ...', delay: 300 },
-    { text: '> УСТАНОВКА ЗАЩИЩЁННОГО КАНАЛА...', delay: 400 },
-    { text: '> СИНХРОНИЗАЦИЯ С ЦЕНТРАЛЬНЫМ УЗЛОМ...', delay: 350 },
-    { text: '> ЗАГРУЗКА ПРОФИЛЯ ОПЕРАТОРА...', delay: 300 },
-    { text: '> СИСТЕМА ГОТОВА К РАБОТЕ.', delay: 200 }
-  ];
+const bootLines = [
+  'ЗАГРУЗКА КРИПТОГРАФИЧЕСКИХ МОДУЛЕЙ...',
+  'ПРОВЕРКА ЦЕЛОСТНОСТИ СЕАНСА...',
+  'ИНИЦИАЛИЗАЦИЯ ЗАЩИЩЁННОГО КОНТУРА...',
+  'СИНХРОНИЗАЦИЯ С ЦЕНТРАЛЬНЫМ УЗЛОМ...',
+  'ПРОВЕРКА КАНАЛОВ СВЯЗИ...',
+  'ЗАГРУЗКА ПРОФИЛЯ ОПЕРАТОРА...',
+  'СИСТЕМА ГОТОВА К РАБОТЕ.'
+];
 
-  function addBootLine(text, className = '') {
-    const line = document.createElement('div');
-    line.className = 'bootLine ' + className;
-    line.textContent = text;
-    bootConsole.appendChild(line);
-    bootConsole.scrollTop = bootConsole.scrollHeight;
-  }
+function addBootLine(text) {
+  const line = document.createElement('div');
+  line.className = 'bootLine good';
+  line.textContent = '▸ ' + text;
+  consoleEl.prepend(line);
+  while (consoleEl.children.length > 8) consoleEl.removeChild(consoleEl.lastChild);
+}
 
-  function startBoot() {
-    let msgIndex = 0;
-    let progressInterval;
+function runBoot() {
+  let index = 0;
+  let prog = 0;
 
-    function nextMessage() {
-      if (msgIndex < bootMessages.length) {
-        const msg = bootMessages[msgIndex];
-        addBootLine(msg.text);
-        msgIndex++;
-        const delay = msg.delay + Math.random() * 200;
-        setTimeout(nextMessage, delay);
-      } else {
-        showAuth();
-      }
+  const interval = setInterval(() => {
+    if (index < bootLines.length) {
+      addBootLine(bootLines[index]);
+      index++;
     }
 
-    progressInterval = setInterval(function() {
-      progress += Math.random() * 3 + 1;
-      if (progress > 100) progress = 100;
-      bootProgress.style.width = progress + '%';
-      bootPct.textContent = Math.round(progress) + '%';
+    prog += Math.random() * 4 + 2;
+    if (prog > 100) prog = 100;
+    progress.style.width = prog + '%';
+    pct.textContent = Math.round(prog) + '%';
 
-      const stages = ['ПОДГОТОВКА', 'ЗАГРУЗКА', 'ПРОВЕРКА', 'СИНХРОНИЗАЦИЯ', 'ГОТОВ'];
-      const stageIndex = Math.min(Math.floor(progress / 25), stages.length - 1);
-      bootStage.textContent = stages[stageIndex];
+    const stages = ['ПОДГОТОВКА', 'ЗАГРУЗКА', 'ПРОВЕРКА', 'СИНХРОНИЗАЦИЯ', 'ГОТОВ'];
+    stage.textContent = stages[Math.min(Math.floor(prog / 25), stages.length - 1)];
 
-      if (progress >= 100) {
-        clearInterval(progressInterval);
-        bootFooterStatus.textContent = 'СИСТЕМА ГОТОВА';
-        bootTitle.textContent = 'СИСТЕМА ГОТОВА';
-        bootSubtitle.textContent = 'Ожидание ввода кода доступа';
-        bootHex.textContent = '7F 04 A9 31 // 00 57 // SPMG // READY';
-      }
-    }, 120);
-
-    setTimeout(nextMessage, 500);
-
-    // Часы
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('bootClock').textContent = now.toTimeString().slice(0, 8);
+    if (prog >= 100) {
+      clearInterval(interval);
+      footerStatus.textContent = 'ОЖИДАНИЕ АВТОРИЗАЦИИ';
+      title.textContent = 'СИСТЕМА ГОТОВА';
+      subtitle.textContent = 'Введите код допуска оператора';
+      hex.textContent = '7F 04 A9 31 // 00 57 // SPMG // READY';
+      codeGate.classList.remove('hidden');
+      input.focus();
+      bootDone = true;
     }
-    updateClock();
-    setInterval(updateClock, 1000);
+  }, 180);
+}
+
+function authorize() {
+  const code = input.value.trim().toUpperCase();
+  const valid = ['SPMG-04-2057', 'SPMG-OP-2057', 'SPMG-ADMIN-2057'];
+  if (!valid.includes(code)) {
+    footerStatus.textContent = 'ДОСТУП ОТКЛОНЁН // НЕИЗВЕСТНЫЙ КОД';
+    title.textContent = 'ВЕРИФИКАЦИЯ НЕ ПРОЙДЕНА';
+    subtitle.textContent = 'УЧЁТНАЯ ЗАПИСЬ НЕ РАСПОЗНАНА';
+    input.style.borderColor = '#8e5757';
+    setTimeout(() => input.style.borderColor = '', 600);
+    return;
   }
 
-  function showAuth() {
-    codeGate.classList.remove('hidden');
-    bootComplete = true;
-    accessCode.focus();
-    addBootLine('> ОЖИДАНИЕ ВВОДА КОДА ДОСТУПА...', 'good');
-  }
+  footerStatus.textContent = 'ДОСТУП РАЗРЁШЕН';
+  title.textContent = 'ДОСТУП ПОДТВЕРЖДЁН';
+  subtitle.textContent = 'Стандартный оперативный уровень // SPMG-IV';
+  input.disabled = true;
+  btn.disabled = true;
 
-  function handleAuth() {
-    const code = accessCode.value.trim();
-    if (!code) {
-      accessCode.style.borderColor = '#8e5757';
-      setTimeout(function() { accessCode.style.borderColor = ''; }, 500);
-      return;
-    }
+  setTimeout(() => {
+    boot.classList.add('hidden');
+    app.classList.remove('hidden');
+    const sid = Math.random().toString(36).slice(2, 8).toUpperCase();
+    document.getElementById('sessionId').textContent = sid;
+    document.getElementById('sessionShort').textContent = sid;
+  }, 500);
+}
 
-    if (code.startsWith('SPMG') && code.length >= 10) {
-      addBootLine('> ДОСТУП РАЗРЁШЕН. ЗАПУСК СИСТЕМЫ...', 'good');
-      bootFooterStatus.textContent = 'ДОСТУП РАЗРЁШЕН';
-      bootTitle.textContent = 'ДОСТУП РАЗРЁШЕН';
-      bootSubtitle.textContent = 'Запуск операционной системы...';
-      bootHex.textContent = 'AUTH: ' + code + ' // SPMG-IV // ACCESS GRANTED';
+btn.addEventListener('click', authorize);
+input.addEventListener('keydown', e => { if (e.key === 'Enter') authorize(); });
 
-      setTimeout(function() {
-        boot.classList.add('hidden');
-        app.classList.remove('hidden');
-        const sessionId = code.split('-')[1] || 'USER';
-        document.getElementById('sessionId').textContent = sessionId;
-        document.getElementById('sessionShort').textContent = sessionId;
-        document.getElementById('footerTime').textContent = new Date().toISOString().slice(0,10) + ' // ' + new Date().toTimeString().slice(0,8);
-      }, 800);
+runBoot();
+
+// ===== ЧАСЫ =====
+function updateClock() {
+  const d = new Date();
+  document.getElementById('clock').textContent = '2057-08-11 // ' + d.toLocaleTimeString('ru-RU', { hour12: false });
+  document.getElementById('bootClock').textContent = d.toLocaleTimeString('ru-RU', { hour12: false });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ===== НАВИГАЦИЯ =====
+const tabs = document.querySelectorAll('.site-tab');
+const pages = document.querySelectorAll('.site-page');
+const sidebar = document.getElementById('charterSidebar');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const target = tab.dataset.page;
+    pages.forEach(p => p.classList.remove('active'));
+    document.getElementById(target).classList.add('active');
+    // Скрываем реестр на всех страницах, кроме главной
+    if (target === 'page-main') {
+      sidebar.classList.remove('hidden');
     } else {
-      accessCode.style.borderColor = '#8e5757';
-      addBootLine('> ОШИБКА: НЕВЕРНЫЙ КОД ДОСТУПА', 'fault');
-      bootFooterStatus.textContent = 'ОШИБКА АВТОРИЗАЦИИ';
-      setTimeout(function() {
-        accessCode.style.borderColor = '';
-        accessCode.value = '';
-        accessCode.focus();
-        bootFooterStatus.textContent = 'СИСТЕМА ГОТОВА';
-      }, 1200);
-    }
-  }
-
-  authorizeBtn.addEventListener('click', handleAuth);
-  accessCode.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAuth();
+      sidebar.classList.add('hidden');
     }
   });
+});
 
-  // ===== ГЛИТЧ-ЭФФЕКТ =====
-  function triggerGlitch() {
-    const glitch = document.getElementById('glitch');
-    if (glitch) {
-      glitch.classList.remove('on');
-      void glitch.offsetWidth;
-      glitch.classList.add('on');
-      setTimeout(function() { glitch.classList.remove('on'); }, 200);
+// ===== РАЗВОРАЧИВАНИЕ СЕКЦИЙ УСТАВА =====
+document.querySelectorAll('.charter-section-head').forEach(head => {
+  head.addEventListener('click', () => {
+    const body = head.nextElementSibling;
+    if (body) {
+      body.classList.toggle('collapsed');
+      const arrow = head.querySelector('.charter-arrow');
+      if (arrow) arrow.textContent = body.classList.contains('collapsed') ? '›' : '⌄';
     }
-  }
-  setInterval(function() {
-    if (!bootComplete && Math.random() > 0.85) triggerGlitch();
-  }, 3000);
-
-  // ===== ОСНОВНОЙ ФУНКЦИОНАЛ =====
-  // Вкладки
-  document.querySelectorAll('.site-tab').forEach(function(tab) {
-    tab.addEventListener('click', function() {
-      document.querySelectorAll('.site-tab').forEach(function(t) { t.classList.remove('active'); });
-      this.classList.add('active');
-      var target = this.dataset.page;
-      document.querySelectorAll('.site-page').forEach(function(p) { p.classList.remove('active'); });
-      var targetPage = document.getElementById(target);
-      if (targetPage) targetPage.classList.add('active');
-    });
   });
+});
 
-  // Навигация
-  document.querySelectorAll('.charter-nav button').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.charter-nav button').forEach(function(b) { b.classList.remove('active'); });
-      this.classList.add('active');
-      var target = this.dataset.target;
-      document.querySelectorAll('.charter-section').forEach(function(s) { s.style.display = ''; });
-      document.querySelectorAll('.charter-section').forEach(function(s) {
-        if (s.id !== target) s.style.display = 'none';
-      });
-      var section = document.getElementById(target);
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setTimeout(function() {
-          document.querySelectorAll('.charter-section').forEach(function(s) { s.style.display = ''; });
-        }, 500);
-      }
-    });
+// ===== РАЗВЕРНУТЬ ВСЁ =====
+document.getElementById('expandAll')?.addEventListener('click', function() {
+  const bodies = document.querySelectorAll('.charter-body');
+  const collapsed = Array.from(bodies).some(b => b.classList.contains('collapsed'));
+  bodies.forEach(b => b.classList.toggle('collapsed', collapsed));
+  document.querySelectorAll('.charter-arrow').forEach(a => a.textContent = collapsed ? '⌄' : '›');
+  this.textContent = collapsed ? 'СВЕРНУТЬ' : 'РАЗВЕРНУТЬ';
+});
+
+// ===== ПОИСК =====
+document.getElementById('charterSearch')?.addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  document.querySelectorAll('.charter-section').forEach(s => {
+    s.style.display = !q || s.textContent.toLowerCase().includes(q) ? '' : 'none';
   });
+});
 
-  // Разворачивание секций
-  document.querySelectorAll('.charter-section-head').forEach(function(head) {
-    head.addEventListener('click', function() {
-      var body = this.nextElementSibling;
-      if (body) {
-        body.classList.toggle('collapsed');
-        var arrow = this.querySelector('.charter-arrow');
-        if (arrow) arrow.textContent = body.classList.contains('collapsed') ? '>' : '⌄';
-      }
-    });
+// ===== ПЕЧАТЬ =====
+document.getElementById('printCharter')?.addEventListener('click', () => window.print());
+
+// ===== СЕКРЕТНЫЕ РАЗДЕЛЫ =====
+const secretData = {
+  '5': { pass: 'SPMG-05-2057', body: 'ПРАВДА ЛИ ЧТО В ЛАСЕ ОДНИ ФЕМБОИ?' },
+  '6': { pass: 'SPMG-06-2057', body: 'СЕКРЕТНЫЕ ТАЙНЫ ИНДУСА?' },
+  '7': { pass: 'SPMG-07-2057', body: 'ИСТОРИЯ ПОЯВЛЕНИЯ ЖОПЫ (APPLE SPECIAL SQUAD)' },
+  '11': { pass: 'SPMG-11-2057', body: 'MNE_VESELOYT СНЯЛИ С КУРАТОРКИ ОТДЕЛА SPMG???' },
+  '12': { pass: 'SPMG-12-2057', body: 'ВСЕ ОБ СВО МЕЖДУ ОТДЕЛАМИ' },
+  '13': { pass: 'SPMG-13-2057', body: 'КЕНАКО ЛИДЕР ВСЕМИРНОГО ЗАГОВОРА???' }
+};
+
+const modal = document.getElementById('secretModal');
+const secretForm = document.getElementById('secretForm');
+const secretPwd = document.getElementById('secretPassword');
+const secretMsg = document.getElementById('secretMessage');
+const secretContent = document.getElementById('secretContent');
+let currentSecret = null;
+
+document.querySelectorAll('.secret-card').forEach(card => {
+  card.addEventListener('click', () => {
+    currentSecret = card.dataset.secret;
+    modal.classList.add('open');
+    secretPwd.value = '';
+    secretMsg.textContent = '';
+    secretContent.classList.remove('show');
+    secretContent.textContent = '';
+    setTimeout(() => secretPwd.focus(), 100);
   });
+});
 
-  // Развернуть всё
-  document.getElementById('expandAll').addEventListener('click', function() {
-    document.querySelectorAll('.charter-body').forEach(function(b) { b.classList.remove('collapsed'); });
-    document.querySelectorAll('.charter-arrow').forEach(function(a) { a.textContent = '⌄'; });
-  });
+document.getElementById('secretClose').addEventListener('click', () => modal.classList.remove('open'));
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
 
-  // Поиск
-  var searchInput = document.getElementById('charterSearch');
-  if (searchInput) {
-    searchInput.addEventListener('input', function() {
-      var query = this.value.toLowerCase().trim();
-      document.querySelectorAll('.charter-section').forEach(function(section) {
-        var text = section.textContent.toLowerCase();
-        section.style.display = !query || text.includes(query) ? '' : 'none';
-      });
-    });
+secretForm.addEventListener('submit', e => {
+  e.preventDefault();
+  if (!currentSecret) return;
+  const data = secretData[currentSecret];
+  const code = secretPwd.value.trim().toUpperCase();
+  if (code !== data.pass) {
+    secretMsg.textContent = 'ACCESS DENIED // НЕВЕРНЫЙ КЛЮЧ';
+    secretMsg.className = 'secret-message';
+    return;
   }
+  secretMsg.textContent = 'KEY ACCEPTED // ДЕШИФРАЦИЯ...';
+  secretMsg.className = 'secret-message good';
+  secretContent.textContent = '';
+  secretContent.classList.add('show');
+  const card = document.querySelector(`.secret-card[data-secret="${currentSecret}"]`);
+  if (card) { card.classList.add('unlocked'); card.querySelector('.stamp').textContent = 'OPEN'; }
+  let i = 0;
+  const txt = data.body;
+  const tick = () => {
+    if (i < txt.length) {
+      secretContent.textContent += txt[i++];
+      setTimeout(tick, 20 + Math.random() * 30);
+    }
+  };
+  setTimeout(tick, 300);
+});
 
-  // Печать
-  document.getElementById('printCharter').addEventListener('click', function() { window.print(); });
-
-  // Секретные разделы
-  var secretModalBackdrop = document.getElementById('secretModalBackdrop');
-  var secretClose = document.getElementById('secretClose');
-  var secretForm = document.getElementById('secretForm');
-  var secretInput = document.getElementById('secretInput');
-  var secretMessage = document.getElementById('secretMessage');
-  var secretContent = document.getElementById('secretContent');
-  var secretModal = document.getElementById('secretModal');
-
-  document.querySelectorAll('.secret-card').forEach(function(card) {
-    card.addEventListener('click', function() {
-      var secret = this.dataset.secret;
-      if (this.classList.contains('unlocked')) {
-        secretContent.textContent = this.dataset.content || 'Данные сектора ' + secret + ' доступны.';
-        secretContent.classList.add('show');
-        secretModalBackdrop.classList.add('open');
-        return;
-      }
-      secretModal.dataset.secret = secret;
-      secretMessage.textContent = '';
-      secretContent.classList.remove('show');
-      secretModalBackdrop.classList.add('open');
-      secretInput.value = '';
-      secretInput.focus();
-    });
-  });
-
-  if (secretClose) {
-    secretClose.addEventListener('click', function() { secretModalBackdrop.classList.remove('open'); });
-  }
-  if (secretModalBackdrop) {
-    secretModalBackdrop.addEventListener('click', function(e) {
-      if (e.target === secretModalBackdrop) secretModalBackdrop.classList.remove('open');
-    });
-  }
-  if (secretForm) {
-    secretForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      var code = secretInput.value.trim();
-      var secret = secretModal.dataset.secret;
-
-      if (code === '1234' || code === 'SPMG-05' || code === 'SPMG-06' || code === 'SPMG-07' ||
-          code === 'SPMG-11' || code === 'SPMG-12' || code === 'SPMG-13') {
-        secretMessage.textContent = 'ДОСТУП РАЗРЁШЕН. ДЕШИФРОВКА...';
-        secretMessage.className = 'secret-message good';
-
-        var card = document.querySelector('.secret-card[data-secret="' + secret + '"]');
-        if (card) {
-          card.classList.add('unlocked');
-          card.dataset.content = 'СЕКРЕТНЫЙ РАЗДЕЛ ' + secret + ' // ДОСТУП ПОЛУЧЕН. СОДЕРЖИМОЕ: [ЗАСЕКРЕЧЕННЫЕ ДАННЫЕ ОПЕРАЦИЙ SPMG-IV]';
-        }
-
-        setTimeout(function() {
-          secretContent.textContent = 'СЕКРЕТНЫЙ РАЗДЕЛ ' + secret + ' // ДОСТУП ПОЛУЧЕН. СОДЕРЖИМОЕ: [ЗАСЕКРЕЧЕННЫЕ ДАННЫЕ ОПЕРАЦИЙ SPMG-IV]';
-          secretContent.classList.add('show');
-        }, 600);
-      } else {
-        secretMessage.textContent = 'ОШИБКА: НЕВЕРНЫЙ КОД ДОСТУПА';
-        secretMessage.className = 'secret-message';
-        secretInput.value = '';
-        secretInput.focus();
-      }
-    });
-  }
-
-  // Запуск загрузки
-  setTimeout(startBoot, 300);
 })();
 </script>
 </body>
