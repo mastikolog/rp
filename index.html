@@ -993,58 +993,119 @@ function boot() {
     ["СОСТОЯНИЕ СИСТЕМЫ ........ РАБОТАЕТ","good"]
   ];
 
+  const titles = ["ИНИЦИАЛИЗАЦИЯ","ПРОВЕРКА СИСТЕМЫ","СИНХРОНИЗАЦИЯ","ВЕРИФИКАЦИЯ","ПОДКЛЮЧЕНИЕ","ДОПУСК"];
   const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&@!?№;%*+=-_";
   let i = 0, progressValue = 0, titleBase = "";
+  let isBootComplete = false;
 
-  const corrupt = s => s.split("").map(ch => Math.random()>.08 ? ch : glyphs[Math.floor(Math.random()*glyphs.length)]).join("");
+  const corrupt = s => s.split("").map(ch => Math.random() > .08 ? ch : glyphs[Math.floor(Math.random() * glyphs.length)]).join("");
 
   const titleGlitch = () => {
-    if (!title || !titleBase) return;
+    if (!title || !titleBase || isBootComplete) return;
     title.dataset.text = titleBase;
     title.classList.add("glitching");
     title.textContent = corrupt(titleBase);
-    setTimeout(() => { title.textContent = titleBase; title.classList.remove("glitching"); }, 45+Math.random()*85);
+    setTimeout(() => { 
+      title.textContent = titleBase; 
+      title.classList.remove("glitching"); 
+    }, 45 + Math.random() * 85);
   };
 
   const hexGlitch = () => {
-    hex.textContent = Array.from({length:8}, () => glyphs[Math.floor(Math.random()*glyphs.length)]).join("") +
-      " // "+Math.floor(Math.random()*9999).toString().padStart(4,"0")+" // SPMG-04";
+    if (isBootComplete) return;
+    const chars = Array.from({length: 8}, () => glyphs[Math.floor(Math.random() * glyphs.length)]).join("");
+    const num = Math.floor(Math.random() * 9999).toString().padStart(4, "0");
+    hex.textContent = chars + " // " + num + " // SPMG-04";
   };
 
   const addLine = (text, kind) => {
     const el = document.createElement("span");
     el.className = "bootLine";
-    const prefix = Math.random()<.25 ? "// " : "▸ ";
-    el.innerHTML = prefix + text + (Math.random()<.22 ? ` <span class="noise">${corrupt("["+kind.toUpperCase()+"]")}</span>` : "");
+    const prefix = Math.random() < 0.25 ? "// " : "▸ ";
+    const noise = Math.random() < 0.22 ? ` <span class="noise">${corrupt("[" + kind.toUpperCase() + "]")}</span>` : "";
+    el.innerHTML = prefix + text + noise;
     consoleEl.prepend(el);
-    while(consoleEl.children.length > 8) consoleEl.lastElementChild.remove();
+    while (consoleEl.children.length > 8) consoleEl.lastElementChild.remove();
+  };
+
+  const completeBoot = () => {
+    if (isBootComplete) return;
+    isBootComplete = true;
+    progress.style.width = "100%";
+    pct.textContent = "100%";
+    stage.textContent = "СИСТЕМА ГОТОВА";
+    footerStatus.textContent = "ОЖИДАЕТСЯ АВТОРИЗАЦИЯ";
+    titleBase = "СИСТЕМА ГОТОВА";
+    title.textContent = titleBase;
+    subtitle.textContent = "Введите код допуска оператора";
+    // Показываем поле ввода
+    const gate = document.getElementById('codeGate');
+    if (gate) gate.classList.remove('hidden');
+    // Финальный глитч
+    setTimeout(() => {
+      titleGlitch();
+      hexGlitch();
+      const glitchEl = document.getElementById('glitch');
+      if (glitchEl) {
+        glitchEl.classList.add('on');
+        setTimeout(() => glitchEl.classList.remove('on'), 180);
+      }
+    }, 200);
   };
 
   const tick = () => {
-    if (i >= lines.length) {
-      progressValue = 100; progress.style.width = "100%"; pct.textContent = "100%";
-      stage.textContent = "СИСТЕМА ГОТОВА";
-      footerStatus.textContent = "ОЖИДАЕТСЯ АВТОРИЗАЦИЯ";
-      titleBase = "СИСТЕМА ГОТОВА"; title.textContent = titleBase;
-      subtitle.textContent = "Введите код допуска оператора";
-      setTimeout(() => document.getElementById('codeGate').classList.remove('hidden'), 450);
-      return;
-    }
-    const [text, kind] = lines[i];
-    addLine(text, kind);
-    progressValue = Math.round(((i+1)/lines.length)*94);
-    progress.style.width = progressValue + "%";
-    pct.textContent = String(progressValue).padStart(2,"0") + "%";
-    stage.textContent = text.slice(0,31);
+    if (isBootComplete) return;
+
+    // Обновляем заголовок
+    const titleIdx = Math.min(Math.floor(i / 2), titles.length - 1);
+    titleBase = titles[titleIdx] || titles[titles.length - 1];
+    title.textContent = titleBase;
+    subtitle.textContent = "Подготовка защищённого соединения...";
+    
+    // Обновляем шестнадцатеричный код
     hexGlitch();
-    if (kind === "fault") {
-      document.getElementById('glitch').classList.add('on');
-      setTimeout(() => document.getElementById('glitch').classList.remove('on'), 130);
+
+    // Добавляем строку в консоль
+    if (i < lines.length) {
+      const [text, kind] = lines[i];
+      addLine(text, kind);
+      if (kind === "fault") {
+        const glitchEl = document.getElementById('glitch');
+        if (glitchEl) {
+          glitchEl.classList.add('on');
+          setTimeout(() => glitchEl.classList.remove('on'), 130);
+        }
+      }
     }
+
+    // Обновляем прогресс
+    progressValue = Math.min(Math.round(((i + 1) / lines.length) * 94), 94);
+    progress.style.width = progressValue + "%";
+    pct.textContent = String(progressValue).padStart(2, "0") + "%";
+    stage.textContent = i < lines.length ? lines[i][0].slice(0, 31) : "СИСТЕМА ГОТОВА";
+
     i++;
-    setTimeout(tick, 130+Math.random()*240);
+
+    if (i >= lines.length) {
+      completeBoot();
+    } else {
+      // Случайный глитч заголовка
+      if (Math.random() < 0.3) titleGlitch();
+      setTimeout(tick, 130 + Math.random() * 240);
+    }
   };
+
+  // Запускаем
   tick();
+
+  // Периодический глитч после загрузки
+  setInterval(() => {
+    if (!isBootComplete) {
+      hexGlitch();
+      if (Math.random() < 0.3) titleGlitch();
+    }
+  }, 300);
+}
 }
 
 // ============================================================
