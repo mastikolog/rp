@@ -72,11 +72,6 @@ button{color:inherit}
 h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8e9e9}
 .pageactions{display:flex;gap:7px}.btn{border:1px solid #2a3034;background:#0c0f11;color:#9ba1a5;padding:8px 11px;cursor:pointer;font:500 9px var(--mono);letter-spacing:.08em}.btn:hover{border-color:#596168;color:#eef0f1}
 
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
-.metric{border:1px solid var(--line);background:rgba(12,15,17,.72);padding:12px 13px;min-height:76px}
-.metric .label{font:9px var(--mono);color:#555d62;letter-spacing:.1em}.metric strong{display:block;font:500 19px var(--mono);color:#dfe2e3;margin-top:8px}.metric .sub{font:9px var(--mono);color:#555d62;margin-top:3px}.metric.alert strong{color:#b99a69}
-
-.grid2{display:grid;grid-template-columns:1.35fr .85fr;gap:12px}
 .panel{border:1px solid var(--line);background:rgba(10,13,15,.76);margin-bottom:12px}
 .panelhead{padding:11px 13px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
 .panelhead span:first-child{font:600 9px var(--mono);letter-spacing:.13em;color:#777f84}.panelhead .minor{font:9px var(--mono);color:#444b50}
@@ -86,26 +81,18 @@ h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8
 .rowtitle{margin-top:5px;color:#d9dcdd;font-size:12px;font-weight:500}.rowdesc{margin-top:5px;color:#666e73;font:10px/1.5 var(--mono)}
 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.tag{border:1px solid #292f33;color:#646c71;padding:2px 5px;font:8px var(--mono)}
 .feed{font:9px/1.65 var(--mono)}.feedline{display:grid;grid-template-columns:68px 48px 1fr;gap:7px;padding:7px 11px;border-bottom:1px solid #15191c;color:#666e73}.feedline b{font-weight:400;color:#4d555a}.feedline .type{color:#8a9297}.feedline:hover{background:#0d1012}.feedline strong{font-weight:400;color:#9ba1a5}
-.signalbox{padding:13px;font:9px/1.8 var(--mono);color:#626a6f}.bar{height:3px;background:#1a1e21;margin:4px 0 10px}.bar i{display:block;height:100%;background:#858e93}.bar.amber i{background:#92794d}.bar.red i{background:#7c4747}
 .notice{border:1px solid #342c20;background:rgba(50,40,22,.13);padding:12px;color:#8c795a;font:9px/1.6 var(--mono);margin-bottom:12px}.notice strong{display:block;color:#b69b69;margin-bottom:4px}
 .empty{padding:32px;text-align:center;color:#4b5358;font:10px var(--mono)}
-
 .toast{position:fixed;right:20px;bottom:48px;z-index:130;width:min(380px,calc(100vw - 40px));border:1px solid #30363b;background:#0b0e10;box-shadow:0 15px 50px rgba(0,0,0,.5);padding:12px;transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s}.toast.show{transform:none;opacity:1}.toast .t{font:600 9px var(--mono);color:#aeb4b7;letter-spacing:.1em}.toast .m{font:9px/1.5 var(--mono);color:#697176;margin-top:5px}
 .footer{border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;color:#4f575c;font:8px var(--mono);letter-spacing:.07em;background:#060708}.footer b{font-weight:400;color:#777f84}
 
-@media(max-width:1000px){.layout{grid-template-columns:180px 1fr}.metrics{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
-@media(max-width:700px){body{overflow:auto}.app{height:auto;min-height:100vh;grid-template-rows:54px auto 30px}.layout{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid var(--line);padding:8px}.nav{display:flex;overflow:auto}.nav button{min-width:max-content;border-left:0;border-bottom:2px solid transparent}.nav button.active{border-left:0;border-bottom-color:#aab0b3}.sidebar-note{display:none}.content{padding:18px 12px 25px}.topmeta{display:none}.metrics{grid-template-columns:1fr 1fr}h1{font-size:20px}.pageactions{display:none}}
+@media(max-width:1000px){.layout{grid-template-columns:180px 1fr}}
+@media(max-width:700px){body{overflow:auto}.app{height:auto;min-height:100vh;grid-template-rows:54px auto 30px}.layout{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid var(--line);padding:8px}.nav{display:flex;overflow:auto}.nav button{min-width:max-content;border-left:0;border-bottom:2px solid transparent}.nav button.active{border-left:0;border-bottom-color:#aab0b3}.sidebar-note{display:none}.content{padding:18px 12px 25px}.topmeta{display:none}h1{font-size:20px}.pageactions{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 
-/* ===== КАСТОМНЫЙ СКРОЛЛБАР ===== */
-::-webkit-scrollbar{width:8px;height:8px}
-::-webkit-scrollbar-track{background:var(--bg);border-left:1px solid var(--line)}
-::-webkit-scrollbar-thumb{background:var(--green);border-radius:4px;box-shadow:0 0 15px rgba(0,255,65,0.3)}
-::-webkit-scrollbar-thumb:hover{background:var(--green-hot);box-shadow:0 0 25px rgba(0,255,65,0.5)}
-
-/* ===== УСТАВ (РАЗДЕЛЫ) ===== */
+/* ===== УСТАВ ===== */
 .dossier{display:grid;gap:12px;min-width:0}
-.section{content-visibility:auto;contain-intrinsic-size:150px;overflow:clip;border:1px solid var(--line);background:linear-gradient(135deg,rgba(15,25,37,.93),rgba(8,14,22,.97));opacity:0;transform:translateY(18px);transition:opacity 500ms ease,transform 500ms ease,border-color 0.3s ease,box-shadow 0.3s ease}
+.section{content-visibility:auto;contain-intrinsic-size:150px;overflow:clip;border:1px solid var(--line);background:linear-gradient(135deg,rgba(15,25,37,.93),rgba(8,14,22,.97));opacity:0;transform:translateY(18px);transition:opacity 500ms ease,transform 500ms ease,border-color .3s ease,box-shadow .3s ease}
 .section.in-view{opacity:1;transform:none}
 .section:hover{border-color:rgba(0,255,65,0.35);box-shadow:0 0 8px rgba(0,255,65,0.08),inset 0 0 8px rgba(0,255,65,0.02)}
 .section:hover .section__title{color:var(--green-hot);text-shadow:0 0 15px rgba(0,255,65,0.3)}
@@ -115,9 +102,9 @@ h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8
 .section__toggle{position:relative;display:grid;grid-template-columns:58px minmax(0,1fr) 28px;gap:14px;align-items:center;width:100%;min-height:74px;padding:12px 18px;text-align:left;border:0;background:transparent;cursor:pointer}
 .section__toggle::after{content:"+";color:var(--muted);font-size:22px;text-align:center;transition:transform var(--ease),color var(--ease)}
 .section__toggle[aria-expanded="true"]::after{color:var(--green);transform:rotate(45deg)}
-.section__number{color:var(--cyan);font-family:var(--display,var(--mono));font-size:2rem;font-weight:700;line-height:1}
-.section__title{display:block;color:#a9f3b8;font-family:var(--display,var(--mono));font-size:clamp(1rem,2vw,1.25rem);font-weight:600;line-height:1.1;letter-spacing:.07em;text-transform:uppercase}
-.section__class{display:block;margin-top:5px;color:var(--faint,#485b6b);font-size:8px;letter-spacing:.16em;text-transform:uppercase}
+.section__number{color:var(--cyan);font-family:var(--mono);font-size:2rem;font-weight:700;line-height:1}
+.section__title{display:block;color:#a9f3b8;font-family:var(--mono);font-size:clamp(1rem,2vw,1.25rem);font-weight:600;line-height:1.1;letter-spacing:.07em;text-transform:uppercase}
+.section__class{display:block;margin-top:5px;color:var(--faint);font-size:8px;letter-spacing:.16em;text-transform:uppercase}
 .section__body{display:grid;grid-template-rows:0fr;border-top:0 solid var(--line);transition:grid-template-rows 420ms cubic-bezier(.2,.8,.2,1),border-width var(--ease)}
 .section__body>div{min-height:0;overflow:hidden}
 .section__toggle[aria-expanded="true"]+.section__body{grid-template-rows:1fr;border-top-width:1px}
@@ -128,17 +115,14 @@ h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8
 .record__label{margin:0;color:var(--cyan);font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-align:left}
 .record__value{margin:0;color:var(--muted);text-align:left}
 .record__value strong{color:var(--green);font-weight:600}
-.record__value ul{margin:8px 0 0;padding-left:18px}
-.record__value li{margin:5px 0}
 .section--redacted{border-color:rgba(255,92,92,.22)}
 .section--redacted:hover{border-color:rgba(255,92,92,.44)}
 .section--redacted .section__number,.section--redacted .section__title{color:var(--red)}
 .section--redacted .section__toggle::before{position:absolute;inset:0 auto 0 0;width:3px;content:"";background:var(--red);opacity:.7}
-.section--redacted .section__class{color:rgba(255,92,92,.58)}
 .redaction{position:relative;min-height:230px;padding:28px;overflow:hidden;cursor:not-allowed;background:repeating-linear-gradient(-45deg,rgba(255,92,92,.025)0 7px,transparent 7px 14px),rgba(5,9,14,.74)}
 .redaction::before{position:absolute;inset:0;content:"";background:linear-gradient(90deg,transparent,rgba(255,92,92,.05),transparent);transform:translateX(-100%)}
 .redaction:hover::before{animation:breachScan 1s ease}
-.redaction__stamp{position:absolute;top:50%;left:50%;padding:8px 16px;color:var(--red);border:2px solid currentColor;font-family:var(--display,var(--mono));font-size:clamp(1.2rem,4vw,2.1rem);font-weight:700;letter-spacing:.12em;transform:translate(-50%,-50%) rotate(-4deg);opacity:.86;white-space:nowrap}
+.redaction__stamp{position:absolute;top:50%;left:50%;padding:8px 16px;color:var(--red);border:2px solid currentColor;font-family:var(--mono);font-size:clamp(1.2rem,4vw,2.1rem);font-weight:700;letter-spacing:.12em;transform:translate(-50%,-50%) rotate(-4deg);opacity:.86;white-space:nowrap}
 .redaction__lines{display:grid;gap:11px;opacity:.3}
 .redaction__line{height:13px;background:#020304;box-shadow:0 0 0 1px rgba(255,255,255,.025)}
 .redaction__line:nth-child(2){width:81%}
@@ -153,42 +137,32 @@ h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8
 .section--unlocked .record__label{color:var(--amber);font-size:12px;letter-spacing:.04em}
 @keyframes breachScan{to{transform:translateX(100%)}}
 
-/* ===== ВКЛАДКИ УСТАВА (над контентом) ===== */
+/* ===== ВКЛАДКИ ===== */
 .charter-tabs{display:flex;flex-wrap:wrap;gap:4px;padding:8px 12px;margin:10px 0 14px;border:1px solid var(--line);background:rgba(8,13,21,0.85);backdrop-filter:blur(12px);border-radius:4px;box-shadow:0 0 30px rgba(0,0,0,0.3)}
 .charter-tab{flex:1 1 auto;padding:6px 12px;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border:1px solid transparent;border-radius:3px;transition:all .3s ease;cursor:pointer;background:transparent;text-align:center;min-width:70px}
 .charter-tab:hover{color:var(--green-hot);border-color:rgba(0,255,65,0.25);background:rgba(0,255,65,0.05);text-shadow:0 0 15px rgba(0,255,65,0.2)}
-.charter-tab.active{color:var(--green);border-color:var(--line-strong,rgba(103,245,138,.55));background:rgba(0,255,65,0.08)}
+.charter-tab.active{color:var(--green);border-color:var(--line-strong);background:rgba(0,255,65,0.08)}
 .charter-tab.active:hover{color:var(--green-hot);border-color:var(--green-hot);background:rgba(0,255,65,0.12);box-shadow:0 0 20px rgba(0,255,65,0.1)}
 .charter-page{display:none;animation:pageFade .4s ease}
 .charter-page.active{display:block}
 @keyframes pageFade{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
-</style>
 
-<!-- ===== ВСТАВЛЯЕМ СТИЛИ ДЛЯ ОТСТУПОВ В НОРМЕ ===== -->
-<style>
-/* ===== УВЕЛИЧЕННЫЙ ОТСТУП ДЛЯ ТЕКСТА ===== */
-#page-norm .page-content .section-block .block-body .record .record__label {
-  min-width: 100px;
-  padding-right: 10px;
-}
-#page-norm .page-content .section-block .block-body .record .record__value {
-  padding-left: 10px;
-}
-#page-norm .page-content .section-block .block-body .record .record__value .indent-text {
-  display: block;
-  padding-left: 50px;
-  margin-top: 4px;
-}
-#page-norm .page-content .section-block .block-body .record .record__value .indent-text-sm {
-  display: block;
-  padding-left: 30px;
-  margin-top: 2px;
-  font-size: 13px;
-  color: var(--muted);
-}
-</style>
+.section-block{border:1px solid var(--line);background:linear-gradient(135deg,rgba(15,25,37,.93),rgba(8,14,22,.97));overflow:clip;transition:border-color .3s ease,box-shadow .3s ease;margin-bottom:12px}
+.section-block:hover{border-color:rgba(0,255,65,0.35);box-shadow:0 0 8px rgba(0,255,65,0.08),inset 0 0 8px rgba(0,255,65,0.02)}
+.block-header{display:grid;grid-template-columns:58px minmax(0,1fr);gap:14px;align-items:center;padding:14px 18px;min-height:64px;background:rgba(0,255,65,0.03);border-bottom:1px solid var(--line)}
+.block-number{color:var(--cyan);font-family:var(--mono);font-size:1.6rem;font-weight:700;line-height:1}
+.block-title{color:#a9f3b8;font-family:var(--mono);font-size:clamp(0.95rem,1.8vw,1.15rem);font-weight:600;line-height:1.1;letter-spacing:.07em;text-transform:uppercase}
+.block-body{padding:clamp(16px,2.5vw,28px)}
+.note-box{border-left:2px solid var(--amber);padding:12px 16px;background:rgba(226,182,91,0.06);border-radius:0 4px 4px 0;color:var(--muted);font-size:13px}
+.note-box strong{color:var(--amber)}
+.highlight{color:var(--green-hot);font-weight:700;text-shadow:0 0 10px rgba(0,255,65,0.2)}
+.warn{color:var(--amber);font-weight:600}
+.danger{color:var(--red);font-weight:600}
 
-<style id="boot-overhaul">
+#page-norm .page-content .section-block .block-body .record .record__label{min-width:100px;padding-right:10px}
+#page-norm .page-content .section-block .block-body .record .record__value{padding-left:10px}
+#page-norm .page-content .section-block .block-body .record .record__value .indent-text{display:block;padding-left:50px;margin-top:4px}
+
 .boot{overflow:hidden;background:#020304;color:#d9dddf;isolation:isolate}
 .boot canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.16}
 .bootScan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.018) 3px 4px);mix-blend-mode:screen;opacity:.55}
@@ -224,20 +198,6 @@ h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8
 @keyframes bootSweep{from{top:-1px}to{top:100%}}@keyframes bootNoise{50%{transform:translate(1.5%,-1%)}}@keyframes logoPulse{50%{box-shadow:0 0 18px rgba(200,210,215,.4)}}@keyframes dotPulse{50%{opacity:.25;transform:scale(.65)}}@keyframes titleJitter{0%{transform:translate(0)}25%{transform:translate(-3px,1px)}50%{transform:translate(3px,-1px)}75%{transform:translate(-1px,0)}100%{transform:translate(0)}}@keyframes progressNoise{to{transform:translateX(13px)}}
 @media(max-width:700px){.bootFrame{width:96vw;height:92vh}.bootHeader{padding:0 15px}.bootTelemetry span:not(:last-child){display:none}.bootCenter{padding:25px 18px}.bootConsole{height:130px}.bootFooter{padding:0 12px;font-size:7px}.bootFooter span:nth-child(2){display:none}.authRow{flex-wrap:wrap}.authPrefix{width:100%;padding-bottom:4px}.authRow input{width:100%;flex:auto}.authRow button{margin-left:0;margin-top:7px;width:100%}}
 </style>
-
-<style id="transmission-css">
-.prose{white-space:pre-wrap}
-.transmissionline{position:relative}
-.transmissionline.system{color:#6e777d}
-.transmissionline.secret{color:#b59b67}
-</style>
-
-<style id="ru-type-fix">
-body,.app,.modal,.row,.panel,.side,.content{font-family:var(--sans)}
-button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.metric,.footer,.topbar,.boot{font-family:var(--mono)}
-.rowtitle,.paneltitle,h1,h2,h3{font-family:var(--sans);font-weight:600;letter-spacing:-.01em}
-</style>
-
 </head>
 <body>
 <div id="noise"></div><div id="scan"></div><div id="vignette"></div><div id="glitch"></div>
@@ -245,166 +205,99 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 <!-- ============================================================
      ЗАГРУЗОЧНЫЙ ЭКРАН
      ============================================================ -->
-// ============================================================
-// ЗАГРУЗОЧНЫЙ ЭКРАН
-// ============================================================
-function boot() {
-  const consoleEl = document.getElementById('bootConsole');
-  const title = document.getElementById('bootTitle');
-  const subtitle = document.getElementById('bootSubtitle');
-  const stage = document.getElementById('bootStage');
-  const pct = document.getElementById('bootPct');
-  const progress = document.getElementById('bootProgress');
-  const hex = document.getElementById('bootHex');
-  const footerStatus = document.getElementById('bootFooterStatus');
+<section class="boot" id="boot">
+  <canvas id="bootMatrix"></canvas>
+  <div class="bootScan"></div>
+  <div class="bootNoise"></div>
+  <div class="bootVignette"></div>
+  <div class="bootFrame">
+    <div class="bootCorner tl"></div><div class="bootCorner tr"></div>
+    <div class="bootCorner bl"></div><div class="bootCorner br"></div>
 
-  const lines = [
-    ["ПОДГОТОВКА ЗАЩИЩЁННОГО КОНТУРА","good"],
-    ["ПРОВЕРКА ЦЕЛОСТНОСТИ СЕАНСА","good"],
-    ["СВЕРКА ИДЕНТИФИКАТОРА // SPMG-04","good"],
-    ["ПРОВЕРКА ЛОКАЛЬНОГО ХРАНИЛИЩА","good"],
-    ["СИНХРОНИЗАЦИЯ ОПЕРАТИВНОГО АРХИВА","good"],
-    ["ПРОВЕРКА КАНАЛОВ СВЯЗИ","good"],
-    ["NODE-03 ................. СОСТОЯНИЕ: НЕСТАБИЛЬНО","warn"],
-    ["NODE-05 ................. ОТКЛЮЧЕН","fault"],
-    ["ПОВТОРНАЯ ПРОВЕРКА МАРШРУТОВ","good"],
-    ["ПРОВЕРКА КЛЮЧЕЙ СЕАНСА","good"],
-    ["СОСТОЯНИЕ СИСТЕМЫ ........ РАБОТАЕТ","good"]
-  ];
+    <div class="bootHeader">
+      <div class="bootLogo">
+        <span class="bootLogoMark"></span>
+        <div>
+          <div class="bootAgency">TFB // SPMG-04</div>
+          <div class="bootSub">SPECIAL PROJECTS MANAGEMENT GROUP</div>
+        </div>
+      </div>
+      <div class="bootTelemetry">
+        <span>NODE <b>SPMG-04</b></span>
+        <span>YEAR <b>2057</b></span>
+        <span id="bootClock">00:00:00</span>
+      </div>
+    </div>
 
-  const titles = ["ИНИЦИАЛИЗАЦИЯ","ПРОВЕРКА СИСТЕМЫ","СИНХРОНИЗАЦИЯ","ВЕРИФИКАЦИЯ","ПОДКЛЮЧЕНИЕ","ДОПУСК"];
-  const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&@!?№;%*+=-_";
-  
-  let step = 0;
-  let progressValue = 0;
-  let titleBase = "";
-  let isBootComplete = false;
-  let tickTimeout = null;
+    <div class="bootCenter">
+      <div class="bootStatusLine"><span class="pulseDot"></span>ЗАЩИЩЁННЫЙ КОНТУР // ПОДКЛЮЧЕНИЕ</div>
+      <div class="bootTitle" id="bootTitle">ИНИЦИАЛИЗАЦИЯ</div>
+      <div class="bootSubtitle" id="bootSubtitle">Подготовка защищённого соединения</div>
+      <div class="bootHex" id="bootHex">7F 04 A9 31 // 00 57 // SPMG</div>
 
-  const corrupt = (s) => {
-    return s.split("").map(ch => {
-      if (ch === " " || Math.random() > 0.08) return ch;
-      return glyphs[Math.floor(Math.random() * glyphs.length)];
-    }).join("");
-  };
+      <div class="bootProgressWrap">
+        <div class="bootProgressMeta"><span id="bootStage">ПОДГОТОВКА</span><span id="bootPct">00%</span></div>
+        <div class="bootProgress"><i id="bootProgress"></i><b id="bootProgressNoise"></b></div>
+      </div>
 
-  const titleGlitch = () => {
-    if (!title || !titleBase || isBootComplete) return;
-    title.dataset.text = titleBase;
-    title.classList.add("glitching");
-    title.textContent = corrupt(titleBase);
-    setTimeout(() => {
-      if (!isBootComplete) {
-        title.textContent = titleBase;
-        title.classList.remove("glitching");
-      }
-    }, 45 + Math.random() * 85);
-  };
+      <div class="bootConsole" id="bootConsole"></div>
 
-  const hexGlitch = () => {
-    if (isBootComplete) return;
-    const chars = Array.from({length: 8}, () => glyphs[Math.floor(Math.random() * glyphs.length)]).join("");
-    const num = Math.floor(Math.random() * 9999).toString().padStart(4, "0");
-    hex.textContent = chars + " // " + num + " // SPMG-04";
-  };
+      <div class="bootAuth hidden" id="codeGate">
+        <div class="authLabel">ТРЕБУЕТСЯ ПОДТВЕРЖДЕНИЕ ОПЕРАТОРА</div>
+        <div class="authRow">
+          <div class="authPrefix">SPMG-04 //</div>
+          <input id="accessCode" autocomplete="off" spellcheck="false" placeholder="ВВЕДИТЕ КОД ДОПУСКА">
+          <button id="authorize">ПОДТВЕРДИТЬ</button>
+        </div>
+        <div class="authHint">Коды доступа: <b>afrrwtbt-2</b> // оператор &nbsp; <b>SPMG-ADMIN-2057</b> // администратор</div>
+      </div>
+    </div>
 
-  const addLine = (text, kind) => {
-    const el = document.createElement("span");
-    el.className = "bootLine";
-    const prefix = Math.random() < 0.25 ? "// " : "▸ ";
-    const noise = Math.random() < 0.22 ? ` <span class="noise">${corrupt("[" + kind.toUpperCase() + "]")}</span>` : "";
-    el.innerHTML = prefix + text + noise;
-    consoleEl.prepend(el);
-    while (consoleEl.children.length > 8) consoleEl.lastElementChild.remove();
-  };
+    <div class="bootFooter">
+      <span>ВНУТРЕННЯЯ СЕТЬ // ДОСТУП ОГРАНИЧЕН</span>
+      <span id="bootFooterStatus">ПРОВЕРКА СИСТЕМЫ</span>
+      <span>TFB // SPMG-IV</span>
+    </div>
+  </div>
+</section>
 
-  const completeBoot = () => {
-    if (isBootComplete) return;
-    isBootComplete = true;
-    
-    if (tickTimeout) {
-      clearTimeout(tickTimeout);
-      tickTimeout = null;
-    }
+<!-- ============================================================
+     ОСНОВНОЙ САЙТ
+     ============================================================ -->
+<div class="app hidden" id="app">
+<header class="topbar">
+  <div class="brand"><span class="mark"></span><span>TFB // SPMG</span><small>SPECIAL PROJECTS MANAGEMENT GROUP</small></div>
+  <div class="topmeta"><span>NODE <b>SPMG-04</b></span><span>SESSION <b id="sessionId">----</b></span><span class="signal">● LINK <b>СТАБИЛЬНО</b></span></div>
+</header>
 
-    progress.style.width = "100%";
-    pct.textContent = "100%";
-    stage.textContent = "СИСТЕМА ГОТОВА";
-    footerStatus.textContent = "ОЖИДАЕТСЯ АВТОРИЗАЦИЯ";
-    titleBase = "СИСТЕМА ГОТОВА";
-    title.textContent = titleBase;
-    subtitle.textContent = "Введите код допуска оператора";
+<div class="layout">
+<aside class="sidebar">
+  <div class="navlabel">НАВИГАЦИЯ</div>
+  <nav class="nav" id="nav">
+    <button class="active" data-page="charter">УСТАВ <span class="count">01</span></button>
+    <button data-page="patrol">ПАТРУЛИ <span class="count">02</span></button>
+    <button data-page="training">ТРЕНИРОВКИ <span class="count">03</span></button>
+    <button data-page="events">ИВЕНТЫ <span class="count">04</span></button>
+    <button data-page="cordon">ОЦЕПЛЕНИЕ <span class="count">05</span></button>
+    <button data-page="rules">ПРАВИЛА ДИСКОРД <span class="count">06</span></button>
+    <button data-page="norm">НОРМА <span class="count">07</span></button>
+    <button data-page="punishments">НАКАЗАНИЯ <span class="count">08</span></button>
+    <button data-page="vacations">ОТПУСКА <span class="count">09</span></button>
+    <button data-page="history">ИСТОРИЯ КУРАТОРОВ <span class="count">10</span></button>
+    <button data-page="additional">ДОПОЛНИТЕЛЬНО <span class="count">11</span></button>
+  </nav>
+  <div class="sidebar-note">
+    УРОВЕНЬ ДОПУСКА: SPMG-IV<br>
+    СИСТЕМА: АКТИВНА<br><br>
+    Несанкционированное распространение внутренних материалов запрещено.
+  </div>
+</aside>
 
-    const gate = document.getElementById('codeGate');
-    if (gate) gate.classList.remove('hidden');
+<main class="content" id="content"></main>
+</div>
 
-    // Финальный глитч
-    setTimeout(() => {
-      const glitchEl = document.getElementById('glitch');
-      if (glitchEl) {
-        glitchEl.classList.add('on');
-        setTimeout(() => glitchEl.classList.remove('on'), 180);
-      }
-      titleGlitch();
-      hexGlitch();
-    }, 200);
-  };
-
-  const tick = () => {
-    if (isBootComplete) return;
-
-    // Обновляем заголовок
-    const titleIdx = Math.min(Math.floor(step / 2), titles.length - 1);
-    titleBase = titles[titleIdx] || titles[titles.length - 1];
-    title.textContent = titleBase;
-
-    // Обновляем шестнадцатеричный код
-    hexGlitch();
-
-    // Добавляем строку в консоль
-    if (step < lines.length) {
-      const [text, kind] = lines[step];
-      addLine(text, kind);
-      if (kind === "fault") {
-        const glitchEl = document.getElementById('glitch');
-        if (glitchEl) {
-          glitchEl.classList.add('on');
-          setTimeout(() => glitchEl.classList.remove('on'), 130);
-        }
-      }
-    }
-
-    // Обновляем прогресс
-    progressValue = Math.min(Math.round(((step + 1) / lines.length) * 94), 94);
-    progress.style.width = progressValue + "%";
-    pct.textContent = String(progressValue).padStart(2, "0") + "%";
-    stage.textContent = step < lines.length ? lines[step][0].slice(0, 31) : "СИСТЕМА ГОТОВА";
-
-    step++;
-
-    // Проверяем завершение
-    if (step >= lines.length) {
-      completeBoot();
-    } else {
-      // Случайный глитч заголовка
-      if (Math.random() < 0.3) titleGlitch();
-      tickTimeout = setTimeout(tick, 130 + Math.random() * 240);
-    }
-  };
-
-  // Запускаем
-  tick();
-
-  // Периодический глитч во время загрузки
-  const glitchInterval = setInterval(() => {
-    if (isBootComplete) {
-      clearInterval(glitchInterval);
-      return;
-    }
-    hexGlitch();
-    if (Math.random() < 0.3) titleGlitch();
-  }, 300);
-}
+<footer class="footer"><span>TFB // SPMG <b>INTERNAL OPERATIONS NETWORK</b></span><span id="clock">2057-08-11 // 00:00:00</span><span>AUTH <b>SPMG-IV</b> // SESSION ACTIVE</span></footer>
+</div>
 
 <!-- ============================================================
      TOAST (уведомления)
@@ -412,11 +305,14 @@ function boot() {
 <div class="toast" id="toast"><div class="t" id="toastTitle"></div><div class="m" id="toastMsg"></div></div>
 
 <script>
-(() => {
+// ============================================================
+// ВСЕ ФУНКЦИИ В ОДНОМ МЕСТЕ
+// ============================================================
+(function() {
 "use strict";
 
 // ============================================================
-// ПЕРЕМЕННЫЕ И СОСТОЯНИЕ
+// ПЕРЕМЕННЫЕ
 // ============================================================
 let audioCtx = null;
 let soundEnabled = true;
@@ -451,35 +347,23 @@ function playErrorSound() { playBeep(180, 0.18, 0.04); }
 function playClickSound() { playBeep(560, 0.03, 0.025); }
 
 // ============================================================
-// ЛОГ ДЕЙСТВИЙ
+// ЛОГ
 // ============================================================
 let actionLog = [];
-const actionLogEl = document.getElementById('actionLog');
 
 function addLog(message, type = '') {
   const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   actionLog.unshift({ time, message, type });
   if (actionLog.length > 50) actionLog.pop();
-  // сохраняем в localStorage
   try { localStorage.setItem('spmg_action_log', JSON.stringify(actionLog)); } catch(_) {}
-  renderLog();
-}
-
-function renderLog() {
-  // Лог выводится в консоль для отладки, либо можно добавить элемент в интерфейс
-  // Для простоты — логируем в консоль браузера
-  // Если нужно отображать на странице, можно добавить блок
 }
 
 // ============================================================
-// ДАННЫЕ УСТАВА (РАЗДЕЛЫ 1-13)
+// ДАННЫЕ УСТАВА
 // ============================================================
 const charterSections = [
   {
-    id: 'section-1',
-    number: '01',
-    title: 'Общие положения',
-    class: 'РАЗДЕЛ 1',
+    id: 'section-1', number: '01', title: 'Общие положения', class: 'РАЗДЕЛ 1',
     records: [
       { label: '1.1.', value: 'Настоящий устав определяет порядок организации и несения службы сотрудниками отдела SPMG — структурного подразделения в составе TFB корпорации Aurum. Документ является обязательным к исполнению всеми сотрудниками, зачисленными в состав отдела.' },
       { label: '1.2.', value: 'Отдел SPMG является штатным подразделением TFB и подчиняется непосредственно командованию TFB, а также офицерскому составу отдела в рамках их полномочий.' },
@@ -489,20 +373,14 @@ const charterSections = [
     ]
   },
   {
-    id: 'section-2',
-    number: '02',
-    title: 'Права и обязанности',
-    class: 'РАЗДЕЛ 2',
+    id: 'section-2', number: '02', title: 'Права и обязанности', class: 'РАЗДЕЛ 2',
     records: [
       { label: '2.1.', value: '<strong>Сотрудники отдела SPMG имеют право:</strong><br>— на получение полной информации о задачах и целях, поставленных руководством;<br>— на использование служебного снаряжения и вооружения в рамках установленных норм;<br>— на защиту своих прав и законных интересов в порядке, установленном К.В.Р. и уставами Aurum;<br>— на подачу рапортов и обращений к командованию отдела.' },
       { label: '2.2.', value: '<strong>Сотрудники отдела SPMG обязаны:</strong><br>— соблюдать Кодекс Внутреннего Распорядка, настоящий устав и иные нормативные акты Aurum;<br>— выполнять приказы вышестоящих сотрудников в пределах их компетенции;<br>— поддерживать установленную форму одежды и дисциплину;<br>— не разглашать сведения, составляющие служебную тайну;<br>— посещать мероприятия и выполнять установленную норму времени.' }
     ]
   },
   {
-    id: 'section-3',
-    number: '03',
-    title: 'Структура отдела',
-    class: 'РАЗДЕЛ 3',
+    id: 'section-3', number: '03', title: 'Структура отдела', class: 'РАЗДЕЛ 3',
     records: [
       { label: '3.1.', value: 'Отдел SPMG является одним из четырёх основных отделов в составе TFB, наряду с отделами «Сыр-Колбасеры», «USEC» и «Упыри».' },
       { label: '3.2.', value: '<strong>В состав отдела входят:</strong><br>— командование отдела (куратор, 2 заместителя);<br>— основные боевые группы;<br>— элитное подразделение Apple Special Squad (A.S.S.);' },
@@ -511,53 +389,38 @@ const charterSections = [
     ]
   },
   {
-    id: 'section-4',
-    number: '04',
-    title: 'Порядок действий',
-    class: 'РАЗДЕЛ 4',
+    id: 'section-4', number: '04', title: 'Порядок действий', class: 'РАЗДЕЛ 4',
     records: [
       { label: '4.1.', value: '<strong>При выполнении служебных задач сотрудник SPMG обязан руководствоваться:</strong><br>— настоящим уставом;<br>— прямыми приказами командования;<br>— Кодексом Внутреннего Распорядка;<br>— иными нормативными актами Aurum.' },
       { label: '4.2.', value: 'В случае возникновения ситуации, не урегулированной настоящим уставом, сотрудник действует в рамках Кодекса Внутреннего Распорядка и общих приказов командования.' }
     ]
   },
-  // Разделы 5-7 — секретные (redacted)
   { id: 'section-5', number: '05', title: 'Секретный раздел 5', class: 'ДОСТУП ОГРАНИЧЕН | ТРЕБУЕТСЯ УРОВЕНЬ 5', redacted: true },
   { id: 'section-6', number: '06', title: 'Секретный раздел 6', class: 'ДОСТУП ОГРАНИЧЕН | ТРЕБУЕТСЯ УРОВЕНЬ 5', redacted: true },
   { id: 'section-7', number: '07', title: 'Секретный раздел 7', class: 'ДОСТУП ОГРАНИЧЕН | ТРЕБУЕТСЯ УРОВЕНЬ 5', redacted: true },
   {
-    id: 'section-8',
-    number: '08',
-    title: 'Дополнительные сведения',
-    class: 'РАЗДЕЛ 8',
+    id: 'section-8', number: '08', title: 'Дополнительные сведения', class: 'РАЗДЕЛ 8',
     records: [
       { label: '8.1.', value: '<strong>Сотрудникам SPMG рекомендуется:</strong><br>— поддерживать высокий уровень дисциплины и профессионализма;<br>— следить за новыми версиями устава и обновлениями.' }
     ]
   },
   {
-    id: 'section-9',
-    number: '09',
-    title: 'Примечания',
-    class: 'РАЗДЕЛ 9',
+    id: 'section-9', number: '09', title: 'Примечания', class: 'РАЗДЕЛ 9',
     records: [
       { label: '9.1.', value: 'Данный устав является официальным документом отдела SPMG и обязателен к исполнению всеми сотрудниками, зачисленными в состав отдела.' }
     ]
   },
   {
-    id: 'section-10',
-    number: '10',
-    title: 'Архивация и обновление',
-    class: 'РАЗДЕЛ 10',
+    id: 'section-10', number: '10', title: 'Архивация и обновление', class: 'РАЗДЕЛ 10',
     records: [
       { label: '10.1.', value: 'Архивные версии устава хранятся у руководства отдела. Актуальной является версия, опубликованная в установленном порядке.' }
     ]
   },
-  // Разделы 11-13 — секретные (redacted)
   { id: 'section-11', number: '11', title: 'Секретный раздел 11', class: 'ДОСТУП ОГРАНИЧЕН | ТРЕБУЕТСЯ УРОВЕНЬ 5', redacted: true },
   { id: 'section-12', number: '12', title: 'Секретный раздел 12', class: 'ДОСТУП ОГРАНИЧЕН | ТРЕБУЕТСЯ УРОВЕНЬ 5', redacted: true },
   { id: 'section-13', number: '13', title: 'Секретный раздел 13', class: 'ДОСТУП ОГРАНИЧЕН | ТРЕБУЕТСЯ УРОВЕНЬ 5', redacted: true }
 ];
 
-// Секретный контент для разблокировки
 const secretContent = {
   'section-5': 'ПРАВДА ЛИ ЧТО В ЛАСЕ ОДНИ ФЕМБОИ?',
   'section-6': 'СЕКРЕТНЫЕ ТАЙНЫ ИНДУСА?',
@@ -578,7 +441,7 @@ function renderCharter() {
         <button class="btn" id="searchToggle">🔍 ПОИСК</button>
       </div>
     </div>
-    <div id="searchContainer" style="margin-bottom: 16px; display: none;">
+    <div id="searchContainer" style="margin-bottom:16px;display:none;">
       <input id="searchInput" type="text" placeholder="ПОИСК ПО УСТАВУ..." style="width:100%;padding:10px;background:#07090a;border:1px solid var(--line);color:var(--text);font-family:var(--mono);outline:none;">
     </div>
     <div class="dossier" id="dossier">
@@ -615,14 +478,13 @@ function renderCharter() {
       html += `</div>`;
     }
 
-    html += `</div></div>`;
-    html += `</article>`;
+    html += `</div></div></article>`;
   });
 
   html += `</div>`;
   document.getElementById('content').innerHTML = html;
 
-  // Обработчики для поиска
+  // Поиск
   const searchToggle = document.getElementById('searchToggle');
   const searchContainer = document.getElementById('searchContainer');
   const searchInput = document.getElementById('searchInput');
@@ -653,7 +515,7 @@ function renderCharter() {
     });
   }
 
-  // Обработчики для секций
+  // Обработчики
   document.querySelectorAll('.section__toggle').forEach(btn => {
     btn.addEventListener('click', function(e) {
       const section = this.closest('.section');
@@ -672,22 +534,14 @@ function renderCharter() {
     });
   });
 
-  // Обработчики для redaction (клик по закрытому разделу)
   document.querySelectorAll('.redaction').forEach(el => {
     el.addEventListener('click', function() {
       const sectionId = this.dataset.section;
       if (sectionId) openAccessModal(sectionId);
     });
-    el.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const sectionId = this.dataset.section;
-        if (sectionId) openAccessModal(sectionId);
-      }
-    });
   });
 
-  // Анимация появления разделов
+  // Анимация
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -697,18 +551,10 @@ function renderCharter() {
     });
   }, { rootMargin: '100px 0px', threshold: 0.04 });
   document.querySelectorAll('.section').forEach(s => observer.observe(s));
-
-  // Навигация по боковому меню
-  document.querySelectorAll('.nav button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    });
-  });
 }
 
 // ============================================================
-// МОДАЛЬНОЕ ОКНО ДЛЯ ПАРОЛЯ
+// МОДАЛЬНОЕ ОКНО
 // ============================================================
 function openAccessModal(sectionId) {
   const overlay = document.createElement('div');
@@ -741,8 +587,7 @@ function openAccessModal(sectionId) {
       playSuccessSound();
       addLog(`РАЗБЛОКИРОВАН РАЗДЕЛ: ${sectionId}`, 'success');
       overlay.remove();
-      renderCharter(); // Перерисовываем устав
-      // Открываем все секции
+      renderCharter();
       document.querySelectorAll('.section__toggle').forEach(b => b.setAttribute('aria-expanded', 'true'));
     } else {
       attemptCount++;
@@ -780,39 +625,37 @@ function openAccessModal(sectionId) {
 }
 
 // ============================================================
-// СТРАНИЦЫ (ПАТРУЛИ, ТРЕНИРОВКИ, ИВЕНТЫ, ОЦЕПЛЕНИЕ, ПРАВИЛА ДИСКОРД, НАКАЗАНИЯ, ОТПУСКА)
+// СТРАНИЦЫ
 // ============================================================
 function renderPage(pageId) {
   const pages = {
     'patrol': {
-      title: 'ПАТРУЛИ',
-      kicker: 'SPMG // РЕГЛАМЕНТ',
+      title: 'ПАТРУЛИ', kicker: 'SPMG // РЕГЛАМЕНТ',
       content: `
         <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Общие положения</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><strong>Патруль</strong> — это МП, в котором участвуют от <span class="highlight">3 человек</span> (включая проводящего). Один человек — это сам проводящий, остальные — участники.</p></div>
-          <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value">Участники обязаны <strong>выполнять приказы проводящего</strong> без обсуждений.</p></div>
+          <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><strong>Патруль</strong> — это МП, в котором участвуют от <span class="highlight">3 человек</span> (включая проводящего).</p></div>
+          <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value">Участники обязаны <strong>выполнять приказы проводящего</strong>.</p></div>
           <div class="record"><h2 class="record__label">1.3.</h2><p class="record__value">Патруль длится минимум <span class="highlight">30 минут</span>, максимум — <span class="highlight">1 час 30 минут</span>.</p></div>
         </div></div>
         <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Типы патрулей</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">2.1.</h2><p class="record__value"><span class="highlight">Свободные</span> — проводящий разрешает идти в любой из секторов комплекса.</p></div>
+          <div class="record"><h2 class="record__label">2.1.</h2><p class="record__value"><span class="highlight">Свободные</span> — проводящий разрешает идти в любой сектор.</p></div>
           <div class="record"><h2 class="record__label">2.2.</h2><p class="record__value"><span class="highlight">По секторам</span> — проводящий распределяет участников по секторам.</p></div>
         </div></div>
         <div class="section-block"><div class="block-header"><span class="block-number">03</span><span class="block-title">Мега-рейд</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">3.1.</h2><p class="record__value">Во время патруля может начаться <span class="warn">мега-рейд</span>. Приказы проводящего становятся <strong>приоритетными</strong>.</p></div>
+          <div class="record"><h2 class="record__label">3.1.</h2><p class="record__value">Приказы проводящего становятся <strong>приоритетными</strong>.</p></div>
         </div></div>
       `
     },
     'training': {
-      title: 'ТРЕНИРОВКИ',
-      kicker: 'SPMG // ПВП-ПОДГОТОВКА',
+      title: 'ТРЕНИРОВКИ', kicker: 'SPMG // ПВП-ПОДГОТОВКА',
       content: `
         <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Общие положения</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><strong>Тренировка</strong> — это МП, где проверяются и оттачиваются ваши ПВП навыки.</p></div>
-          <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value">Минимальное количество участников: <span class="highlight">4 человека</span> (не включая проводящего).</p></div>
+          <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><strong>Тренировка</strong> — проверка ПВП навыков.</p></div>
+          <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value">Минимум <span class="highlight">4 человека</span> (не включая проводящего).</p></div>
         </div></div>
         <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">1 раунд</span></div>
         <div class="block-body">
@@ -820,26 +663,24 @@ function renderPage(pageId) {
         </div></div>
         <div class="section-block"><div class="block-header"><span class="block-number">03</span><span class="block-title">2 раунд</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">3.1.</h2><p class="record__value">Раунд на усмотрение проводящего. Лимит ОС — <span class="highlight">15</span>. Важен <span class="highlight">баланс</span>.</p></div>
-          <div class="record"><h2 class="record__label">3.2.</h2><p class="record__value">Проводящий должен грамотно распределять сильных и слабых.</p></div>
+          <div class="record"><h2 class="record__label">3.1.</h2><p class="record__value">Раунд на усмотрение проводящего. Лимит ОС — <span class="highlight">15</span>.</p></div>
+          <div class="record"><h2 class="record__label">3.2.</h2><p class="record__value">Важен <span class="highlight">баланс</span> сил.</p></div>
         </div></div>
       `
     },
     'events': {
-      title: 'ИВЕНТЫ',
-      kicker: 'SPMG // ФАН-МЕРОПРИЯТИЯ',
+      title: 'ИВЕНТЫ', kicker: 'SPMG // ФАН-МЕРОПРИЯТИЯ',
       content: `
         <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Общие положения</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><strong>Ивент</strong> — это фан МП, где люди играют в обычные игры, которые выберет проводящий.</p></div>
-          <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value">Лимит времени: от <span class="highlight">20 минут</span> до <span class="highlight">1 часа</span>. Время за ивент не дают.</p></div>
-          <div class="record"><h2 class="record__label">1.3.</h2><p class="record__value">Минимум должно прийти <span class="highlight">4 человека</span>, включая проводящего.</p></div>
+          <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><strong>Ивент</strong> — фан МП для отдыха.</p></div>
+          <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value">Лимит: от <span class="highlight">20 минут</span> до <span class="highlight">1 часа</span>.</p></div>
+          <div class="record"><h2 class="record__label">1.3.</h2><p class="record__value">Минимум <span class="highlight">4 человека</span>, включая проводящего.</p></div>
         </div></div>
       `
     },
     'cordon': {
-      title: 'ОЦЕПЛЕНИЕ',
-      kicker: 'SPMG // ОХРАНА СЕКТОРА',
+      title: 'ОЦЕПЛЕНИЕ', kicker: 'SPMG // ОХРАНА СЕКТОРА',
       content: `
         <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Общие положения</span></div>
         <div class="block-body">
@@ -847,36 +688,33 @@ function renderPage(pageId) {
         </div></div>
         <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Порядок проведения</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">2.1.</h2><p class="record__value">Перед проведением оцепления необходимо <span class="highlight">объявить в Рацию</span>.</p></div>
-          <div class="record"><h2 class="record__label">2.2.</h2><p class="record__value">На оцеплении <span class="highlight">2 сотрудника Aurum</span> проверяют карточки.</p></div>
-          <div class="record"><h2 class="record__label">2.3.</h2><p class="record__value">Без очереди могут пройти <span class="highlight">Сотрудники Aurum</span>.</p></div>
+          <div class="record"><h2 class="record__label">2.1.</h2><p class="record__value">Необходимо <span class="highlight">объявить в Рацию</span>.</p></div>
+          <div class="record"><h2 class="record__label">2.2.</h2><p class="record__value"><span class="highlight">2 сотрудника</span> проверяют карточки.</p></div>
+          <div class="record"><h2 class="record__label">2.3.</h2><p class="record__value">Без очереди проходят <span class="highlight">Сотрудники Aurum</span>.</p></div>
         </div></div>
-        <div class="section-block"><div class="block-body"><div class="note-box"><strong>📌 Примечание:</strong> Подробнее об оцеплениях спрашивайте у Офицеров Отдела.</div></div></div>
+        <div class="section-block"><div class="block-body"><div class="note-box"><strong>📌 Примечание:</strong> Подробнее у Офицеров Отдела.</div></div></div>
       `
     },
     'rules': {
-      title: 'ПРАВИЛА ДИСКОРД СЕРВЕРА',
-      kicker: 'SPMG // ПОВЕДЕНИЕ В СЕТИ',
+      title: 'ПРАВИЛА ДИСКОРД', kicker: 'SPMG // ПОВЕДЕНИЕ В СЕТИ',
       content: `
         <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Раздел 1</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><span class="danger">Запрещается</span> спорить с обычным составом — иначе <span class="warn">наказание</span>.</p></div>
+          <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><span class="danger">Запрещается</span> спорить с составом.</p></div>
           <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value">Не советуется спорить с <span class="highlight">офицерами</span>.</p></div>
-          <div class="record"><h2 class="record__label">1.3.</h2><p class="record__value">Вы имеете право оправдаться перед офицером.</p></div>
+          <div class="record"><h2 class="record__label">1.3.</h2><p class="record__value">Вы имеете право оправдаться.</p></div>
         </div></div>
         <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Раздел 2</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">2.1.</h2><p class="record__value"><span class="danger">Запрещается</span> кидать NSFW, 18+ контент, кровь.</p></div>
-          <div class="record"><h2 class="record__label">2.2.</h2><p class="record__value">Относитесь к друг другу с <span class="highlight">уважением</span>.</p></div>
-          <div class="record"><h2 class="record__label">2.3.</h2><p class="record__value">Не стесняйтесь общаться, заводите друзей.</p></div>
-          <div class="record"><h2 class="record__label">2.4.</h2><p class="record__value">Не орите в ГЧ, не перебивайте.</p></div>
-          <div class="record"><h2 class="record__label">2.5.</h2><p class="record__value"><span class="highlight">Самое важное</span> — не стесняйтесь разговаривать в ГЧ!</p></div>
+          <div class="record"><h2 class="record__label">2.1.</h2><p class="record__value"><span class="danger">Запрещены</span> NSFW, 18+, кровь.</p></div>
+          <div class="record"><h2 class="record__label">2.2.</h2><p class="record__value">Относитесь с <span class="highlight">уважением</span>.</p></div>
+          <div class="record"><h2 class="record__label">2.3.</h2><p class="record__value">Общайтесь, заводите друзей.</p></div>
+          <div class="record"><h2 class="record__label">2.4.</h2><p class="record__value">Не орите в ГЧ.</p></div>
         </div></div>
       `
     },
     'norm': {
-      title: 'НОРМА',
-      kicker: 'SPMG // ТАБЛИЦА НОРМ',
+      title: 'НОРМА', kicker: 'SPMG // ТАБЛИЦА НОРМ',
       content: `
         <div class="record" style="display:block;padding:0;border:none;margin:0;">
           <div class="record__value" style="display:block;padding:0;text-align:center;">
@@ -886,21 +724,21 @@ function renderPage(pageId) {
         <div class="page-content" style="margin-top:14px;">
           <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Норма для Альфы Б</span></div>
           <div class="block-body">
-            <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><span class="highlight">Боец:</span> −33% от времени, −25% от МП</p></div>
-            <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value"><span class="highlight">Офицер:</span> −33% от времени, −50% от МП</p></div>
-            <div class="record"><h2 class="record__label">1.3.</h2><p class="record__value">Округление идёт <span class="highlight">в пользу бойца</span>.</p></div>
+            <div class="record"><h2 class="record__label">1.1.</h2><p class="record__value"><span class="highlight">Боец:</span> −33% времени, −25% МП</p></div>
+            <div class="record"><h2 class="record__label">1.2.</h2><p class="record__value"><span class="highlight">Офицер:</span> −33% времени, −50% МП</p></div>
+            <div class="record"><h2 class="record__label">1.3.</h2><p class="record__value">Округление <span class="highlight">в пользу бойца</span>.</p></div>
             <div class="record"><h2 class="record__label">1.4.</h2><p class="record__value">Таблица интерактивна. Благодарим <span class="highlight">Витали</span>.</p></div>
           </div></div>
-          <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Как работает "Обратное АБ"</span></div>
+          <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">"Обратное АБ"</span></div>
           <div class="block-body">
-            <div class="record"><h2 class="record__label">2.1.</h2><p class="record__value">Вы зарабатываете баллы за актив. Каждую неделю баллы <span class="warn">сбрасываются</span>.</p></div>
+            <div class="record"><h2 class="record__label">2.1.</h2><p class="record__value">Баллы за актив. Каждую неделю <span class="warn">сбрасываются</span>.</p></div>
           </div></div>
           <div class="section-block"><div class="block-header"><span class="block-number">03</span><span class="block-title">Начисление баллов</span></div>
           <div class="block-body">
             <div class="record"><h2 class="record__label">3.1.</h2><p class="record__value">1 посещение МП — <span class="highlight">1.5 балла</span></p></div>
             <div class="record"><h2 class="record__label">3.2.</h2><p class="record__value">1 проведение МП — <span class="highlight">2 балла</span></p></div>
             <div class="record"><h2 class="record__label">3.3.</h2><p class="record__value">1 час игры — <span class="highlight">1 балл</span></p></div>
-            <div class="record"><h2 class="record__label">3.4.</h2><p class="record__value">1 посещение общего МП в Ауруме — <span class="highlight">3 балла</span></p></div>
+            <div class="record"><h2 class="record__label">3.4.</h2><p class="record__value">Общее МП в Ауруме — <span class="highlight">3 балла</span></p></div>
             <div class="record"><h2 class="record__label">3.5.</h2><p class="record__value">Премия Куратора — <span class="highlight">1–15 баллов</span></p></div>
           </div></div>
           <div class="section-block"><div class="block-header"><span class="block-number">04</span><span class="block-title">Товары</span></div>
@@ -913,83 +751,55 @@ function renderPage(pageId) {
       `
     },
     'punishments': {
-      title: 'НАКАЗАНИЯ',
-      kicker: 'SPMG // ДИСЦИПЛИНА',
+      title: 'НАКАЗАНИЯ', kicker: 'SPMG // ДИСЦИПЛИНА',
       content: `
         <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Нарушения</span></div>
         <div class="block-body">
           <div class="record"><h2 class="record__label">1.</h2><p class="record__value">Незнание ПОВР — <span class="warn">1-2 страйка</span></p></div>
           <div class="record"><h2 class="record__label">2.</h2><p class="record__value">Выход без формы — <span class="warn">1 выговор</span></p></div>
           <div class="record"><h2 class="record__label">3.</h2><p class="record__value">Неподчинение офицерам — <span class="warn">1 выговор — 1 страйк</span></p></div>
-          <div class="record"><h2 class="record__label">4.</h2><p class="record__value">Оскорбление товарищей — <span class="warn">1 страйк</span></p></div>
+          <div class="record"><h2 class="record__label">4.</h2><p class="record__value">Оскорбление — <span class="warn">1 страйк</span></p></div>
           <div class="record"><h2 class="record__label">5.</h2><p class="record__value">Разжигание конфликта — <span class="warn">1 выговор — 2 страйка</span></p></div>
           <div class="record"><h2 class="record__label">6.</h2><p class="record__value">Непослушание проводящему — <span class="warn">1 страйк</span></p></div>
           <div class="record"><h2 class="record__label">7.</h2><p class="record__value">Крики в ГЧ — <span class="warn">1 выговор — 1 страйк</span></p></div>
         </div></div>
         <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Отработка</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">1.</h2><p class="record__value"><span class="highlight">Ожидание</span> — 30 дней без нарушений</p></div>
-          <div class="record"><h2 class="record__label">2.</h2><p class="record__value"><span class="highlight">Проявление</span> — показать себя перед вышестоящими</p></div>
-          <div class="record"><h2 class="record__label">3.</h2><p class="record__value"><span class="highlight">Покупка</span> — накопить валюту отдела</p></div>
-          <div class="record"><h2 class="record__label">4.</h2><p class="record__value"><span class="highlight">Отработка от офицера</span> — сложная отработка</p></div>
+          <div class="record"><h2 class="record__label">1.</h2><p class="record__value"><span class="highlight">Ожидание</span> — 30 дней</p></div>
+          <div class="record"><h2 class="record__label">2.</h2><p class="record__value"><span class="highlight">Проявление</span> — показать себя</p></div>
+          <div class="record"><h2 class="record__label">3.</h2><p class="record__value"><span class="highlight">Покупка</span> — валютой отдела</p></div>
+          <div class="record"><h2 class="record__label">4.</h2><p class="record__value"><span class="highlight">Отработка от офицера</span></p></div>
         </div></div>
       `
     },
     'vacations': {
-      title: 'ОТПУСКА',
-      kicker: 'SPMG // ОТДЫХ И ВОССТАНОВЛЕНИЕ',
+      title: 'ОТПУСКА', kicker: 'SPMG // ОТДЫХ',
       content: `
-        <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Правила отпуска</span></div>
+        <div class="section-block"><div class="block-header"><span class="block-number">01</span><span class="block-title">Правила</span></div>
         <div class="block-body">
-          <div class="record"><h2 class="record__label">1.</h2><p class="record__value">Вступление меньше 2 недель — отпуск <span class="danger">недоступен</span></p></div>
-          <div class="record"><h2 class="record__label">2.</h2><p class="record__value">Отпуск только <span class="warn">раз в 2 недели</span></p></div>
-          <div class="record"><h2 class="record__label">3.</h2><p class="record__value">Максимум отпуск — <span class="highlight">месяц</span></p></div>
+          <div class="record"><h2 class="record__label">1.</h2><p class="record__value">Меньше 2 недель — <span class="danger">недоступен</span></p></div>
+          <div class="record"><h2 class="record__label">2.</h2><p class="record__value">Только <span class="warn">раз в 2 недели</span></p></div>
+          <div class="record"><h2 class="record__label">3.</h2><p class="record__value">Максимум — <span class="highlight">месяц</span></p></div>
           <div class="record"><h2 class="record__label">4.</h2><p class="record__value">Уважительная причина — доказательства</p></div>
-          <div class="record"><h2 class="record__label">5.</h2><p class="record__value">При отпуске более 25 дней — роль снимается</p></div>
+          <div class="record"><h2 class="record__label">5.</h2><p class="record__value">Более 25 дней — роль снимается</p></div>
         </div></div>
-        <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Причины отпуска</span></div>
+        <div class="section-block"><div class="block-header"><span class="block-number">02</span><span class="block-title">Причины</span></div>
         <div class="block-body">
           <div class="record"><h2 class="record__label">1.</h2><p class="record__value"><span class="highlight">Выгорание</span></p></div>
           <div class="record"><h2 class="record__label">2.</h2><p class="record__value"><span class="highlight">Травмы</span></p></div>
           <div class="record"><h2 class="record__label">3.</h2><p class="record__value"><span class="highlight">Личная жизнь</span></p></div>
-          <div class="record"><h2 class="record__label">4.</h2><p class="record__value">Иные причины, которые могут понять офицеры</p></div>
+          <div class="record"><h2 class="record__label">4.</h2><p class="record__value">Иные причины</p></div>
         </div></div>
       `
     },
-    'history': {
-      title: 'ИСТОРИЯ КУРАТОРОВ',
-      kicker: 'SPMG // РУКОВОДСТВО',
-      content: `<div class="empty">[СЮДА БУДЕТ ДОБАВЛЕН ТЕКСТ ОБ ИСТОРИИ КУРАТОРОВ]</div>`
-    },
-    'additional': {
-      title: 'ДОПОЛНИТЕЛЬНО',
-      kicker: 'SPMG // ПРОЧАЯ ИНФОРМАЦИЯ',
-      content: `<div class="empty">[СЮДА БУДЕТ ДОБАВЛЕНА ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ]</div>`
-    }
+    'history': { title: 'ИСТОРИЯ КУРАТОРОВ', kicker: 'SPMG // РУКОВОДСТВО', content: `<div class="empty">[СЮДА БУДЕТ ДОБАВЛЕН ТЕКСТ]</div>` },
+    'additional': { title: 'ДОПОЛНИТЕЛЬНО', kicker: 'SPMG // ПРОЧЕЕ', content: `<div class="empty">[СЮДА БУДЕТ ДОБАВЛЕНА ИНФОРМАЦИЯ]</div>` }
   };
 
   const page = pages[pageId];
   if (!page) return;
 
-  // Стили для страниц
-  const pageStyles = `
-    <style>
-      .section-block{border:1px solid var(--line);background:linear-gradient(135deg,rgba(15,25,37,.93),rgba(8,14,22,.97));overflow:clip;transition:border-color .3s ease,box-shadow .3s ease;margin-bottom:12px;}
-      .section-block:hover{border-color:rgba(0,255,65,0.35);box-shadow:0 0 8px rgba(0,255,65,0.08),inset 0 0 8px rgba(0,255,65,0.02);}
-      .block-header{display:grid;grid-template-columns:58px minmax(0,1fr);gap:14px;align-items:center;padding:14px 18px;min-height:64px;background:rgba(0,255,65,0.03);border-bottom:1px solid var(--line);}
-      .block-number{color:var(--cyan);font-family:var(--mono);font-size:1.6rem;font-weight:700;line-height:1;}
-      .block-title{color:#a9f3b8;font-family:var(--mono);font-size:clamp(0.95rem,1.8vw,1.15rem);font-weight:600;line-height:1.1;letter-spacing:.07em;text-transform:uppercase;}
-      .block-body{padding:clamp(16px,2.5vw,28px);}
-      .note-box{border-left:2px solid var(--amber);padding:12px 16px;background:rgba(226,182,91,0.06);border-radius:0 4px 4px 0;color:var(--muted);font-size:13px;}
-      .note-box strong{color:var(--amber);}
-      .highlight{color:var(--green-hot);font-weight:700;text-shadow:0 0 10px rgba(0,255,65,0.2);}
-      .warn{color:var(--amber);font-weight:600;}
-      .danger{color:var(--red);font-weight:600;}
-      .empty{padding:32px;text-align:center;color:#4b5358;font:10px var(--mono);}
-    </style>
-  `;
-
-  const html = pageStyles + `
+  const html = `
     <div class="pagehead">
       <div><div class="kicker">${page.kicker}</div><h1>${page.title}</h1></div>
     </div>
@@ -1034,7 +844,7 @@ document.querySelectorAll('#nav button').forEach(btn => {
 });
 
 // ============================================================
-// ЗАГРУЗОЧНЫЙ ЭКРАН (BOOT)
+// ЗАГРУЗОЧНЫЙ ЭКРАН (БОЛЬШЕ НЕТ БЕСКОНЕЧНОЙ ЗАГРУЗКИ)
 // ============================================================
 function boot() {
   const consoleEl = document.getElementById('bootConsole');
@@ -1062,19 +872,30 @@ function boot() {
 
   const titles = ["ИНИЦИАЛИЗАЦИЯ","ПРОВЕРКА СИСТЕМЫ","СИНХРОНИЗАЦИЯ","ВЕРИФИКАЦИЯ","ПОДКЛЮЧЕНИЕ","ДОПУСК"];
   const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&@!?№;%*+=-_";
-  let i = 0, progressValue = 0, titleBase = "";
+  
+  let step = 0;
   let isBootComplete = false;
+  let tickTimeout = null;
+  let glitchInterval = null;
 
-  const corrupt = s => s.split("").map(ch => Math.random() > .08 ? ch : glyphs[Math.floor(Math.random() * glyphs.length)]).join("");
+  const corrupt = (s) => {
+    return s.split("").map(ch => {
+      if (ch === " " || Math.random() > 0.08) return ch;
+      return glyphs[Math.floor(Math.random() * glyphs.length)];
+    }).join("");
+  };
 
   const titleGlitch = () => {
-    if (!title || !titleBase || isBootComplete) return;
-    title.dataset.text = titleBase;
+    if (!title || isBootComplete) return;
+    const currentText = title.textContent || "";
+    title.dataset.text = currentText;
     title.classList.add("glitching");
-    title.textContent = corrupt(titleBase);
-    setTimeout(() => { 
-      title.textContent = titleBase; 
-      title.classList.remove("glitching"); 
+    title.textContent = corrupt(currentText);
+    setTimeout(() => {
+      if (!isBootComplete) {
+        title.textContent = currentText;
+        title.classList.remove("glitching");
+      }
     }, 45 + Math.random() * 85);
   };
 
@@ -1098,20 +919,28 @@ function boot() {
   const completeBoot = () => {
     if (isBootComplete) return;
     isBootComplete = true;
+    
+    if (tickTimeout) {
+      clearTimeout(tickTimeout);
+      tickTimeout = null;
+    }
+    if (glitchInterval) {
+      clearInterval(glitchInterval);
+      glitchInterval = null;
+    }
+
     progress.style.width = "100%";
     pct.textContent = "100%";
     stage.textContent = "СИСТЕМА ГОТОВА";
     footerStatus.textContent = "ОЖИДАЕТСЯ АВТОРИЗАЦИЯ";
-    titleBase = "СИСТЕМА ГОТОВА";
-    title.textContent = titleBase;
+    title.textContent = "СИСТЕМА ГОТОВА";
     subtitle.textContent = "Введите код допуска оператора";
-    // Показываем поле ввода
+
     const gate = document.getElementById('codeGate');
     if (gate) gate.classList.remove('hidden');
+
     // Финальный глитч
     setTimeout(() => {
-      titleGlitch();
-      hexGlitch();
       const glitchEl = document.getElementById('glitch');
       if (glitchEl) {
         glitchEl.classList.add('on');
@@ -1124,17 +953,15 @@ function boot() {
     if (isBootComplete) return;
 
     // Обновляем заголовок
-    const titleIdx = Math.min(Math.floor(i / 2), titles.length - 1);
-    titleBase = titles[titleIdx] || titles[titles.length - 1];
-    title.textContent = titleBase;
-    subtitle.textContent = "Подготовка защищённого соединения...";
-    
+    const titleIdx = Math.min(Math.floor(step / 2), titles.length - 1);
+    title.textContent = titles[titleIdx] || titles[titles.length - 1];
+
     // Обновляем шестнадцатеричный код
     hexGlitch();
 
     // Добавляем строку в консоль
-    if (i < lines.length) {
-      const [text, kind] = lines[i];
+    if (step < lines.length) {
+      const [text, kind] = lines[step];
       addLine(text, kind);
       if (kind === "fault") {
         const glitchEl = document.getElementById('glitch');
@@ -1146,46 +973,45 @@ function boot() {
     }
 
     // Обновляем прогресс
-    progressValue = Math.min(Math.round(((i + 1) / lines.length) * 94), 94);
+    const progressValue = Math.min(Math.round(((step + 1) / lines.length) * 94), 94);
     progress.style.width = progressValue + "%";
     pct.textContent = String(progressValue).padStart(2, "0") + "%";
-    stage.textContent = i < lines.length ? lines[i][0].slice(0, 31) : "СИСТЕМА ГОТОВА";
+    stage.textContent = step < lines.length ? lines[step][0].slice(0, 31) : "СИСТЕМА ГОТОВА";
 
-    i++;
+    step++;
 
-    if (i >= lines.length) {
+    // Проверяем завершение
+    if (step >= lines.length) {
       completeBoot();
     } else {
-      // Случайный глитч заголовка
       if (Math.random() < 0.3) titleGlitch();
-      setTimeout(tick, 130 + Math.random() * 240);
+      tickTimeout = setTimeout(tick, 130 + Math.random() * 240);
     }
   };
 
   // Запускаем
   tick();
 
-  // Периодический глитч после загрузки
-  setInterval(() => {
-    if (!isBootComplete) {
-      hexGlitch();
-      if (Math.random() < 0.3) titleGlitch();
+  // Периодический глитч во время загрузки
+  glitchInterval = setInterval(() => {
+    if (isBootComplete) {
+      clearInterval(glitchInterval);
+      glitchInterval = null;
+      return;
     }
+    hexGlitch();
+    if (Math.random() < 0.3) titleGlitch();
   }, 300);
-}
 }
 
 // ============================================================
-// АВТОРИЗАЦИЯ (ВХОД)
+// АВТОРИЗАЦИЯ
 // ============================================================
 function authorize() {
   const input = document.getElementById('accessCode');
   const btn = document.getElementById('authorize');
   const boot = document.getElementById('boot');
   const app = document.getElementById('app');
-  const status = document.getElementById('bootFooterStatus');
-  const titleEl = document.getElementById('bootTitle');
-  const sub = document.getElementById('bootSubtitle');
 
   if (!input || !btn || !boot || !app) return;
 
@@ -1197,31 +1023,22 @@ function authorize() {
   const account = accounts[code] || (code === CORRECT_PASSWORD.toUpperCase() ? { name: "Оператор SPMG-04", role: "operator", level: "SPMG-IV" } : null);
 
   if (!account) {
-    if (status) status.textContent = "ДОСТУП ОТКЛОНЁН // НЕИЗВЕСТНЫЙ КОД";
-    if (titleEl) titleEl.textContent = "ВЕРИФИКАЦИЯ НЕ ПРОЙДЕНА";
-    if (sub) sub.textContent = "УЧЁТНАЯ ЗАПИСЬ НЕ РАСПОЗНАНА";
     playErrorSound();
     input.value = '';
     input.focus();
-    setTimeout(() => {
-      if (status) status.textContent = "ОЖИДАНИЕ АВТОРИЗАЦИИ";
-      if (titleEl) titleEl.textContent = "ДОСТУП ОГРАНИЧЕН";
-      if (sub) sub.textContent = "Введите код допуска для продолжения";
-    }, 1500);
     return;
   }
 
   playSuccessSound();
   input.disabled = true;
   btn.disabled = true;
-  if (status) status.textContent = "ПРОВЕРКА УЧЁТНЫХ ДАННЫХ...";
 
   setTimeout(() => {
     boot.classList.add('hidden');
     app.classList.remove('hidden');
     document.getElementById('sessionId').textContent = Math.random().toString(36).slice(2, 8).toUpperCase();
     render();
-    addLog(`ВХОД // ${account.name} // ${account.role === 'admin' ? 'ПОЛНЫЙ ДОСТУП' : 'ОПЕРАТИВНЫЙ ДОСТУП'}`, 'success');
+    addLog(`ВХОД // ${account.name}`, 'success');
   }, 650);
 }
 
@@ -1239,41 +1056,61 @@ function updateClock() {
 setInterval(updateClock, 1000);
 
 // ============================================================
+// МАТРИЦА (ФОН)
+// ============================================================
+function initMatrix() {
+  const c = document.getElementById('bootMatrix');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let w, h, cols, drops;
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@!?№;:%*";
+  
+  function resize() {
+    w = c.width = innerWidth * devicePixelRatio;
+    h = c.height = innerHeight * devicePixelRatio;
+    ctx.font = 10 * devicePixelRatio + "px monospace";
+    cols = Math.floor(w / (12 * devicePixelRatio));
+    drops = Array.from({length: cols}, () => Math.random() * -50);
+  }
+  
+  function draw() {
+    ctx.fillStyle = "rgba(2,3,4,.14)";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "rgba(180,190,195,.12)";
+    for (let i = 0; i < drops.length; i++) {
+      const ch = chars[(Math.random() * chars.length) | 0];
+      const px = i * 12 * devicePixelRatio;
+      const py = drops[i] * 12 * devicePixelRatio;
+      ctx.fillText(ch, px, py);
+      if (py > h && Math.random() > .975) drops[i] = 0;
+      drops[i] += .35 + Math.random() * .55;
+    }
+    requestAnimationFrame(draw);
+  }
+  
+  addEventListener('resize', resize);
+  resize();
+  draw();
+}
+
+// ============================================================
 // ИНИЦИАЛИЗАЦИЯ
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-  // Авторизация
   const authBtn = document.getElementById('authorize');
   const authInput = document.getElementById('accessCode');
   if (authBtn) authBtn.addEventListener('click', authorize);
   if (authInput) authInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') authorize(); });
 
-  // Запуск загрузочного экрана
   boot();
   updateClock();
-
-  // Если уже есть сохранённая сессия
-  if (localStorage.getItem('spmg_session') === 'active') {
-    document.getElementById('boot').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-    render();
-  }
-});
-
-// ============================================================
-// KEYBOARD SHORTCUTS
-// ============================================================
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    const modal = document.querySelector('body > div[style*="position:fixed"]');
-    if (modal) modal.remove();
-  }
+  initMatrix();
 });
 
 console.log('%cTFB // SPMG-04', 'font-size:24px;font-weight:700;color:#aab0b4;');
 console.log('%cSPECIAL PROJECTS MANAGEMENT GROUP // 2057', 'font-size:14px;color:#5f686e;');
-console.log('%cДОСТУП ТОЛЬКО ДЛЯ АВТОРИЗОВАННОГО ПЕРСОНАЛА', 'font-size:11px;color:#3e464b;');
-</script>
 
+})();
+</script>
 </body>
 </html>
