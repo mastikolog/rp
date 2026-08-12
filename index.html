@@ -245,99 +245,166 @@ button,input,select,textarea,.mono,.code,.status,.tag,.sectionlabel,.kicker,.met
 <!-- ============================================================
      ЗАГРУЗОЧНЫЙ ЭКРАН
      ============================================================ -->
-<section class="boot" id="boot">
-  <canvas id="bootMatrix"></canvas>
-  <div class="bootScan"></div>
-  <div class="bootNoise"></div>
-  <div class="bootVignette"></div>
-  <div class="bootFrame">
-    <div class="bootCorner tl"></div><div class="bootCorner tr"></div>
-    <div class="bootCorner bl"></div><div class="bootCorner br"></div>
+// ============================================================
+// ЗАГРУЗОЧНЫЙ ЭКРАН
+// ============================================================
+function boot() {
+  const consoleEl = document.getElementById('bootConsole');
+  const title = document.getElementById('bootTitle');
+  const subtitle = document.getElementById('bootSubtitle');
+  const stage = document.getElementById('bootStage');
+  const pct = document.getElementById('bootPct');
+  const progress = document.getElementById('bootProgress');
+  const hex = document.getElementById('bootHex');
+  const footerStatus = document.getElementById('bootFooterStatus');
 
-    <div class="bootHeader">
-      <div class="bootLogo">
-        <span class="bootLogoMark"></span>
-        <div>
-          <div class="bootAgency">TFB // SPMG-04</div>
-          <div class="bootSub">SPECIAL PROJECTS MANAGEMENT GROUP</div>
-        </div>
-      </div>
-      <div class="bootTelemetry">
-        <span>NODE <b>SPMG-04</b></span>
-        <span>YEAR <b>2057</b></span>
-        <span id="bootClock">00:00:00</span>
-      </div>
-    </div>
+  const lines = [
+    ["ПОДГОТОВКА ЗАЩИЩЁННОГО КОНТУРА","good"],
+    ["ПРОВЕРКА ЦЕЛОСТНОСТИ СЕАНСА","good"],
+    ["СВЕРКА ИДЕНТИФИКАТОРА // SPMG-04","good"],
+    ["ПРОВЕРКА ЛОКАЛЬНОГО ХРАНИЛИЩА","good"],
+    ["СИНХРОНИЗАЦИЯ ОПЕРАТИВНОГО АРХИВА","good"],
+    ["ПРОВЕРКА КАНАЛОВ СВЯЗИ","good"],
+    ["NODE-03 ................. СОСТОЯНИЕ: НЕСТАБИЛЬНО","warn"],
+    ["NODE-05 ................. ОТКЛЮЧЕН","fault"],
+    ["ПОВТОРНАЯ ПРОВЕРКА МАРШРУТОВ","good"],
+    ["ПРОВЕРКА КЛЮЧЕЙ СЕАНСА","good"],
+    ["СОСТОЯНИЕ СИСТЕМЫ ........ РАБОТАЕТ","good"]
+  ];
 
-    <div class="bootCenter">
-      <div class="bootStatusLine"><span class="pulseDot"></span>ЗАЩИЩЁННЫЙ КОНТУР // ПОДКЛЮЧЕНИЕ</div>
-      <div class="bootTitle" id="bootTitle">ИНИЦИАЛИЗАЦИЯ</div>
-      <div class="bootSubtitle" id="bootSubtitle">Подготовка защищённого соединения</div>
-      <div class="bootHex" id="bootHex">7F 04 A9 31 // 00 57 // SPMG</div>
+  const titles = ["ИНИЦИАЛИЗАЦИЯ","ПРОВЕРКА СИСТЕМЫ","СИНХРОНИЗАЦИЯ","ВЕРИФИКАЦИЯ","ПОДКЛЮЧЕНИЕ","ДОПУСК"];
+  const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&@!?№;%*+=-_";
+  
+  let step = 0;
+  let progressValue = 0;
+  let titleBase = "";
+  let isBootComplete = false;
+  let tickTimeout = null;
 
-      <div class="bootProgressWrap">
-        <div class="bootProgressMeta"><span id="bootStage">ПОДГОТОВКА</span><span id="bootPct">00%</span></div>
-        <div class="bootProgress"><i id="bootProgress"></i><b id="bootProgressNoise"></b></div>
-      </div>
+  const corrupt = (s) => {
+    return s.split("").map(ch => {
+      if (ch === " " || Math.random() > 0.08) return ch;
+      return glyphs[Math.floor(Math.random() * glyphs.length)];
+    }).join("");
+  };
 
-      <div class="bootConsole" id="bootConsole"></div>
+  const titleGlitch = () => {
+    if (!title || !titleBase || isBootComplete) return;
+    title.dataset.text = titleBase;
+    title.classList.add("glitching");
+    title.textContent = corrupt(titleBase);
+    setTimeout(() => {
+      if (!isBootComplete) {
+        title.textContent = titleBase;
+        title.classList.remove("glitching");
+      }
+    }, 45 + Math.random() * 85);
+  };
 
-      <div class="bootAuth hidden" id="codeGate">
-        <div class="authLabel">ТРЕБУЕТСЯ ПОДТВЕРЖДЕНИЕ ОПЕРАТОРА</div>
-        <div class="authRow">
-          <div class="authPrefix">SPMG-04 //</div>
-          <input id="accessCode" autocomplete="off" spellcheck="false" placeholder="ВВЕДИТЕ КОД ДОПУСКА">
-          <button id="authorize">ПОДТВЕРДИТЬ</button>
-        </div>
-        <div class="authHint">Коды доступа: <b>afrrwtbt-2</b> // оператор &nbsp; <b>SPMG-ADMIN-2057</b> // администратор</div>
-      </div>
-    </div>
+  const hexGlitch = () => {
+    if (isBootComplete) return;
+    const chars = Array.from({length: 8}, () => glyphs[Math.floor(Math.random() * glyphs.length)]).join("");
+    const num = Math.floor(Math.random() * 9999).toString().padStart(4, "0");
+    hex.textContent = chars + " // " + num + " // SPMG-04";
+  };
 
-    <div class="bootFooter">
-      <span>ВНУТРЕННЯЯ СЕТЬ // ДОСТУП ОГРАНИЧЕН</span>
-      <span id="bootFooterStatus">ПРОВЕРКА СИСТЕМЫ</span>
-      <span>TFB // SPMG-IV</span>
-    </div>
-  </div>
-</section>
+  const addLine = (text, kind) => {
+    const el = document.createElement("span");
+    el.className = "bootLine";
+    const prefix = Math.random() < 0.25 ? "// " : "▸ ";
+    const noise = Math.random() < 0.22 ? ` <span class="noise">${corrupt("[" + kind.toUpperCase() + "]")}</span>` : "";
+    el.innerHTML = prefix + text + noise;
+    consoleEl.prepend(el);
+    while (consoleEl.children.length > 8) consoleEl.lastElementChild.remove();
+  };
 
-<!-- ============================================================
-     ОСНОВНОЙ САЙТ
-     ============================================================ -->
-<div class="app hidden" id="app">
-<header class="topbar">
-  <div class="brand"><span class="mark"></span><span>TFB // SPMG</span><small>SPECIAL PROJECTS MANAGEMENT GROUP</small></div>
-  <div class="topmeta"><span>NODE <b>SPMG-04</b></span><span>SESSION <b id="sessionId">----</b></span><span class="signal">● LINK <b>СТАБИЛЬНО</b></span></div>
-</header>
+  const completeBoot = () => {
+    if (isBootComplete) return;
+    isBootComplete = true;
+    
+    if (tickTimeout) {
+      clearTimeout(tickTimeout);
+      tickTimeout = null;
+    }
 
-<div class="layout">
-<aside class="sidebar">
-  <div class="navlabel">НАВИГАЦИЯ</div>
-  <nav class="nav" id="nav">
-    <button class="active" data-page="charter">УСТАВ <span class="count">01</span></button>
-    <button data-page="patrol">ПАТРУЛИ <span class="count">02</span></button>
-    <button data-page="training">ТРЕНИРОВКИ <span class="count">03</span></button>
-    <button data-page="events">ИВЕНТЫ <span class="count">04</span></button>
-    <button data-page="cordon">ОЦЕПЛЕНИЕ <span class="count">05</span></button>
-    <button data-page="rules">ПРАВИЛА ДИСКОРД <span class="count">06</span></button>
-    <button data-page="norm">НОРМА <span class="count">07</span></button>
-    <button data-page="punishments">НАКАЗАНИЯ <span class="count">08</span></button>
-    <button data-page="vacations">ОТПУСКА <span class="count">09</span></button>
-    <button data-page="history">ИСТОРИЯ КУРАТОРОВ <span class="count">10</span></button>
-    <button data-page="additional">ДОПОЛНИТЕЛЬНО <span class="count">11</span></button>
-  </nav>
-  <div class="sidebar-note">
-    УРОВЕНЬ ДОПУСКА: SPMG-IV<br>
-    СИСТЕМА: АКТИВНА<br><br>
-    Несанкционированное распространение внутренних материалов запрещено.
-  </div>
-</aside>
+    progress.style.width = "100%";
+    pct.textContent = "100%";
+    stage.textContent = "СИСТЕМА ГОТОВА";
+    footerStatus.textContent = "ОЖИДАЕТСЯ АВТОРИЗАЦИЯ";
+    titleBase = "СИСТЕМА ГОТОВА";
+    title.textContent = titleBase;
+    subtitle.textContent = "Введите код допуска оператора";
 
-<main class="content" id="content"></main>
-</div>
+    const gate = document.getElementById('codeGate');
+    if (gate) gate.classList.remove('hidden');
 
-<footer class="footer"><span>TFB // SPMG <b>INTERNAL OPERATIONS NETWORK</b></span><span id="clock">2057-08-11 // 00:00:00</span><span>AUTH <b>SPMG-IV</b> // SESSION ACTIVE</span></footer>
-</div>
+    // Финальный глитч
+    setTimeout(() => {
+      const glitchEl = document.getElementById('glitch');
+      if (glitchEl) {
+        glitchEl.classList.add('on');
+        setTimeout(() => glitchEl.classList.remove('on'), 180);
+      }
+      titleGlitch();
+      hexGlitch();
+    }, 200);
+  };
+
+  const tick = () => {
+    if (isBootComplete) return;
+
+    // Обновляем заголовок
+    const titleIdx = Math.min(Math.floor(step / 2), titles.length - 1);
+    titleBase = titles[titleIdx] || titles[titles.length - 1];
+    title.textContent = titleBase;
+
+    // Обновляем шестнадцатеричный код
+    hexGlitch();
+
+    // Добавляем строку в консоль
+    if (step < lines.length) {
+      const [text, kind] = lines[step];
+      addLine(text, kind);
+      if (kind === "fault") {
+        const glitchEl = document.getElementById('glitch');
+        if (glitchEl) {
+          glitchEl.classList.add('on');
+          setTimeout(() => glitchEl.classList.remove('on'), 130);
+        }
+      }
+    }
+
+    // Обновляем прогресс
+    progressValue = Math.min(Math.round(((step + 1) / lines.length) * 94), 94);
+    progress.style.width = progressValue + "%";
+    pct.textContent = String(progressValue).padStart(2, "0") + "%";
+    stage.textContent = step < lines.length ? lines[step][0].slice(0, 31) : "СИСТЕМА ГОТОВА";
+
+    step++;
+
+    // Проверяем завершение
+    if (step >= lines.length) {
+      completeBoot();
+    } else {
+      // Случайный глитч заголовка
+      if (Math.random() < 0.3) titleGlitch();
+      tickTimeout = setTimeout(tick, 130 + Math.random() * 240);
+    }
+  };
+
+  // Запускаем
+  tick();
+
+  // Периодический глитч во время загрузки
+  const glitchInterval = setInterval(() => {
+    if (isBootComplete) {
+      clearInterval(glitchInterval);
+      return;
+    }
+    hexGlitch();
+    if (Math.random() < 0.3) titleGlitch();
+  }, 300);
+}
 
 <!-- ============================================================
      TOAST (уведомления)
