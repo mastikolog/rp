@@ -155,9 +155,323 @@ h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8
 .legacy-grid{display:grid;gap:12px}.legacy-panel{margin-bottom:0}.legacy-content{padding:14px 16px;color:#aab1b5;font:10px/1.8 var(--mono)}.legacy-content .section-block{border:0;background:transparent;margin:0}.legacy-content .block-header{display:none}.legacy-content .block-body{padding:0}.legacy-content .record{display:grid;grid-template-columns:58px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid #1b2024}.legacy-content .record:last-child{border-bottom:0}.legacy-content .record__label{margin:0;color:#7f888e;font:600 9px var(--mono)}.legacy-content .record__value{margin:0;color:#aab1b5;font:10px/1.8 var(--mono)}.legacy-content .record__value strong{color:#d3d7d9}.legacy-content .highlight{color:#c2c8cb}.legacy-content .warn{color:#a68a5a}.legacy-content .danger{color:#9a5c5c}.legacy-content .section{margin:0}.legacy-content .section__body{display:block}.legacy-content .prose{color:#aab1b5}
 </style>
 
-<style id="final-polish">
-.crypto-panel{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(12,15,17,.88),rgba(7,9,11,.92))}.crypto-panel:after{content:"";position:absolute;left:-30%;right:-30%;height:1px;top:0;background:rgba(210,220,225,.12);box-shadow:0 0 14px rgba(210,220,225,.1);animation:cryptoSweep 3.8s linear infinite}.crypto-head{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:11px 12px 7px;font:8px var(--mono);color:#70777c;letter-spacing:.09em}.crypto-head b{font-weight:500;color:#aeb4b7}.crypto-dot{width:5px;height:5px;border-radius:50%;background:#aeb4b7;box-shadow:0 0 9px rgba(210,220,225,.4);animation:cryptoPulse 1.2s infinite}.crypto-bar{height:3px;margin:0 12px 8px;background:#191d20;overflow:hidden}.crypto-bar i{display:block;width:97%;height:100%;background:#aeb4b7;box-shadow:0 0 10px rgba(210,220,225,.18);transition:width .4s}.crypto-stream,.crypto-code{padding:0 12px 7px;font:8px/1.6 var(--mono);color:#4f575c;white-space:nowrap;overflow:hidden}.crypto-code{padding-bottom:11px;color:#727a7f;letter-spacing:.13em}.legacy-panel{position:relative;transition:transform .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease)}.legacy-panel:before{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(transparent,#9ba2a6,transparent);opacity:0;transform:translateY(-100%);transition:opacity .2s}.legacy-panel:hover{transform:translateY(-2px);border-color:#343a3f;box-shadow:0 10px 35px rgba(0,0,0,.22),inset 0 0 24px rgba(255,255,255,.012)}.legacy-panel:hover:before{opacity:.5;animation:panelScan 1.4s linear}.panelhead{position:relative;overflow:hidden}.panelhead:after{content:"";position:absolute;left:-20%;top:0;width:18%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.045),transparent);transform:skewX(-18deg);animation:headSweep 6s linear infinite}.record__value{transition:color .25s,text-shadow .25s}.record:hover .record__value{color:#c4c9cb;text-shadow:0 0 12px rgba(220,225,228,.05)}.nav button{position:relative;overflow:hidden}.nav button:after{content:"";position:absolute;left:-100%;bottom:0;width:45%;height:1px;background:#9da4a8;opacity:.35}.nav button:hover:after,.nav button.active:after{animation:navSweep .7s ease forwards}.rightbar .panel{transition:border-color .3s,box-shadow .3s}.rightbar .panel:hover{border-color:#343a3f;box-shadow:inset 0 0 18px rgba(255,255,255,.01)}@keyframes cryptoSweep{from{top:-2px}to{top:100%}}@keyframes cryptoPulse{50%{opacity:.3;transform:scale(.7)}}@keyframes panelScan{from{transform:translateY(-100%)}to{transform:translateY(100%)}}@keyframes headSweep{0%,65%{left:-20%;opacity:0}70%{opacity:1}100%{left:120%;opacity:0}}@keyframes navSweep{to{left:135%}}
+<style id="spmg-document-animations-only">
+/* =========================================================
+   SPMG DOCUMENT — VISUAL EFFECTS ONLY
+   No content / structure / interaction changes.
+   ========================================================= */
+
+.legacy-panel{
+  position:relative;
+  overflow:hidden;
+  transition:
+    border-color .28s ease,
+    background .28s ease,
+    box-shadow .28s ease,
+    transform .28s cubic-bezier(.2,.8,.2,1);
+}
+
+.legacy-panel::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:1px;
+  background:rgba(210,220,225,0);
+  transition:background .28s ease, box-shadow .28s ease;
+  pointer-events:none;
+}
+
+.legacy-panel:hover{
+  border-color:#2b3136;
+  background:rgba(11,14,16,.82);
+  box-shadow:0 8px 32px rgba(0,0,0,.16);
+}
+
+.legacy-panel:hover::before{
+  background:rgba(180,190,195,.28);
+  box-shadow:0 0 12px rgba(190,200,205,.08);
+}
+
+.legacy-panel .panelhead{
+  position:relative;
+  overflow:hidden;
+  transition:background .25s ease;
+}
+
+.legacy-panel .panelhead::after{
+  content:"";
+  position:absolute;
+  left:-25%;
+  top:0;
+  width:25%;
+  height:100%;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(220,225,228,.045),
+    transparent
+  );
+  transform:skewX(-18deg);
+  transition:left .65s ease;
+  pointer-events:none;
+}
+
+.legacy-panel:hover .panelhead::after{
+  left:125%;
+}
+
+.legacy-panel .panelhead span:first-child{
+  transition:color .22s ease, letter-spacing .22s ease;
+}
+
+.legacy-panel:hover .panelhead span:first-child{
+  color:#aeb5b9;
+  letter-spacing:.145em;
+}
+
+/* Individual document entries: hover only, never clickable/collapsible. */
+.legacy-content .record{
+  position:relative;
+  transition:
+    background .22s ease,
+    border-color .22s ease,
+    padding-left .22s ease,
+    transform .22s ease;
+}
+
+.legacy-content .record::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:10px;
+  bottom:10px;
+  width:1px;
+  background:rgba(190,200,205,0);
+  box-shadow:0 0 0 rgba(190,200,205,0);
+  transition:background .22s ease, box-shadow .22s ease;
+  pointer-events:none;
+}
+
+.legacy-content .record:hover{
+  background:rgba(255,255,255,.018);
+  padding-left:5px;
+  transform:translateX(2px);
+}
+
+.legacy-content .record:hover::before{
+  background:rgba(180,190,195,.25);
+  box-shadow:0 0 10px rgba(180,190,195,.08);
+}
+
+.legacy-content .record__label{
+  transition:
+    color .2s ease,
+    text-shadow .2s ease;
+}
+
+.legacy-content .record:hover .record__label{
+  color:#aeb5b9;
+  text-shadow:0 0 10px rgba(210,220,225,.08);
+}
+
+.legacy-content .record__value{
+  transition:color .2s ease;
+}
+
+.legacy-content .record:hover .record__value{
+  color:#b4bbbf;
+}
+
+/* Existing highlighted/warning text gets a restrained response. */
+.legacy-content .record:hover .highlight{
+  text-shadow:0 0 9px rgba(195,205,210,.08);
+}
+
+.legacy-content .record:hover .warn{
+  text-shadow:0 0 9px rgba(195,154,85,.08);
+}
+
+.legacy-content .record:hover .danger{
+  text-shadow:0 0 9px rgba(168,74,74,.08);
+}
+
+/* Entrance animation for document panels only. */
+@keyframes spmgPanelIn{
+  from{
+    opacity:0;
+    transform:translateY(7px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+.legacy-grid .legacy-panel{
+  animation:spmgPanelIn .42s var(--ease) both;
+}
+
+.legacy-grid .legacy-panel:nth-child(2){animation-delay:.035s}
+.legacy-grid .legacy-panel:nth-child(3){animation-delay:.07s}
+.legacy-grid .legacy-panel:nth-child(4){animation-delay:.105s}
+.legacy-grid .legacy-panel:nth-child(5){animation-delay:.14s}
+.legacy-grid .legacy-panel:nth-child(6){animation-delay:.175s}
+.legacy-grid .legacy-panel:nth-child(7){animation-delay:.21s}
+.legacy-grid .legacy-panel:nth-child(8){animation-delay:.245s}
+.legacy-grid .legacy-panel:nth-child(9){animation-delay:.28s}
+.legacy-grid .legacy-panel:nth-child(10){animation-delay:.315s}
+.legacy-grid .legacy-panel:nth-child(11){animation-delay:.35s}
+.legacy-grid .legacy-panel:nth-child(12){animation-delay:.385s}
+.legacy-grid .legacy-panel:nth-child(13){animation-delay:.42s}
+
+/* Keep document text selection and normal clicking completely normal. */
+.legacy-content,
+.legacy-content .record,
+.legacy-content .record__label,
+.legacy-content .record__value{
+  user-select:text;
+  cursor:text;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .legacy-grid .legacy-panel,
+  .legacy-panel,
+  .legacy-content .record{
+    animation:none!important;
+    transition:none!important;
+  }
+}
 </style>
+
+
+<style id="spmg-sidebar-final-fix">
+/* Sidebar: one fixed row geometry for every item, including long titles. */
+.nav{
+  width:100%;
+  min-width:0;
+}
+.nav button{
+  position:relative !important;
+  box-sizing:border-box !important;
+  width:100% !important;
+  min-width:0 !important;
+  height:34px !important;
+  padding:10px 38px 10px 11px !important;
+  margin:0 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  float:none !important;
+}
+.nav button .count{
+  position:absolute !important;
+  right:11px !important;
+  top:10px !important;
+  width:20px !important;
+  margin:0 !important;
+  padding:0 !important;
+  float:none !important;
+  text-align:right !important;
+  line-height:14px !important;
+}
+/* The long 08 title gets the exact same left edge and row height. */
+.nav button[data-page="punishments"]{
+  padding-left:11px !important;
+  padding-right:38px !important;
+  transform:none !important;
+}
+</style>
+
+
+<style id="spmg-green-polish-v7">
+:root{
+ --spmg-green:#78c78d;
+ --spmg-green-line:rgba(120,199,141,.24);
+}
+.nav button.active{
+ border-left-color:var(--spmg-green)!important;
+ color:#c1e0c8!important;
+ background:linear-gradient(90deg,rgba(72,180,100,.08),transparent 72%)!important;
+ box-shadow:inset 8px 0 22px rgba(60,170,90,.035);
+}
+.nav button:hover{
+ color:#b8d8bf!important;
+ background:linear-gradient(90deg,rgba(72,180,100,.045),transparent 75%)!important;
+ transform:translateX(2px);
+}
+.legacy-panel,.panel,.nav button{
+ transition:background .25s ease,border-color .25s ease,box-shadow .3s ease,transform .22s ease,color .22s ease;
+}
+.legacy-panel:hover{
+ border-color:var(--spmg-green-line);
+ box-shadow:0 10px 34px rgba(0,0,0,.18),0 0 22px rgba(70,170,90,.035);
+}
+.legacy-panel .panelhead{position:relative}
+.legacy-panel .panelhead::before{
+ content:"";position:absolute;left:-15%;top:0;width:14%;height:1px;
+ background:var(--spmg-green);opacity:0;
+ box-shadow:0 0 9px rgba(100,210,125,.35);pointer-events:none;
+}
+.legacy-panel:hover .panelhead::before{
+ opacity:.42;animation:spmgScan .9s ease-out forwards;
+}
+@keyframes spmgScan{from{left:-15%}to{left:115%}}
+.legacy-content .record:hover::before{
+ background:var(--spmg-green)!important;
+ box-shadow:0 0 10px rgba(100,210,125,.18)!important;
+}
+.legacy-content .record:hover .record__label{color:#b7d9be!important}
+@keyframes spmgMicroIn{
+ 0%{opacity:.82;transform:translateY(3px)}55%{opacity:1}100%{opacity:1;transform:none}
+}
+main,.content,.page{animation:spmgMicroIn .32s ease-out both}
+body::after{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:9998;
+ background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(120,199,141,.012) 4px);
+ opacity:.42;mix-blend-mode:screen;
+}
+::selection{background:rgba(100,190,120,.22);color:#d6e9da}
+</style>
+
+
+<style id="spmg-user-polish">
+/* Very subtle green cast across the overall interface, keeping the existing dark style. */
+html, body{
+  background:
+    radial-gradient(circle at 50% 18%, rgba(72,180,100,.035), transparent 58%),
+    var(--bg);
+}
+.app{
+  background:
+    radial-gradient(circle at 50% 12%, rgba(72,180,100,.035), transparent 55%),
+    linear-gradient(135deg,#060708,#090b0d 55%,#070809);
+}
+
+/* Document numbering: the text starts after the actual label width,
+   rather than after a fixed column. This prevents long labels from colliding. */
+.legacy-content .record{
+  grid-template-columns:max-content minmax(0,1fr);
+  column-gap:18px;
+  align-items:start;
+}
+.legacy-content .record__label{
+  white-space:nowrap;
+}
+.legacy-content .record__value{
+  min-width:0;
+}
+
+@media(max-width:700px){
+  .legacy-content .record{
+    grid-template-columns:max-content minmax(0,1fr);
+    column-gap:14px;
+  }
+}
+</style>
+
+<style id="norm-table-v9">.norm-table-wrap{width:100%;overflow-x:auto;margin:0 0 18px;border:1px solid rgba(120,199,141,.20);background:rgba(4,8,6,.56);box-shadow:0 0 26px rgba(45,140,65,.035)}.norm-table{width:100%;min-width:900px;border-collapse:collapse;table-layout:fixed;font:11px/1.35 var(--mono);color:var(--text)}.norm-table th{padding:10px 8px;text-align:center;font-weight:500;letter-spacing:.035em;color:#a8c7ae;background:linear-gradient(180deg,rgba(76,150,88,.11),rgba(20,40,25,.06));border:1px solid rgba(120,199,141,.18)}.norm-table td{padding:8px;vertical-align:middle;border:1px solid rgba(120,199,141,.12);transition:background .2s ease,color .2s ease}.norm-table tbody tr{transition:background .2s ease}.norm-table tbody tr:hover{background:rgba(100,190,120,.045)}.norm-table tbody tr:hover td{border-color:rgba(120,199,141,.20)}.norm-table .rank-name{font-weight:600;white-space:nowrap;color:#b8cdbb}.norm-table .rank-limit{text-align:center;font-weight:600;color:#a8c9ae}.norm-table td:nth-child(2),.norm-table td:nth-child(3),.norm-table td:nth-child(4),.norm-table td:nth-child(6),.norm-table td:nth-child(7){text-align:center}.norm-table .rank-recruit .rank-name,.norm-table .rank-operator .rank-name{color:#78c78d}.norm-table .rank-specialist .rank-name,.norm-table .rank-corporal .rank-name{color:#d08a8a}.norm-table .rank-sergeant .rank-name,.norm-table .rank-master .rank-name{color:#cf9b9b}.norm-table .rank-junior .rank-name,.norm-table .rank-lieutenant .rank-name,.norm-table .rank-senior .rank-name{color:#8db7df}.norm-table .rank-curator .rank-name{color:#8fc7a0}@media(max-width:900px){.norm-table{min-width:820px}.norm-table th,.norm-table td{padding:7px 6px}}</style>
 </head>
 <body>
 <div id="noise"></div><div class="system-watermark">SPMG-04</div><div id="scan"></div><div id="vignette"></div><div id="glitch"></div>
@@ -228,17 +542,17 @@ h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8
 <div class="layout">
 <aside class="sidebar">
   <div class="navlabel">ВНУТРЕННЯЯ СЕТЬ</div>
-  <nav class="nav" id="nav"><button class="active" data-page="charter">УСТАВ ОТДЕЛА <span class="count">01</span></button>
-<button class="" data-page="patrol">ПАТРУЛИ <span class="count">02</span></button>
-<button class="" data-page="training">ТРЕНИРОВКИ <span class="count">03</span></button>
-<button class="" data-page="events">ИВЕНТЫ <span class="count">04</span></button>
-<button class="" data-page="cordon">ОЦЕПЛЕНИЕ <span class="count">05</span></button>
-<button class="" data-page="rules">ПРАВИЛА ОТДЕЛА <span class="count">06</span></button>
-<button class="" data-page="norm">НОРМА АЛЬФЫ Б <span class="count">07</span></button>
-<button class="" data-page="punishments">НАРУШЕНИЯ И НАКАЗАНИЯ <span class="count">08</span></button>
-<button class="" data-page="vacations">ОТПУСКА <span class="count">09</span></button>
-<button class="" data-page="history">ХРОНОЛОГИЯ <span class="count">10</span></button>
-<button class="" data-page="additional">ДОПОЛНИТЕЛЬНЫЕ <span class="count">11</span></button></nav>
+  <nav class="nav" id="nav"><button class="active" data-page="charter">УСТАВ ОТДЕЛА </button>
+<button class="" data-page="patrol">ПАТРУЛИ </button>
+<button class="" data-page="training">ТРЕНИРОВКИ </button>
+<button class="" data-page="events">ИВЕНТЫ </button>
+<button class="" data-page="cordon">ОЦЕПЛЕНИЕ </button>
+<button class="" data-page="rules">ПРАВИЛА ОТДЕЛА </button>
+<button class="" data-page="norm">НОРМА </button>
+<button class="" data-page="punishments">НАРУШЕНИЯ И НАКАЗАНИЯ </button>
+<button class="" data-page="vacations">ОТПУСКА </button>
+<button class="" data-page="history">ХРОНОЛОГИЯ </button>
+<button class="" data-page="additional">ДОПОЛНИТЕЛЬНЫЕ </button></nav>
   <div class="sidebar-note">УРОВЕНЬ ДОПУСКА: SPMG-IV<br>СЕКТОР ДОСТУПА: ПОЛЕВЫЕ ОПЕРАЦИИ<br>SYSTEM: OPERATIONAL<br><br>Несанкционированное распространение внутренних материалов запрещено.</div>
 </aside>
 
@@ -263,13 +577,6 @@ h1{margin:6px 0 0;font-size:24px;letter-spacing:-.03em;font-weight:600;color:#e8
       СИНХРОНИЗАЦИЯ АРХИВА <span style="float:right">97.2%</span><br>
       ВНЕШНИЙ КАНАЛ <span style="float:right">ОГРАНИЧЕН</span>
     </div>
-  </div>
-  <div class="sectionlabel">ШИФРОВАНИЕ КАНАЛА</div>
-  <div class="panel crypto-panel" style="margin-top:10px">
-    <div class="crypto-head"><span class="crypto-dot"></span><span>КАНАЛ SPMG-04</span><b id="cryptoPct">97.4%</b></div>
-    <div class="crypto-bar"><i id="cryptoBar"></i></div>
-    <div class="crypto-stream" id="cryptoStream">ПЕРЕДАЧА ПАКЕТОВ // ПОДПИСЬ ПОДТВЕРЖДЕНА</div>
-    <div class="crypto-code" id="cryptoCode">7F A1 04 C9 // 88 20 // 57</div>
   </div>
   <div class="notice"><strong>УВЕДОМЛЕНИЕ БЕЗОПАСНОСТИ // SEC-57-0811</strong>Обнаруженная аномалия сеанса устранена автоматически. Действий со стороны оператора не требуется.</div>
   <div class="sectionlabel">ЖУРНАЛ СОБЫТИЙ</div>
@@ -297,8 +604,8 @@ function toast(title,msg){$("#toastTitle").textContent=title;$("#toastMsg").text
 function log(type,msg){audit.unshift([now(),type,msg]);if(audit.length>30)audit.pop();renderRightFeed()}
 function head(kicker,title,actions=""){return `<div class="pagehead"><div><div class="kicker">${kicker}</div><h1>${title}</h1></div><div class="pageactions">${actions}</div></div>`}
 const content=$("#content"), modal=$("#modal");
-const LEGACY_PAGES={"charter": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\">Настоящий устав определяет порядок организации и несения службы сотрудниками отдела SPMG — структурного подразделения в составе TFB корпорации Aurum. Документ является обязательным к исполнению всеми сотрудниками, зачисленными в состав отдела.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Отдел SPMG является штатным подразделением TFB и подчиняется непосредственно командованию TFB, а также офицерскому составу отдела в рамках их полномочий.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.3.</h2><p class=\"record__value\">Настоящий устав разработан в соответствии с Кодексом Внутреннего Распорядка и общим уставом TFB. В случае противоречия настоящего устава Кодексу или общему уставу TFB, приоритет имеют документы высшей юридической силы.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.4.</h2><p class=\"record__value\">Изменения и дополнения в настоящий устав вносятся по решению командования TFB или руководства отдела SPMG. Сотрудники оповещаются о внесённых изменениях в установленном порядке.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.5.</h2><p class=\"record__value\">Незнание устава не освобождает сотрудника от ответственности за его нарушение.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Права и обязанности</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\"><strong>Сотрудники отдела SPMG имеют право:</strong><br/>— на получение полной информации о задачах и целях, поставленных руководством;<br/>— на использование служебного снаряжения и вооружения в рамках установленных норм;<br/>— на защиту своих прав и законных интересов в порядке, установленном К.В.Р. и уставами Aurum;<br/>— на подачу рапортов и обращений к командованию отдела.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.2.</h2><p class=\"record__value\"><strong>Сотрудники отдела SPMG обязаны:</strong><br/>— соблюдать Кодекс Внутреннего Распорядка, настоящий устав и иные нормативные акты Aurum;<br/>— выполнять приказы вышестоящих сотрудников в пределах их компетенции;<br/>— поддерживать установленную форму одежды и дисциплину;<br/>— не разглашать сведения, составляющие служебную тайну;<br/>— посещать мероприятия и выполнять установленную норму времени.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>03 // Структура отдела</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">3.1.</h2><p class=\"record__value\">Отдел SPMG является одним из четырёх основных отделов в составе TFB, наряду с отделами «Сыр-Колбасеры», «USEC» и «Упыри».</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.2.</h2><p class=\"record__value\"><strong>В состав отдела входят:</strong><br/>— командование отдела (куратор, 2 заместителя);<br/>— основные боевые группы;<br/>— элитное подразделение Apple Special Squad (A.S.S.);</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.3.</h2><p class=\"record__value\">Назначение и освобождение от должностей производится по решению командования отдела и руководства TFB.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.4.</h2><p class=\"record__value\">Перевод в другой отдел осуществляется в порядке, установленном общим уставом TFB.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>04 // Порядок действий</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">4.1.</h2><p class=\"record__value\"><strong>При выполнении служебных задач сотрудник SPMG обязан руководствоваться:</strong><br/>— настоящим уставом;<br/>— прямыми приказами командования;<br/>— Кодексом Внутреннего Распорядка;<br/>— иными нормативными актами Aurum.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.2.</h2><p class=\"record__value\">В случае возникновения ситуации, не урегулированной настоящим уставом, сотрудник действует в рамках Кодекса Внутреннего Распорядка и общих приказов командования.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>08 // Дополнительные сведения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">8.1.</h2><p class=\"record__value\"><strong>Сотрудникам SPMG рекомендуется:</strong><br/>— поддерживать высокий уровень дисциплины и профессионализма;<br/>— следить за новыми версиями устава и обновлениями.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>09 // Примечания</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">9.1.</h2><p class=\"record__value\">Данный устав является официальным документом отдела SPMG и обязателен к исполнению всеми сотрудниками, зачисленными в состав отдела.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>10 // Архивация и обновление</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">10.1.</h2><p class=\"record__value\">Архивные версии устава хранятся у руководства отдела. Актуальной является версия, опубликованная в установленном порядке.</p></div>\n</div></div></div></section>", "patrol": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><strong>Патруль</strong> — это МП, в котором участвуют от <span class=\"highlight\">3 человек</span> (включая проводящего). Один человек — это сам проводящий, остальные — участники.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Участники обязаны <strong>выполнять приказы проводящего</strong> без обсуждений.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.3.</h2><p class=\"record__value\">Патруль длится минимум <span class=\"highlight\">30 минут</span>, максимум — <span class=\"highlight\">1 час 30 минут</span>.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Типы патрулей</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\"><span class=\"highlight\">Свободные</span> — проводящий разрешает идти в любой из секторов комплекса.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.2.</h2><p class=\"record__value\"><span class=\"highlight\">По секторам</span> — проводящий распределяет участников по секторам. Один может быть поставлен в А-сектор, другого — в любое место из Б-сектора.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>03 // Мега-рейд</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">3.1.</h2><p class=\"record__value\">Во время патруля может начаться <span class=\"warn\">мега-рейд</span>. В этот момент проводящий начинает командовать бойцами для отбития рейда, и его приказы становятся <strong>приоритетными</strong>.</p></div>\n</div></section>", "training": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><strong>Тренировка</strong> — это МП, где проверяются и оттачиваются ваши ПВП навыки.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Минимальное количество участников: <span class=\"highlight\">4 человека</span> (Включая проводящего, если тот участвует).</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // 1 раунд</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\">Игра <span class=\"highlight\">2 на 2</span> с <span class=\"highlight\">10 ОС</span> (возрождений) на карте <span class=\"highlight\">«Меркурий»</span>.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>03 // 2 раунд</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">3.1.</h2><p class=\"record__value\">Раунд идёт на усмотрение проводящего. Лимит ОС — <span class=\"highlight\">15</span>. Количество людей — неограниченно, но важен <span class=\"highlight\">баланс</span>.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.2.</h2><p class=\"record__value\">Проводящий должен грамотно распределять сильных и слабых. Не стоит ставить сильных против слабых. Исключение — бой между обычными бойцами и бойцами от Севера и т.д.</p></div>\n</div></section>", "events": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><strong>Ивент</strong> — это фан МП, где люди играют в обычные игры, которые выберет проводящий. Главное — чтобы людям было <span class=\"highlight\">интересно</span>.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Лимит времени: от <span class=\"highlight\">20 минут</span> до <span class=\"highlight\">1 часа</span>. Время за ивент не дают — это МП для отдыха.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.3.</h2><p class=\"record__value\">Минимум должно прийти <span class=\"highlight\">4 человека</span>, включая проводящего.</p></div>\n</div></section>", "cordon": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><strong>Оцепление</strong> — это отдельный вид патруля, в котором должно быть минимум <span class=\"highlight\">8 человек</span>. Именно столько нужно для оцепления сектора: моста, сектора А, КПП.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Порядок проведения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\">Перед проведением оцепления необходимо <span class=\"highlight\">объявить в Рацию</span> о проведении оцепления сектора или участка.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.2.</h2><p class=\"record__value\">На оцеплении <span class=\"highlight\">2 сотрудника Aurum</span> проверяют карточки: 1 — входящих в сектор, 2 — выходящих из сектора.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.3.</h2><p class=\"record__value\">Задаются вопросы по категории: <span class=\"highlight\">«Причина входа в [место]»</span> (кроме сектора А).</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.4.</h2><p class=\"record__value\">Без очереди могут пройти <span class=\"highlight\">Сотрудники Aurum</span>.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span> // РАЗДЕЛ</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div class=\"note-box\"><strong>📌 Примечание:</strong> Подробнее об оцеплениях спрашивайте у Офицеров Отдела.</div></div></section>", "rules": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Раздел 1</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><span class=\"danger\">Запрещается</span> всячески спорить с обычным составом — иначе последует <span class=\"warn\">наказание</span>.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Крайне не советуется спорить с <span class=\"highlight\">офицерами</span>. Вы можете получить от предупреждения до увольнения из ТФБ.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.3.</h2><p class=\"record__value\">Однако, вы имеете право оправдаться перед офицером, если имеете вину перед собой. Вам никто не запрещает оправдываться. Если вам не дают оправдаться — наказание пойдёт офицеру. <span class=\"warn\">Если поступки не имеют оправдания — даже не пытайтесь.</span></p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Раздел 2</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\"><span class=\"danger\">Запрещается</span> кидать <span class=\"danger\">NSFW, Свастику, 18+ контент, кровь, гифки с фурри и с сексуальным контентом</span> в любой из чатов Discord-сервера.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.2.</h2><p class=\"record__value\">Относитесь к друг другу с <span class=\"highlight\">уважением</span>. Как никак, вы товарищи.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.3.</h2><p class=\"record__value\">Не стесняйтесь общаться с людьми как своего, так и других отделов. Заводите друзей, знакомых, связи.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.4.</h2><p class=\"record__value\">Не орите в ГЧ (можно, если вы никому не мешаете и для рофла), не перебивайте, не разводите конфликт в ГЧ.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.5.</h2><p class=\"record__value\"><span class=\"highlight\">Самое важное</span> — не стесняйтесь разговаривать в ГЧ, даже если у вас писклявый/ребячий голос. Вас никто не осуждает. А если кто-то осуждает — его съедят заживо.</p></div>\n</div></section>", "norm": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Норма для Альфы Б</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\">\n<h2 class=\"record__label\">1.1.</h2>\n<p class=\"record__value\"><span class=\"highlight\">Боец:</span> −33% от времени, −25% от МП</p>\n</div>\n<div class=\"record\">\n<h2 class=\"record__label\">1.2.</h2>\n<p class=\"record__value\"><span class=\"highlight\">Офицер:</span> −33% от времени, −50% от МП</p>\n</div>\n<div class=\"record\" style=\"border-bottom: none;\">\n<h2 class=\"record__label\">1.3.</h2>\n<p class=\"record__value\">Округление идёт <span class=\"highlight\">в пользу бойца</span>.</p>\n</div>\n</div></section>", "punishments": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Нарушения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.</h2><p class=\"record__value\">Незнание или несоблюдение ПОВР и правил Virus RP<br/><span class=\"warn\">Наказание:</span> 1-2 страйка.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.</h2><p class=\"record__value\">Выход из базы без формы (АКА — Морф)<br/><span class=\"warn\">Наказание:</span> 1 выговор.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.</h2><p class=\"record__value\">Неподчинение, неуважение к Офицерам<br/><span class=\"warn\">Наказание:</span> 1 выговор — 1 страйк.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.</h2><p class=\"record__value\">Оскорбление своих товарищей<br/><span class=\"warn\">Наказание:</span> 1 страйк.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">5.</h2><p class=\"record__value\">Разжигание, поддержка конфликта<br/><span class=\"warn\">Наказание:</span> 1 выговор — 2 страйка.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">6.</h2><p class=\"record__value\">Непослушание приказам проводящего (если приказ не нарушает правил)<br/><span class=\"warn\">Наказание:</span> 1 страйк.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">7.</h2><p class=\"record__value\">Крики, перебивание в ГЧ<br/><span class=\"warn\">Наказание:</span> 1 выговор — 1 страйк.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Отработка</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.</h2><p class=\"record__value\"><span class=\"highlight\">Ожидание.</span> Ждать 30 дней (месяц) без нарушений. Если получите ещё одно нарушение — таймер сбросится. Для выговора — <span class=\"highlight\">2 недели</span>.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.</h2><p class=\"record__value\"><span class=\"highlight\">Проявление.</span> Показать себя перед вышестоящими отдела — помочь или произвести хорошее впечатление. Нужно постараться.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.</h2><p class=\"record__value\"><span class=\"highlight\">Покупка.</span> Накопить валюту отдела и снять страйк.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.</h2><p class=\"record__value\"><span class=\"highlight\">Отработка от офицера.</span> Даётся лично офицером в зависимости от вас. Будет сложно отработать.</p></div>\n</div></section>", "vacations": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Правила отпуска</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.</h2><p class=\"record__value\">Если вы вступили во фракцию меньше <span class=\"highlight\">2 недель</span> назад — отпуск <span class=\"danger\">недоступен</span>. Исключение — уважительная причина (рассматривается офицерами).</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.</h2><p class=\"record__value\">Отпуск можно брать только <span class=\"warn\">раз в 2 недели</span>. Исключение — уважительная причина.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.</h2><p class=\"record__value\">Отпуск можно брать максимум на <span class=\"highlight\">месяц</span>. Исключение — уважительная причина.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.</h2><p class=\"record__value\">Уважительная причина должна быть подтверждена доказательствами: справка из больницы, фото повреждений и т.д.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">5.</h2><p class=\"record__value\">При отпуске более <span class=\"highlight\">25 дней</span>, роль отдела снимается до окончания отпуска (человек числится в таблице активности).</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Причины отпуска</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.</h2><p class=\"record__value\"><span class=\"highlight\">Выгорание</span> — усталость от игры или эмоциональное выгорание.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.</h2><p class=\"record__value\"><span class=\"highlight\">Травмы.</span></p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.</h2><p class=\"record__value\"><span class=\"highlight\">Личная жизнь</span> — семья, случаи в вашей жизни или семьи.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.</h2><p class=\"record__value\">Иные причины, не входящие в список. Главное, чтобы офицеры могли понять и принять вашу причину.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span> // РАЗДЕЛ</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div class=\"note-box\"><strong>📌 Примечание:</strong> Если вы часто брали отпуск, офицеры могут отклонить ваш отпуск. Исключение — уважительная причина. Если причина неуважительная — отмена.</div></div></section>", "history": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>◆ // Хронология кураторов SPMG</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\" style=\"border-bottom:none;\"><h2 class=\"record__label\">Архив</h2><p class=\"record__value\">Полная хронология смены кураторов отдела SPMG с момента основания. Данные собраны из архивов TFB и личных записей командования.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Старое поколение SPMG (M.P.F.)</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">Слух</h2><p class=\"record__value\"><span class=\"highlight\">08.09.2022</span> — Встал на Куратора и создал SPMG при M.P.F. Основатель отдела.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Омни</h2><p class=\"record__value\"><span class=\"highlight\">21.12.2022</span> — Встал на Куратора при M.P.F. Продолжил развитие отдела.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Кенако</h2><p class=\"record__value\"><span class=\"highlight\">05.08.2023</span> — Встал на Куратора при T.F.B., после чего на Капитана и Ординала Альфы.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Ашка</h2><p class=\"record__value\"><span class=\"highlight\">11.11.2023</span> — Встал на Куратора при T.F.B., после чего и на Капитана.</p></div>\n<div class=\"record\" style=\"border-bottom:none;\"><h2 class=\"record__label\">Лунар</h2><p class=\"record__value\"><span class=\"highlight\">15.11.2024</span> — Встал на Куратора при T.F.B. Р.С., после чего на Капитана, а затем на Канцлера комитета.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Новое поколение SPMG (T.F.B. — Комитет)</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">Андор</h2><p class=\"record__value\"><span class=\"highlight\">21.02.2025</span> — Встал на Куратора при T.F.B. Р.С.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Сендернас</h2><p class=\"record__value\"><span class=\"highlight\">17.05.2025</span> — Встал на Куратора при T.F.B. Р.С. Харизматичный лидер, заложивший основы нового поколения SPMG.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Виталий</h2><p class=\"record__value\"><span class=\"highlight\">24.06.2025</span> — Встал на Куратора при T.F.B. Р.С., после чего на Бригадира, а позже на Капитана и Канцлера комитета.</p></div>\n<div class=\"record\" style=\"border-bottom:none;\"><h2 class=\"record__label\">Эндерлок</h2><p class=\"record__value\"><span class=\"highlight\">28.08.2025</span> — Встал на Куратора при T.F.B. Р.С.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>03 // Новейшая история SPMG</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">Сендернас</h2><p class=\"record__value\"><span class=\"highlight\">31.05.2026 — 28.06.2026</span> — Встал на Куратора при новом TFB Aurum. Был хорошим и харизматичным куратором с безумно крутыми идеями, но после выгорания написал ПСЖ. Вернулся с новыми силами и встал на Капитана TFB.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Весёлый</h2><p class=\"record__value\"><span class=\"highlight\">31.05.2026 — н.в.</span> — Встал на Куратора после Сендернаса, переняв его отдел и дав клятву сделать SPMG лучше.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>◆ // Нынешняя вышка отдела</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\" style=\"border-bottom:none;\"><h2 class=\"record__label\">Куратор</h2><p class=\"record__value\"><span class=\"highlight\">CCGAKKAUNT</span> — бывший и нынешний Куратор SPMG, вернувшийся спустя три года на пост. При нём благодаря реформам и повышению репутации отдела SPMG зажило новой жизнью и получило хороший актив и бонусы при службе. В отдел стремились попасть перспективные люди, которым желалось попасть в Альфу.</p></div>\n</div></section>", "additional": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>ДОПОЛНИТЕЛЬНЫЕ СВЕДЕНИЯ</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div class=\"notice\"><strong>ТЕКСТОВЫЙ АРХИВ</strong>В исходном разделе присутствует графический материал. По текущему запросу переносится только текстовое содержимое.</div></div></section>"};
-const PAGE_META={"charter": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "УСТАВ ОТДЕЛА"}, "patrol": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ПАТРУЛИ"}, "training": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ТРЕНИРОВКИ"}, "events": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ИВЕНТЫ"}, "cordon": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ОЦЕПЛЕНИЕ"}, "rules": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ПРАВИЛА ОТДЕЛА"}, "norm": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "НОРМА АЛЬФЫ Б"}, "punishments": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "НАРУШЕНИЯ И НАКАЗАНИЯ"}, "vacations": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ОТПУСКА"}, "history": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ХРОНОЛОГИЯ"}, "additional": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ДОПОЛНИТЕЛЬНЫЕ"}};
+const LEGACY_PAGES={"charter": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\">Настоящий устав определяет порядок организации и несения службы сотрудниками отдела SPMG — структурного подразделения в составе TFB корпорации Aurum. Документ является обязательным к исполнению всеми сотрудниками, зачисленными в состав отдела.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Отдел SPMG является штатным подразделением TFB и подчиняется непосредственно командованию TFB, а также офицерскому составу отдела в рамках их полномочий.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.3.</h2><p class=\"record__value\">Настоящий устав разработан в соответствии с Кодексом Внутреннего Распорядка и общим уставом TFB. В случае противоречия настоящего устава Кодексу или общему уставу TFB, приоритет имеют документы высшей юридической силы.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.4.</h2><p class=\"record__value\">Изменения и дополнения в настоящий устав вносятся по решению командования TFB или руководства отдела SPMG. Сотрудники оповещаются о внесённых изменениях в установленном порядке.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.5.</h2><p class=\"record__value\">Незнание устава не освобождает сотрудника от ответственности за его нарушение.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Права и обязанности</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\"><strong>Сотрудники отдела SPMG имеют право:</strong><br/>— на получение полной информации о задачах и целях, поставленных руководством;<br/>— на использование служебного снаряжения и вооружения в рамках установленных норм;<br/>— на защиту своих прав и законных интересов в порядке, установленном К.В.Р. и уставами Aurum;<br/>— на подачу рапортов и обращений к командованию отдела.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.2.</h2><p class=\"record__value\"><strong>Сотрудники отдела SPMG обязаны:</strong><br/>— соблюдать Кодекс Внутреннего Распорядка, настоящий устав и иные нормативные акты Aurum;<br/>— выполнять приказы вышестоящих сотрудников в пределах их компетенции;<br/>— поддерживать установленную форму одежды и дисциплину;<br/>— не разглашать сведения, составляющие служебную тайну;<br/>— посещать мероприятия и выполнять установленную норму времени.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>03 // Структура отдела</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">3.1.</h2><p class=\"record__value\">Отдел SPMG является одним из четырёх основных отделов в составе TFB, наряду с отделами «Сыр-Колбасеры», «USEC» и «Упыри».</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.2.</h2><p class=\"record__value\"><strong>В состав отдела входят:</strong><br/>— командование отдела (куратор, 2 заместителя);<br/>— основные боевые группы;<br/>— элитное подразделение Apple Special Squad (A.S.S.);</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.3.</h2><p class=\"record__value\">Назначение и освобождение от должностей производится по решению командования отдела и руководства TFB.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.4.</h2><p class=\"record__value\">Перевод в другой отдел осуществляется в порядке, установленном общим уставом TFB.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>04 // Порядок действий</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">4.1.</h2><p class=\"record__value\"><strong>При выполнении служебных задач сотрудник SPMG обязан руководствоваться:</strong><br/>— настоящим уставом;<br/>— прямыми приказами командования;<br/>— Кодексом Внутреннего Распорядка;<br/>— иными нормативными актами Aurum.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.2.</h2><p class=\"record__value\">В случае возникновения ситуации, не урегулированной настоящим уставом, сотрудник действует в рамках Кодекса Внутреннего Распорядка и общих приказов командования.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>05 // Дополнительные сведения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">8.1.</h2><p class=\"record__value\"><strong>Сотрудникам SPMG рекомендуется:</strong><br/>— поддерживать высокий уровень дисциплины и профессионализма;<br/>— следить за новыми версиями устава и обновлениями.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>06 // Примечания</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">9.1.</h2><p class=\"record__value\">Данный устав является официальным документом отдела SPMG и обязателен к исполнению всеми сотрудниками, зачисленными в состав отдела.</p></div>\n</div></div></div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>07 // Архивация и обновление</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div><div class=\"section__content\">\n<div class=\"record\"><h2 class=\"record__label\">10.1.</h2><p class=\"record__value\">Архивные версии устава хранятся у руководства отдела. Актуальной является версия, опубликованная в установленном порядке.</p></div>\n</div></div></div></section>", "patrol": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><strong>Патруль</strong> — это МП, в котором участвуют от <span class=\"highlight\">3 человек</span> (включая проводящего). Один человек — это сам проводящий, остальные — участники.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Участники обязаны <strong>выполнять приказы проводящего</strong> без обсуждений.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.3.</h2><p class=\"record__value\">Патруль длится минимум <span class=\"highlight\">30 минут</span>, максимум — <span class=\"highlight\">1 час 30 минут</span>.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Типы патрулей</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\"><span class=\"highlight\">Свободные</span> — проводящий разрешает идти в любой из секторов комплекса.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.2.</h2><p class=\"record__value\"><span class=\"highlight\">По секторам</span> — проводящий распределяет участников по секторам. Один может быть поставлен в А-сектор, другого — в любое место из Б-сектора.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>03 // Мега-рейд</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">3.1.</h2><p class=\"record__value\">Во время патруля может начаться <span class=\"warn\">мега-рейд</span>. В этот момент проводящий начинает командовать бойцами для отбития рейда, и его приказы становятся <strong>приоритетными</strong>.</p></div>\n</div></section>", "training": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><strong>Тренировка</strong> — это МП, где проверяются и оттачиваются ваши ПВП навыки.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Минимальное количество участников: <span class=\"highlight\">4 человека</span> (Включая проводящего, если тот участвует).</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // 1 раунд</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\">Игра <span class=\"highlight\">2 на 2</span> с <span class=\"highlight\">10 ОС</span> (возрождений) на карте <span class=\"highlight\">«Меркурий»</span>.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>03 // 2 раунд</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">3.1.</h2><p class=\"record__value\">Раунд идёт на усмотрение проводящего. Лимит ОС — <span class=\"highlight\">15</span>. Количество людей — неограниченно, но важен <span class=\"highlight\">баланс</span>.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.2.</h2><p class=\"record__value\">Проводящий должен грамотно распределять сильных и слабых. Не стоит ставить сильных против слабых. Исключение — бой между обычными бойцами и бойцами от Севера и т.д.</p></div>\n</div></section>", "events": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><strong>Ивент</strong> — это фан МП, где люди играют в обычные игры, которые выберет проводящий. Главное — чтобы людям было <span class=\"highlight\">интересно</span>.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Лимит времени: от <span class=\"highlight\">20 минут</span> до <span class=\"highlight\">1 часа</span>. Время за ивент не дают — это МП для отдыха.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.3.</h2><p class=\"record__value\">Минимум должно прийти <span class=\"highlight\">4 человека</span>, включая проводящего.</p></div>\n</div></section>", "cordon": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Общие положения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><strong>Оцепление</strong> — это отдельный вид патруля, в котором должно быть минимум <span class=\"highlight\">8 человек</span>. Именно столько нужно для оцепления сектора: моста, сектора А, КПП.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Порядок проведения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\">Перед проведением оцепления необходимо <span class=\"highlight\">объявить в Рацию</span> о проведении оцепления сектора или участка.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.2.</h2><p class=\"record__value\">На оцеплении <span class=\"highlight\">2 сотрудника Aurum</span> проверяют карточки: 1 — входящих в сектор, 2 — выходящих из сектора.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.3.</h2><p class=\"record__value\">Задаются вопросы по категории: <span class=\"highlight\">«Причина входа в [место]»</span> (кроме сектора А).</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.4.</h2><p class=\"record__value\">Без очереди могут пройти <span class=\"highlight\">Сотрудники Aurum</span>.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span> // РАЗДЕЛ</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div class=\"note-box\"><strong>Примечание:</strong> Подробнее об оцеплениях спрашивайте у Офицеров Отдела.</div></div></section>", "rules": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Раздел 1</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.1.</h2><p class=\"record__value\"><span class=\"danger\">Запрещается</span> всячески спорить с обычным составом — иначе последует <span class=\"warn\">наказание</span>.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.2.</h2><p class=\"record__value\">Крайне не советуется спорить с <span class=\"highlight\">офицерами</span>. Вы можете получить от предупреждения до увольнения из ТФБ.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">1.3.</h2><p class=\"record__value\">Однако, вы имеете право оправдаться перед офицером, если имеете вину перед собой. Вам никто не запрещает оправдываться. Если вам не дают оправдаться — наказание пойдёт офицеру. <span class=\"warn\">Если поступки не имеют оправдания — даже не пытайтесь.</span></p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Раздел 2</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">2.1.</h2><p class=\"record__value\"><span class=\"danger\">Запрещается</span> кидать <span class=\"danger\">NSFW, Свастику, 18+ контент, кровь, гифки с фурри и с сексуальным контентом</span> в любой из чатов Discord-сервера.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.2.</h2><p class=\"record__value\">Относитесь к друг другу с <span class=\"highlight\">уважением</span>. Как никак, вы товарищи.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.3.</h2><p class=\"record__value\">Не стесняйтесь общаться с людьми как своего, так и других отделов. Заводите друзей, знакомых, связи.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.4.</h2><p class=\"record__value\">Не орите в ГЧ (можно, если вы никому не мешаете и для рофла), не перебивайте, не разводите конфликт в ГЧ.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.5.</h2><p class=\"record__value\"><span class=\"highlight\">Самое важное</span> — не стесняйтесь разговаривать в ГЧ, даже если у вас писклявый/ребячий голос. Вас никто не осуждает. А если кто-то осуждает — его съедят заживо.</p></div>\n</div></section>", "norm": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Норма</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"norm-table-wrap\"><table class=\"norm-table\"><thead><tr><th>Звание</th><th>Еженедельная<br>норма актива</th><th>Звёзды</th><th>Еженедельная<br>норма МП</th><th>Условия для повышения</th><th>Антиспидран</th><th>Лимит<br>званий</th></tr></thead><tbody><tr class=\"rank-row rank-recruit\"><td class=\"rank-name\">Рекрут</td><td>180 минут</td><td>4 звезды</td><td>4 посетить</td><td>Наиграть 2 часа с ментором</td><td>4 дня</td><td class=\"rank-limit\">-</td></tr><tr class=\"rank-row rank-operator\"><td class=\"rank-name\">Оперативник</td><td>180 минут</td><td>4 звезды</td><td>4 посетить</td><td>Наиграть 1 час с ментором, тест</td><td>5 дней</td><td class=\"rank-limit\">-</td></tr><tr class=\"rank-row rank-rank\"><td class=\"rank-name\">Рядовой 2 кл.</td><td>180 минут</td><td>4 звезды</td><td>3 посетить</td><td>Отозваться на 4 запроса помощи</td><td>5 дней</td><td class=\"rank-limit\">-</td></tr><tr class=\"rank-row rank-rank\"><td class=\"rank-name\">Рядовой 1 кл.</td><td>150 минут</td><td>4 звезды</td><td>3 посетить</td><td>Отозваться на 4 запроса помощи</td><td>7 дней</td><td class=\"rank-limit\">-</td></tr><tr class=\"rank-row rank-specialist\"><td class=\"rank-name\">Специалист</td><td>150 минут</td><td>6 звезд</td><td>3 посетить<br>2 провести</td><td>Тест, проверка на командование</td><td>7 дней</td><td class=\"rank-limit\">-</td></tr><tr class=\"rank-row rank-corporal\"><td class=\"rank-name\">Капрал</td><td>150 минут</td><td>6 звезд</td><td>3 посетить<br>2 провести</td><td>Тест, проверка на командование</td><td>7 дней</td><td class=\"rank-limit\">-</td></tr><tr class=\"rank-row rank-sergeant\"><td class=\"rank-name\">Сержант</td><td>120 минут</td><td>7 звезд</td><td>3 посетить<br>2 провести</td><td>Отозваться на 6 запросов помощи</td><td>8 дней</td><td class=\"rank-limit\">6</td></tr><tr class=\"rank-row rank-master\"><td class=\"rank-name\">Мастер Сержант</td><td>120 минут</td><td>9 звезд</td><td>3 посетить<br>2 провести</td><td>Менторство, проверка на командование</td><td>9 дней</td><td class=\"rank-limit\">5</td></tr><tr class=\"rank-row rank-company\"><td class=\"rank-name\">Комнани</td><td>90 минут</td><td>9 звезд</td><td>3 посетить<br>2 провести</td><td>Рекомендация куратора</td><td>10 дней</td><td class=\"rank-limit\">4</td></tr><tr class=\"rank-row rank-junior\"><td class=\"rank-name\">Мл. Лейтенант</td><td>90 минут</td><td>9 звезд</td><td>2 посетить<br>2 провести</td><td>Рекомендация ординала, проверка на командование, собеседование с Лидером</td><td>-</td><td class=\"rank-limit\">3</td></tr><tr class=\"rank-row rank-lieutenant\"><td class=\"rank-name\">Лейтенант</td><td>60 минут</td><td>-</td><td>1 посетить<br>2 провести</td><td>По решению куратора и ординала, собеседование с Лидером</td><td>-</td><td class=\"rank-limit\">2</td></tr><tr class=\"rank-row rank-senior\"><td class=\"rank-name\">Ст. Лейтенант</td><td>-</td><td>-</td><td>-</td><td>По решению ординала, собеседование с Лидером</td><td>-</td><td class=\"rank-limit\">2</td></tr><tr class=\"rank-row rank-curator\"><td class=\"rank-name\">Куратор</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td class=\"rank-limit\">1</td></tr></tbody></table></div>\n<div class=\"record\">\n<h2 class=\"record__label\">1.1.</h2>\n<p class=\"record__value\"><span class=\"highlight\">Боец:</span> −33% от времени, −25% от МП</p>\n</div>\n<div class=\"record\">\n<h2 class=\"record__label\">1.2.</h2>\n<p class=\"record__value\"><span class=\"highlight\">Офицер:</span> −33% от времени, −50% от МП</p>\n</div>\n<div class=\"record\" style=\"border-bottom: none;\">\n<h2 class=\"record__label\">1.3.</h2>\n<p class=\"record__value\">Округление идёт <span class=\"highlight\">в пользу бойца</span>.</p>\n</div>\n</div></section>", "punishments": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Нарушения</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.</h2><p class=\"record__value\">Незнание или несоблюдение ПОВР и правил Virus RP<br/><span class=\"warn\">Наказание:</span> 1-2 страйка.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.</h2><p class=\"record__value\">Выход из базы без формы (АКА — Морф)<br/><span class=\"warn\">Наказание:</span> 1 выговор.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.</h2><p class=\"record__value\">Неподчинение, неуважение к Офицерам<br/><span class=\"warn\">Наказание:</span> 1 выговор — 1 страйк.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.</h2><p class=\"record__value\">Оскорбление своих товарищей<br/><span class=\"warn\">Наказание:</span> 1 страйк.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">5.</h2><p class=\"record__value\">Разжигание, поддержка конфликта<br/><span class=\"warn\">Наказание:</span> 1 выговор — 2 страйка.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">6.</h2><p class=\"record__value\">Непослушание приказам проводящего (если приказ не нарушает правил)<br/><span class=\"warn\">Наказание:</span> 1 страйк.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">7.</h2><p class=\"record__value\">Крики, перебивание в ГЧ<br/><span class=\"warn\">Наказание:</span> 1 выговор — 1 страйк.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Отработка</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.</h2><p class=\"record__value\"><span class=\"highlight\">Ожидание.</span> Ждать 30 дней (месяц) без нарушений. Если получите ещё одно нарушение — таймер сбросится. Для выговора — <span class=\"highlight\">2 недели</span>.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.</h2><p class=\"record__value\"><span class=\"highlight\">Проявление.</span> Показать себя перед вышестоящими отдела — помочь или произвести хорошее впечатление. Нужно постараться.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.</h2><p class=\"record__value\"><span class=\"highlight\">Покупка.</span> Накопить валюту отдела и снять страйк.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.</h2><p class=\"record__value\"><span class=\"highlight\">Отработка от офицера.</span> Даётся лично офицером в зависимости от вас. Будет сложно отработать.</p></div>\n</div></section>", "vacations": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Правила отпуска</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.</h2><p class=\"record__value\">Если вы вступили во фракцию меньше <span class=\"highlight\">2 недель</span> назад — отпуск <span class=\"danger\">недоступен</span>. Исключение — уважительная причина (рассматривается офицерами).</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.</h2><p class=\"record__value\">Отпуск можно брать только <span class=\"warn\">раз в 2 недели</span>. Исключение — уважительная причина.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.</h2><p class=\"record__value\">Отпуск можно брать максимум на <span class=\"highlight\">месяц</span>. Исключение — уважительная причина.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.</h2><p class=\"record__value\">Уважительная причина должна быть подтверждена доказательствами: справка из больницы, фото повреждений и т.д.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">5.</h2><p class=\"record__value\">При отпуске более <span class=\"highlight\">25 дней</span>, роль отдела снимается до окончания отпуска (человек числится в таблице активности).</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Причины отпуска</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">1.</h2><p class=\"record__value\"><span class=\"highlight\">Выгорание</span> — усталость от игры или эмоциональное выгорание.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">2.</h2><p class=\"record__value\"><span class=\"highlight\">Травмы.</span></p></div>\n<div class=\"record\"><h2 class=\"record__label\">3.</h2><p class=\"record__value\"><span class=\"highlight\">Личная жизнь</span> — семья, случаи в вашей жизни или семьи.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">4.</h2><p class=\"record__value\">Иные причины, не входящие в список. Главное, чтобы офицеры могли понять и принять вашу причину.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span> // РАЗДЕЛ</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div class=\"note-box\"><strong>Примечание:</strong> Если вы часто брали отпуск, офицеры могут отклонить ваш отпуск. Исключение — уважительная причина. Если причина неуважительная — отмена.</div></div></section>", "history": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>◆ // Хронология кураторов SPMG</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\" style=\"border-bottom:none;\"><h2 class=\"record__label\">Архив</h2><p class=\"record__value\">Полная хронология смены кураторов отдела SPMG с момента основания. Данные собраны из архивов TFB и личных записей командования.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>01 // Старое поколение SPMG (M.P.F.)</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">Слух</h2><p class=\"record__value\"><span class=\"highlight\">08.09.2022</span> — Встал на Куратора и создал SPMG при M.P.F. Основатель отдела.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Омни</h2><p class=\"record__value\"><span class=\"highlight\">21.12.2022</span> — Встал на Куратора при M.P.F. Продолжил развитие отдела.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Кенако</h2><p class=\"record__value\"><span class=\"highlight\">05.08.2023</span> — Встал на Куратора при T.F.B., после чего на Капитана и Ординала Альфы.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Ашка</h2><p class=\"record__value\"><span class=\"highlight\">11.11.2023</span> — Встал на Куратора при T.F.B., после чего и на Капитана.</p></div>\n<div class=\"record\" style=\"border-bottom:none;\"><h2 class=\"record__label\">Лунар</h2><p class=\"record__value\"><span class=\"highlight\">15.11.2024</span> — Встал на Куратора при T.F.B. Р.С., после чего на Капитана, а затем на Канцлера комитета.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>02 // Новое поколение SPMG (T.F.B. — Комитет)</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">Андор</h2><p class=\"record__value\"><span class=\"highlight\">21.02.2025</span> — Встал на Куратора при T.F.B. Р.С.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Сендернас</h2><p class=\"record__value\"><span class=\"highlight\">17.05.2025</span> — Встал на Куратора при T.F.B. Р.С. Харизматичный лидер, заложивший основы нового поколения SPMG.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Виталий</h2><p class=\"record__value\"><span class=\"highlight\">24.06.2025</span> — Встал на Куратора при T.F.B. Р.С., после чего на Бригадира, а позже на Капитана и Канцлера комитета.</p></div>\n<div class=\"record\" style=\"border-bottom:none;\"><h2 class=\"record__label\">Эндерлок</h2><p class=\"record__value\"><span class=\"highlight\">28.08.2025</span> — Встал на Куратора при T.F.B. Р.С.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>03 // Новейшая история SPMG</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\"><h2 class=\"record__label\">Сендернас</h2><p class=\"record__value\"><span class=\"highlight\">31.05.2026 — 28.06.2026</span> — Встал на Куратора при новом TFB Aurum. Был хорошим и харизматичным куратором с безумно крутыми идеями, но после выгорания написал ПСЖ. Вернулся с новыми силами и встал на Капитана TFB.</p></div>\n<div class=\"record\"><h2 class=\"record__label\">Весёлый</h2><p class=\"record__value\"><span class=\"highlight\">31.05.2026 — н.в.</span> — Встал на Куратора после Сендернаса, переняв его отдел и дав клятву сделать SPMG лучше.</p></div>\n</div></section><section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>◆ // Нынешняя вышка отдела</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\">\n<div class=\"record\" style=\"border-bottom:none;\"><h2 class=\"record__label\">Куратор</h2><p class=\"record__value\"><span class=\"highlight\">CCGAKKAUNT</span> — бывший и нынешний Куратор SPMG, вернувшийся спустя три года на пост. При нём благодаря реформам и повышению репутации отдела SPMG зажило новой жизнью и получило хороший актив и бонусы при службе. В отдел стремились попасть перспективные люди, которым желалось попасть в Альфу.</p></div>\n</div></section>", "additional": "<section class=\"panel legacy-panel\"><div class=\"panelhead\"><span>ДОПОЛНИТЕЛЬНЫЕ СВЕДЕНИЯ</span><span class=\"minor\">SPMG-04</span></div><div class=\"legacy-content\"><div class=\"notice\"><strong>ТЕКСТОВЫЙ АРХИВ</strong>В исходном разделе присутствует графический материал. По текущему запросу переносится только текстовое содержимое.</div></div></section>"};
+const PAGE_META={"charter": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "УСТАВ ОТДЕЛА"}, "patrol": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ПАТРУЛИ"}, "training": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ТРЕНИРОВКИ"}, "events": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ИВЕНТЫ"}, "cordon": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ОЦЕПЛЕНИЕ"}, "rules": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ПРАВИЛА ОТДЕЛА"}, "norm": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "НОРМА"}, "punishments": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "НАРУШЕНИЯ И НАКАЗАНИЯ"}, "vacations": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ОТПУСКА"}, "history": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ХРОНОЛОГИЯ"}, "additional": {"kicker": "SPMG-04 // ВНУТРЕННИЕ МАТЕРИАЛЫ", "title": "ДОПОЛНИТЕЛЬНЫЕ"}};
 
 const audit=[
  ["14:18:42","SECURITY","УЧЁТНЫЕ ДАННЫЕ ПОДТВЕРЖДЕНЫ"],
@@ -318,7 +625,29 @@ function renderRightFeed(){
  feed.innerHTML=audit.slice(0,8).map(x=>`<div class="feedline"><b>${x[0]}</b><span class="type">${x[1]}</span><strong>${esc(x[2])}</strong></div>`).join('');
 }
 function render(){renderLegacy(state.page);renderRightFeed();}
-function bindRows(){}
+function bindRows(){
+  const nav=$("#nav");
+  if(!nav || nav.dataset.bound==="1") return;
+  nav.dataset.bound="1";
+
+  nav.addEventListener("click",(e)=>{
+    const btn=e.target.closest("button[data-page]");
+    if(!btn || !nav.contains(btn)) return;
+
+    const key=btn.dataset.page;
+    if(!PAGE_META[key] || !LEGACY_PAGES[key]) return;
+
+    state.page=key;
+
+    nav.querySelectorAll("button[data-page]").forEach(b=>{
+      b.classList.toggle("active",b===btn);
+    });
+
+    render();
+    log("NAV","ОТКРЫТ РАЗДЕЛ // "+PAGE_META[key].title);
+    glitch();
+  });
+}
 function boot(){
  const consoleEl=$("#bootConsole"), title=$("#bootTitle"), subtitle=$("#bootSubtitle");
  const stage=$("#bootStage"), pct=$("#bootPct"), progress=$("#bootProgress"), hex=$("#bootHex");
@@ -400,28 +729,12 @@ function boot(){
 }
 $("#authorize").onclick=authorize;
 $("#accessCode").addEventListener("keydown",e=>{if(e.key==="Enter")authorize()});
-
-function bindNavigation(){
-  document.querySelectorAll('#nav [data-page]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const key=btn.dataset.page;
-      if(!PAGE_META[key] || !LEGACY_PAGES[key]) return;
-      state.page=key;
-      document.querySelectorAll('#nav [data-page]').forEach(x=>x.classList.toggle('active',x===btn));
-      render();
-      log('NAV',`ОТКРЫТ РАЗДЕЛ: ${PAGE_META[key].title}`);
-      glitch();
-    });
-  });
-}
-
 function authorize(){
  const val=$("#accessCode").value.trim().toUpperCase();
  if(!val){toast("AUTHORIZATION","Требуется код допуска.");return}
  
  setTimeout(()=>{
    $("#boot").classList.add("hidden");$("#app").classList.remove("hidden");state.booted=true;
-   bindNavigation();
    $("#sessionId").textContent=uid();log("SYSTEM","СЕАНС УСТАНОВЛЕН // AUTH SPMG-IV");render();toast("СЕАНС УСТАНОВЛЕН","Доступ к внутренней сети SPMG разрешён.");glitch();
  },650);
 }
@@ -470,13 +783,5 @@ boot();
 })();
 </script>
 
-setInterval(()=>{
-  if(!state.booted) return;
-  const pct=96.7+Math.random()*2.8;
-  const cp=document.getElementById('cryptoPct'), cb=document.getElementById('cryptoBar'), cc=document.getElementById('cryptoCode'), cs=document.getElementById('cryptoStream');
-  if(cp) cp.textContent=pct.toFixed(1)+'%'; if(cb) cb.style.width=pct+'%';
-  if(cc){const g='0123456789ABCDEF'; cc.textContent=Array.from({length:8},()=>g[Math.floor(Math.random()*g.length)]).join('')+' // '+Math.floor(Math.random()*9999).toString().padStart(4,'0')+' // 57';}
-  if(cs) cs.textContent=Math.random()<.35?'ПЕРЕПРОВЕРКА ПОДПИСИ // ЦЕЛОСТНОСТЬ ПОДТВЕРЖДЕНА':'ПЕРЕДАЧА ПАКЕТОВ // ПОДПИСЬ ПОДТВЕРЖДЕНА';
-},900);
 </body>
 </html>
